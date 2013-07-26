@@ -1,7 +1,9 @@
 Description
 ===========
 
-Installs the OpenStack Metering service **Ceilometer** as part of the OpenStack reference deployment Chef for OpenStack. The http://github.com/mattray/chef-openstack-repo contains documentation for using this cookbook in the context of a full OpenStack deployment. Ceilometer is currently installed from packages.
+Installs the OpenStack Metering service **Ceilometer** as part of the OpenStack
+reference deployment Chef for OpenStack.  Ceilometer is currently installed
+from packages.
 
 https://wiki.openstack.org/wiki/Ceilometer
 
@@ -14,15 +16,41 @@ Cookbooks
 Usage
 =====
 
+agent-central
+----
+- Installs agent central service.
+
+agent-compute
+----
+- Installs agent compute service.
+
+api
+----
+- Installs API service.
+
+collector
+----
+- Installs nova network service.
+
+common
+----
+- Common metering configuration.
+
 Attributes
 ==========
 
 Testing
 =====
 
-This cookbook is using [ChefSpec](https://github.com/acrmp/chefspec) for testing. Run the following before commiting. It will run your tests, and check for lint errors.
+This cookbook uses [bundler](http://gembundler.com/), [berkshelf](http://berkshelf.com/), and [strainer](https://github.com/customink/strainer) to isolate dependencies and run tests.
 
-    $ ./run_tests.bash
+Tests are defined in Strainerfile.
+
+To run tests:
+
+    $ bundle install # install gem dependencies
+    $ bundle exec berks install # install cookbook dependencies
+    $ bundle exec strainer test # run tests
 
 License and Author
 ==================
@@ -30,8 +58,11 @@ License and Author
 |                      |                                                    |
 |:---------------------|:---------------------------------------------------|
 | **Author**           |  Matt Ray (<matt@opscode.com>)                     |
+| **Author**           |  John Dewey (<jdewey@att.com>)                     |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
+| **Copyright**        |  Copyright (c) 2013, AT&T Services, Inc.           |
+
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
