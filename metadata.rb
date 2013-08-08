@@ -16,4 +16,4 @@ recipe "openstack-metering::common", "Common metering configuration."
   supports os
 end
 
-depends "openstack-common", "~> 0.3.0"
+depends "openstack-common", "~> 0.4.0"
