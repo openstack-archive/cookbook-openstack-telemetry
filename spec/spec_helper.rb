@@ -25,6 +25,9 @@ def metering_stubs
   ::Chef::Recipe.any_instance.stub(:user_password).
     with("guest").
     and_return "rabbit-pass"
+  ::Chef::Recipe.any_instance.stub(:secret).
+    with("secrets", "openstack_identity_bootstrap_token").
+    and_return "bootstrap-token"
 end
 
 def expect_runs_common_recipe

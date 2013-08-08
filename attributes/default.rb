@@ -43,6 +43,8 @@ default["openstack"]["metering"]["api"]["auth"]["cache_dir"] = "/var/cache/ceilo
 default["openstack"]["metering"]["user"] = "ceilometer"
 default["openstack"]["metering"]["group"] = "ceilometer"
 
+default["openstack"]["metering"]["region"] = "RegionOne"
+
 case platform
 when "suse" # :pragma-foodcritic: ~FC024 - won't fix this
   default["openstack"]["metering"]["platform"] = {

@@ -11,9 +11,11 @@ recipe "openstack-metering::agent-compute", "Installs agent compute service."
 recipe "openstack-metering::api", "Installs API service."
 recipe "openstack-metering::collector", "Installs nova network service."
 recipe "openstack-metering::common", "Common metering configuration."
+recipe "openstack-metering::identity_registration", "Registers the endpoints with Keystone"
 
 %w{ ubuntu suse }.each do |os|
   supports os
 end
 
 depends "openstack-common", "~> 0.4.0"
+depends "openstack-identity", "~> 7.0.0"
