@@ -36,6 +36,10 @@ common
 ----
 - Common metering configuration.
 
+identity_registration
+----
+- Registers the endpoints with Keystone.
+
 Attributes
 ==========
 
