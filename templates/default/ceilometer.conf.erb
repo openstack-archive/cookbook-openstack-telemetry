@@ -1,4 +1,7 @@
 [DEFAULT]
+<% if node["openstack"]["metering"]["host"] %>
+host = <%= node["openstack"]["metering"]["host"] %>
+<% end %>
 os_auth_url = <%= @auth_uri %>
 os_tenant_name = <%= @service_tenant_name %>
 os_password = <%= @service_pass %>

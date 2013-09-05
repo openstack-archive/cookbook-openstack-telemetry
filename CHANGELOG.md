@@ -3,6 +3,11 @@ openstack-metering Cookbook CHANGELOG
 This file is used to list changes made in each version of the openstack-metering cookbook.
 
 
+v7.0.2
+------
+### Improvement
+- Add optional host to the ceilometer.conf
+
 v7.0.1
 ------
 ### Bug
