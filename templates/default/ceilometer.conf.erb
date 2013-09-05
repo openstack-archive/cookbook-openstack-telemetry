@@ -19,6 +19,9 @@ rpc_backend = ceilometer.openstack.common.rpc.impl_kombu
 <% if node["openstack"]["metering"]["syslog"]["use"] %>
 log_config = /etc/openstack/logging.conf
 <% end %>
+<% if node["openstack"]["metering"]["debug"] %>
+debug = True
+<% end %>
 glance_registry_host = <%= @image_endpoint.host %>
 periodic_interval = <%= node["openstack"]["metering"]["periodic_interval"] %>
 
