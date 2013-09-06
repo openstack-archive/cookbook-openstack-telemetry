@@ -25,6 +25,16 @@ platform["agent_compute_packages"].each do |pkg|
   package pkg
 end
 
+# temp fix for compute-agent init not installing properly ubuntu
+# See https://bugs.launchpad.net/cloud-archive/+bug/1221945
+if node["platform"] == "ubuntu"
+  init_script = "/etc/init/ceilometer-agent-compute.conf"
+  execute "fix init script" do
+    command "cp #{init_script}.dpkg-new #{init_script}"
+    not_if { ::File.exists?(init_script) }
+  end
+end
+
 service platform["agent_compute_service"] do
   action :start
 end

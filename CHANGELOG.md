@@ -3,6 +3,11 @@ openstack-metering Cookbook CHANGELOG
 This file is used to list changes made in each version of the openstack-metering cookbook.
 
 
+v7.0.3
+------
+### Bug
+- Ubuntu cloud archive dpkg failing to install init script properly for agent-compute
+
 v7.0.2
 ------
 ### Improvement
