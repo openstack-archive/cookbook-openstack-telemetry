@@ -32,6 +32,16 @@ platform["collector_packages"].each do |pkg|
   package pkg
 end
 
+# temp fix for collector init not installing properly ubuntu
+# See https://bugs.launchpad.net/cloud-archive/+bug/1221945
+if node["platform"] == "ubuntu"
+  init_script = "/etc/init/ceilometer-collector.conf"
+  execute "fix init script" do
+    command "cp #{init_script}.dpkg-new #{init_script}"
+    not_if { ::File.exists?(init_script) }
+  end
+end
+
 service platform["collector_service"] do
   action :start
 end
