@@ -15,6 +15,10 @@ describe "openstack-metering::collector" do
       expect(@chef_run).to execute_command command
     end
 
+    it "installs python-mysqldb", :A => true do
+      expect(@chef_run).to install_package "python-mysqldb"
+    end
+
     it "starts collector service" do
       expect(@chef_run).to start_service("ceilometer-collector")
     end

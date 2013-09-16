@@ -67,7 +67,7 @@ when "ubuntu"
     "agent_compute_service" => "ceilometer-agent-compute",
     "api_packages" => ["ceilometer-api"],
     "api_service" => "ceilometer-api",
-    "collector_packages" => ["ceilometer-collector"],
+    "collector_packages" => ["ceilometer-collector", "python-mysqldb"],
     "collector_service" => "ceilometer-collector"
   }
 end
