@@ -45,6 +45,7 @@ service_pass = service_password "openstack-compute"
 service_tenant = node["openstack"]["metering"]["service_tenant_name"]
 
 identity_endpoint = endpoint "identity-api"
+identity_admin_endpoint = endpoint "identity-admin"
 image_endpoint = endpoint "image-api"
 
 Chef::Log.debug("openstack-metering::common:service_user|#{service_user}")
@@ -70,6 +71,7 @@ template node["openstack"]["metering"]["conf"] do
     :database_connection => db_uri,
     :image_endpoint => image_endpoint,
     :identity_endpoint => identity_endpoint,
+    :identity_admin_endpoint => identity_admin_endpoint,
     :rabbit_pass => rabbit_pass,
     :service_pass => service_pass,
     :service_tenant_name => service_tenant,

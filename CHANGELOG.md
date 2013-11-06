@@ -2,6 +2,11 @@ openstack-metering Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
 
+v7.0.5
+------
+### Bug
+- Corrected inconsistent keystone middleware auth_token for ceilometer.conf.erb.
+
 v7.0.4
 ------
 ### Bug
