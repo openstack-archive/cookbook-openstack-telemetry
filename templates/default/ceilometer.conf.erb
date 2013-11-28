@@ -8,14 +8,43 @@ os_password = <%= @service_pass %>
 os_username = <%= @service_user %>
 policy_file = /etc/ceilometer/policy.json
 database_connection = <%= @database_connection %>
+verbose = True
+
+notification_topics = notifications,glance_notifications
+<% if node["openstack"]["metering"]["mq"]["service_type"] == "rabbitmq"  %>
+##### RABBITMQ #####
 rabbit_userid = <%= node["openstack"]["metering"]["rabbit"]["username"] %>
 rabbit_password = <%= @rabbit_pass %>
 rabbit_port = <%= node["openstack"]["metering"]["rabbit"]["port"] %>
 rabbit_host = <%= node["openstack"]["metering"]["rabbit"]["host"] %>
 rabbit_virtual_host = <%= node["openstack"]["metering"]["rabbit"]["vhost"] %>
-verbose = True
-notification_topics = notifications,glance_notifications
 rpc_backend = ceilometer.openstack.common.rpc.impl_kombu
+<% end %>
+
+
+<% if node["openstack"]["metering"]["mq"]["service_type"] == "qpid"  %>
+##### QPID #####
+rpc_backend=nova.openstack.common.rpc.impl_qpid
+qpid_hostname=<%= node["openstack"]["metering"]["mq"]["qpid"]["host"] %>
+qpid_port=<%= node["openstack"]["metering"]["mq"]["qpid"]["port"] %>
+
+qpid_password=<%= node["openstack"]["metering"]["mq"]["qpid"]["password"] %>
+qpid_username=<%= node["openstack"]["metering"]["mq"]["qpid"]["username"] %>
+qpid_sasl_mechanisms=<%= node["openstack"]["metering"]["mq"]["qpid"]["sasl_mechanisms"] %>
+qpid_reconnect=<%= node["openstack"]["metering"]["mq"]["qpid"]["reconnect"] %>
+qpid_reconnect_timeout=<%= node["openstack"]["metering"]["mq"]["qpid"]["reconnect_timeout"] %>
+qpid_reconnect_limit=<%= node["openstack"]["metering"]["mq"]["qpid"]["reconnect_limit"] %>
+qpid_reconnect_interval_min=<%= node["openstack"]["metering"]["mq"]["qpid"]["reconnect_interval_min"] %>
+qpid_reconnect_interval_max=<%= node["openstack"]["metering"]["mq"]["qpid"]["reconnect_interval_max"] %>
+qpid_reconnect_interval=<%= node["openstack"]["metering"]["mq"]["qpid"]["reconnect_interval"] %>
+qpid_heartbeat=<%= node["openstack"]["metering"]["mq"]["qpid"]["heartbeat"] %>
+# qpid protocol. default 'tcp'. set to 'ssl' to enable SSL
+qpid_protocol=<%= node["openstack"]["metering"]["mq"]["qpid"]["protocol"] %>
+qpid_tcp_nodelay=<%= node["openstack"]["metering"]["mq"]["qpid"]["tcp_nodelay"] %>
+
+<% end %>
+
+
 <% if node["openstack"]["metering"]["syslog"]["use"] %>
 log_config = /etc/openstack/logging.conf
 <% end %>

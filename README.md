@@ -64,10 +64,12 @@ License and Author
 | **Author**           |  Matt Ray (<matt@opscode.com>)                     |
 | **Author**           |  John Dewey (<jdewey@att.com>)                     |
 | **Author**           |  Justin Shepherd (<jshepher@rackspace.com>)        |
+| **Author**           |  Salman Baset (<sabaset@us.ibm.com>)               |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
 | **Copyright**        |  Copyright (c) 2013, AT&T Services, Inc.           |
 | **Copyright**        |  Copyright (c) 2013, Rackspace US, Inc.            |
+| **Copyright**        |  Copyright (c) 2013, IBM Corp. 	            |
 
 
 Licensed under the Apache License, Version 2.0 (the "License");

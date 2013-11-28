@@ -2,6 +2,11 @@ openstack-metering Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
 
+v7.1.0
+------
+### Blueprint
+- Added qpid support to ceilometer. default is rabbitmq
+
 v7.0.5
 ------
 ### Bug

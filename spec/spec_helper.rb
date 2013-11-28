@@ -1,4 +1,5 @@
 require "chefspec"
+require "chef/application"
 
 ::LOG_LEVEL = :fatal
 ::OPENSUSE_OPTS = {
@@ -28,6 +29,7 @@ def metering_stubs
   ::Chef::Recipe.any_instance.stub(:secret).
     with("secrets", "openstack_identity_bootstrap_token").
     and_return "bootstrap-token"
+  ::Chef::Application.stub(:fatal!)
 end
 
 def expect_runs_common_recipe

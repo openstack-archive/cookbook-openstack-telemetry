@@ -32,7 +32,9 @@ platform["common_packages"].each do |pkg|
   package pkg
 end
 
-rabbit_pass = user_password node["openstack"]["metering"]["rabbit"]["username"]
+if node["openstack"]["metering"]["mq"]["service_type"] == "rabbitmq"
+  rabbit_pass = user_password node["openstack"]["metering"]["rabbit"]["username"]
+end
 
 db_info = db "metering"
 db_user = node["openstack"]["metering"]["db"]["username"]
