@@ -4,7 +4,7 @@ maintainer_email "cookbooks@lists.tfoundry.com"
 license          "Apache 2.0"
 description      "The OpenStack Metering service Ceilometer."
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "7.1.0"
+version          "7.1.1"
 
 recipe "openstack-metering::agent-central", "Installs agent central service."
 recipe "openstack-metering::agent-compute", "Installs agent compute service."
@@ -18,4 +18,4 @@ recipe "openstack-metering::identity_registration", "Registers the endpoints wit
 end
 
 depends "openstack-common", "~> 0.4.0"
-depends "openstack-identity", "~> 7.0.0"
+depends "openstack-identity", "~> 7.0"

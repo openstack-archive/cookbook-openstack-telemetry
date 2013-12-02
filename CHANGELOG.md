@@ -2,32 +2,30 @@ openstack-metering Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
 
-v7.1.0
-------
+## 7.1.1
+### Bug
+* Relax the dependency on openstack-identity to the 7.x series
+
+## 7.1.0
 ### Blueprint
-- Added qpid support to ceilometer. default is rabbitmq
+* Added qpid support to ceilometer. default is rabbitmq
 
-v7.0.5
-------
+## 7.0.5
 ### Bug
-- Corrected inconsistent keystone middleware auth_token for ceilometer.conf.erb.
+* Corrected inconsistent keystone middleware auth_token for ceilometer.conf.erb.
 
-v7.0.4
-------
+## 7.0.4
 ### Bug
-- Ubuntu package dependency for python-mysqldb missing for ceilometer-collector
+* Ubuntu package dependency for python-mysqldb missing for ceilometer-collector
 
-v7.0.3
-------
+## 7.0.3
 ### Bug
-- Ubuntu cloud archive dpkg failing to install init script properly for agent-compute
+* Ubuntu cloud archive dpkg failing to install init script properly for agent-compute
 
-v7.0.2
-------
+## 7.0.2
 ### Improvement
-- Add optional host to the ceilometer.conf
+* Add optional host to the ceilometer.conf
 
-v7.0.1
-------
+## 7.0.1
 ### Bug
-- Fix naming inconsistency for db password databag. This makes the metering cookbook consistent with all the others.
+* Fix naming inconsistency for db password databag. This makes the metering cookbook consistent with all the others.
