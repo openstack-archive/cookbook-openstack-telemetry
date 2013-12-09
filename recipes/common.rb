@@ -36,11 +36,9 @@ if node["openstack"]["metering"]["mq"]["service_type"] == "rabbitmq"
   rabbit_pass = user_password node["openstack"]["metering"]["rabbit"]["username"]
 end
 
-db_info = db "metering"
 db_user = node["openstack"]["metering"]["db"]["username"]
 db_pass = db_password "ceilometer"
-db_query = db_info["db_type"] == "mysql" ? "?charset=utf8" : ""
-db_uri = db_uri("metering", db_user, db_pass).to_s + db_query
+db_uri = db_uri("metering", db_user, db_pass).to_s
 
 service_user = node["openstack"]["metering"]["service_user"]
 service_pass = service_password "openstack-compute"
