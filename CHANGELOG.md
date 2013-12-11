@@ -2,6 +2,10 @@ openstack-metering Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
 
+## 8.0.0
+### New version
+* Upgrade to upstream Havana release
+
 ## 7.1.1
 ### Bug
 * Relax the dependency on openstack-identity to the 7.x series

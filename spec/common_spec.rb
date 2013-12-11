@@ -4,7 +4,7 @@ describe "openstack-metering::common" do
   before { metering_stubs }
   describe "ubuntu" do
     before do
-      @chef_run = ::ChefSpec::ChefRunner.new(::UBUNTU_OPTS) do |n|
+      @chef_run = ::ChefSpec::Runner.new(::UBUNTU_OPTS) do |n|
         n.set["openstack"]["metering"]["syslog"]["use"] = true
       end
       @chef_run.converge "openstack-metering::common"
@@ -18,173 +18,79 @@ describe "openstack-metering::common" do
       expect(@chef_run).to install_package "ceilometer-common"
     end
 
-    describe "/etc/ceilometer" do
-      before do
-        @dir = @chef_run.directory "/etc/ceilometer"
-      end
-
-      it "has proper owner" do
-        expect(@dir).to be_owned_by "ceilometer", "ceilometer"
-      end
-
-      it "has proper modes" do
-        expect(sprintf("%o", @dir.mode)).to eq "750"
-      end
+    it "creates the /etc/ceilometer directory" do
+      expect(@chef_run).to create_directory("/etc/ceilometer").with(
+        user: "ceilometer",
+        group: "ceilometer",
+        mode: 0750
+        )
     end
 
     describe "/etc/ceilometer" do
       before do
-        @file = @chef_run.template "/etc/ceilometer/ceilometer.conf"
+        @filename = "/etc/ceilometer/ceilometer.conf"
       end
 
-      it "has proper owner" do
-        expect(@file).to be_owned_by("ceilometer", "ceilometer")
+      it "creates the file" do
+        expect(@chef_run).to create_template(@filename).with(
+          user: "ceilometer",
+          group: "ceilometer",
+          mode: 0640
+          )
       end
 
-      it "has proper modes" do
-        expect(sprintf("%o", @file.mode)).to eq("640")
+      context "with rabbitmq default" do
+        [/^rabbit_userid = guest$/,
+          /^rabbit_password = rabbit-pass$/,
+          /^rabbit_port = 5672$/,
+          /^rabbit_host = 127.0.0.1$/,
+          /^rabbit_virtual_host = \/$/,
+          /^auth_uri = http:\/\/127.0.0.1:5000\/v2.0$/,
+          /^auth_host = 127.0.0.1$/,
+          /^auth_port = 35357$/,
+          /^auth_protocol = http$/
+        ].each do |content|
+          it "has a \#{content.source[1...-1]}\" line" do
+            expect(@chef_run).to render_file(@filename).with_content(content)
+          end
+        end
       end
 
-      it "has rabbit_user" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "rabbit_userid = guest"
-      end
+      context "with qpid enabled" do
+        before do
+          @chef_run.node.set['openstack']['metering']['mq']['service_type'] = "qpid"
+        end
 
-      it "has rabbit_password" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "rabbit_password = rabbit-pass"
-      end
-
-      it "has rabbit_port" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "rabbit_port = 5672"
-      end
-
-      it "has rabbit_host" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "rabbit_host = 127.0.0.1"
-      end
-
-      it "has rabbit_virtual_host" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "rabbit_virtual_host = /"
-      end
-
-      it "has auth_uri" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "auth_uri = http://127.0.0.1:5000/v2.0"
-      end
-
-      it "has auth_host" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "auth_host = 127.0.0.1"
-      end
-
-      it "has auth_port" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "auth_port = 35357"
-      end
-
-      it "has auth_protocol" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "auth_protocol = http"
+        [/^qpid_hostname=127.0.0.1$/,
+          /^qpid_port=5672$/,
+          /^qpid_username=$/,
+          /^qpid_password=$/,
+          /^qpid_sasl_mechanisms=$/,
+          /^qpid_reconnect=true$/,
+          /^qpid_reconnect_timeout=0$/,
+          /^qpid_reconnect_limit=0$/,
+          /^qpid_reconnect_interval_min=0$/,
+          /^qpid_reconnect_interval_max=0$/,
+          /^qpid_reconnect_interval_max=0$/,
+          /^qpid_reconnect_interval=0$/,
+          /^qpid_heartbeat=60$/,
+          /^qpid_protocol=tcp$/,
+          /^qpid_tcp_nodelay=true$/
+        ].each do |content|
+          it "has a \#{content.source[1...-1]}\" line" do
+            expect(@chef_run).to render_file(@filename).with_content(content)
+          end
+        end
       end
     end
 
-    describe "qpid" do
-      before do
-        @file = @chef_run.template "/etc/ceilometer/ceilometer.conf"
-        @chef_run.node.set['openstack']['metering']['mq']['service_type'] = "qpid"
-      end
 
-      it "has qpid_hostname" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_hostname=127.0.0.1"
-      end
-
-      it "has qpid_port" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_port=5672"
-      end
-
-      it "has qpid_username" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_username="
-      end
-
-      it "has qpid_password" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_password="
-      end
-
-      it "has qpid_sasl_mechanisms" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_sasl_mechanisms="
-      end
-
-      it "has qpid_reconnect" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect=true"
-      end
-
-      it "has qpid_reconnect_timeout" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_timeout=0"
-      end
-
-      it "has qpid_reconnect_limit" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_limit=0"
-      end
-
-      it "has qpid_reconnect_interval_min" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_interval_min=0"
-      end
-
-      it "has qpid_reconnect_interval_max" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_interval_max=0"
-      end
-
-      it "has qpid_reconnect_interval_max" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_interval_max=0"
-      end
-
-      it "has qpid_reconnect_interval" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_reconnect_interval=0"
-      end
-
-      it "has qpid_heartbeat" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_heartbeat=60"
-      end
-
-      it "has qpid_protocol" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_protocol=tcp"
-      end
-
-      it "has qpid_tcp_nodelay" do
-        expect(@chef_run).to create_file_with_content @file.name,
-          "qpid_tcp_nodelay=true"
-      end
-    end
-
-    describe "/etc/ceilometer/policy.json" do
-      before do
-        @dir = @chef_run.cookbook_file "/etc/ceilometer/policy.json"
-      end
-
-      it "has proper owner" do
-        expect(@dir).to be_owned_by "ceilometer", "ceilometer"
-      end
-
-      it "has proper modes" do
-        expect(sprintf("%o", @dir.mode)).to eq "640"
-      end
+    it "installs the /etc/ceilometer/policy.json file" do
+      expect(@chef_run).to create_cookbook_file("/etc/ceilometer/policy.json").with(
+        user: "ceilometer",
+        group: "ceilometer",
+        mode: 0640
+        )
     end
   end
 end

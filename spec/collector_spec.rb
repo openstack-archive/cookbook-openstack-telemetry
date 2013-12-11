@@ -4,7 +4,7 @@ describe "openstack-metering::collector" do
   before { metering_stubs }
   describe "ubuntu" do
     before do
-      @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
+      @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
       @chef_run.converge "openstack-metering::collector"
     end
 

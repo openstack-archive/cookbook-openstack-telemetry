@@ -3,7 +3,7 @@ require_relative "spec_helper"
 describe "openstack-metering::identity_registration" do
   before do
     metering_stubs
-    @chef_run = ::ChefSpec::ChefRunner.new ::UBUNTU_OPTS
+    @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
     @chef_run.converge "openstack-metering::identity_registration"
   end
 
