@@ -24,7 +24,7 @@ rpc_backend = ceilometer.openstack.common.rpc.impl_kombu
 
 <% if node["openstack"]["metering"]["mq"]["service_type"] == "qpid"  %>
 ##### QPID #####
-rpc_backend=nova.openstack.common.rpc.impl_qpid
+rpc_backend=ceilometer.openstack.common.rpc.impl_qpid
 qpid_hostname=<%= node["openstack"]["metering"]["mq"]["qpid"]["host"] %>
 qpid_port=<%= node["openstack"]["metering"]["mq"]["qpid"]["port"] %>
 

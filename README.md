@@ -66,6 +66,7 @@ License and Author
 | **Author**           |  Justin Shepherd (<jshepher@rackspace.com>)        |
 | **Author**           |  Salman Baset (<sabaset@us.ibm.com>)               |
 | **Author**           |  Ionut Artarisi (<iartarisi@suse.cz>)              |
+| **Author**           |  Eric Zhou (<zyouzhou@cn.ibm.com>)              |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
 | **Copyright**        |  Copyright (c) 2013, AT&T Services, Inc.           |
