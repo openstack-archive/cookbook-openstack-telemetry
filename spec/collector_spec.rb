@@ -12,7 +12,7 @@ describe "openstack-metering::collector" do
 
     it "executes ceilometer dbsync" do
       command = "ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf"
-      expect(@chef_run).to execute_command command
+      expect(@chef_run).to run_execute command
     end
 
     it "installs python-mysqldb", :A => true do
