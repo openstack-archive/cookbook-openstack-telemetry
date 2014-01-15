@@ -33,15 +33,15 @@ platform["common_packages"].each do |pkg|
 end
 
 if node["openstack"]["metering"]["mq"]["service_type"] == "rabbitmq"
-  rabbit_pass = user_password node["openstack"]["metering"]["rabbit"]["username"]
+  rabbit_pass = get_password "user", node["openstack"]["metering"]["rabbit"]["username"]
 end
 
 db_user = node["openstack"]["metering"]["db"]["username"]
-db_pass = db_password "ceilometer"
+db_pass = get_password "db", "ceilometer"
 db_uri = db_uri("metering", db_user, db_pass).to_s
 
 service_user = node["openstack"]["metering"]["service_user"]
-service_pass = service_password "openstack-compute"
+service_pass = get_password "service", "openstack-compute"
 service_tenant = node["openstack"]["metering"]["service_tenant_name"]
 
 identity_endpoint = endpoint "identity-api"

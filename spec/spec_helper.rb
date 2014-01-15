@@ -21,11 +21,9 @@ require "chef/application"
 
 def metering_stubs
   ::Chef::Recipe.any_instance.stub(:memcached_servers).and_return []
-  ::Chef::Recipe.any_instance.stub(:service_password).and_return String.new
-  ::Chef::Recipe.any_instance.stub(:db_password).and_return String.new
-  ::Chef::Recipe.any_instance.stub(:user_password).and_return String.new
-  ::Chef::Recipe.any_instance.stub(:user_password).
-    with("guest").
+  ::Chef::Recipe.any_instance.stub(:get_password).and_return String.new
+  ::Chef::Recipe.any_instance.stub(:get_password).
+    with("user", "guest").
     and_return "rabbit-pass"
   ::Chef::Recipe.any_instance.stub(:secret).
     with("secrets", "openstack_identity_bootstrap_token").

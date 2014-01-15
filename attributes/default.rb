@@ -24,7 +24,7 @@ default["openstack"]["metering"]["rabbit_server_chef_role"] = "os-ops-messaging"
 
 # This user's password is stored in an encrypted databag
 # and accessed with openstack-common cookbook library's
-# user_password routine.  You are expected to create
+# get_password routine.  You are expected to create
 # the user, pass, vhost in a wrapper rabbitmq cookbook.
 default["openstack"]["metering"]["rabbit"]["username"] = "guest"
 default["openstack"]["metering"]["rabbit"]["vhost"] = "/"
