@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Cookbook Name:: openstack-metering
 # Recipe:: default
@@ -20,74 +21,73 @@
 
 # The name of the Chef role that knows about the message queue server
 # that Nova uses
-default["openstack"]["metering"]["rabbit_server_chef_role"] = "os-ops-messaging"
+default['openstack']['metering']['rabbit_server_chef_role'] = 'os-ops-messaging'
 
 # This user's password is stored in an encrypted databag
 # and accessed with openstack-common cookbook library's
 # user_password routine.  You are expected to create
 # the user, pass, vhost in a wrapper rabbitmq cookbook.
-default["openstack"]["metering"]["rabbit"]["username"] = "guest"
-default["openstack"]["metering"]["rabbit"]["vhost"] = "/"
-default["openstack"]["metering"]["rabbit"]["port"] = 5672
-default["openstack"]["metering"]["rabbit"]["host"] = "127.0.0.1"
-default["openstack"]["metering"]["rabbit"]["ha"] = false
+default['openstack']['metering']['rabbit']['username'] = 'guest'
+default['openstack']['metering']['rabbit']['vhost'] = '/'
+default['openstack']['metering']['rabbit']['port'] = 5672
+default['openstack']['metering']['rabbit']['host'] = '127.0.0.1'
+default['openstack']['metering']['rabbit']['ha'] = false
 
 # MQ options
-default["openstack"]["metering"]["mq"]["service_type"] = node["openstack"]["mq"]["service_type"]
-default["openstack"]["metering"]["mq"]["qpid"]["host"] = "127.0.0.1"
-default["openstack"]["metering"]["mq"]["qpid"]["port"] = "5672"
-default["openstack"]["metering"]["mq"]["qpid"]["qpid_hosts"] = ['127.0.0.1:5672']
+default['openstack']['metering']['mq']['service_type'] = node['openstack']['mq']['service_type']
+default['openstack']['metering']['mq']['qpid']['host'] = '127.0.0.1'
+default['openstack']['metering']['mq']['qpid']['port'] = '5672'
+default['openstack']['metering']['mq']['qpid']['qpid_hosts'] = ['127.0.0.1:5672']
 
-default["openstack"]["metering"]["mq"]["qpid"]["username"] = ""
-default["openstack"]["metering"]["mq"]["qpid"]["password"] = ""
-default["openstack"]["metering"]["mq"]["qpid"]["sasl_mechanisms"] = ""
-default["openstack"]["metering"]["mq"]["qpid"]["reconnect"] = true
-default["openstack"]["metering"]["mq"]["qpid"]["reconnect_timeout"] = 0
-default["openstack"]["metering"]["mq"]["qpid"]["reconnect_limit"] = 0
-default["openstack"]["metering"]["mq"]["qpid"]["reconnect_interval_min"] = 0
-default["openstack"]["metering"]["mq"]["qpid"]["reconnect_interval_max"] = 0
-default["openstack"]["metering"]["mq"]["qpid"]["reconnect_interval"] = 0
-default["openstack"]["metering"]["mq"]["qpid"]["heartbeat"] = 60
-default["openstack"]["metering"]["mq"]["qpid"]["protocol"] = "tcp"
-default["openstack"]["metering"]["mq"]["qpid"]["tcp_nodelay"] = true
+default['openstack']['metering']['mq']['qpid']['username'] = ''
+default['openstack']['metering']['mq']['qpid']['password'] = ''
+default['openstack']['metering']['mq']['qpid']['sasl_mechanisms'] = ''
+default['openstack']['metering']['mq']['qpid']['reconnect'] = true
+default['openstack']['metering']['mq']['qpid']['reconnect_timeout'] = 0
+default['openstack']['metering']['mq']['qpid']['reconnect_limit'] = 0
+default['openstack']['metering']['mq']['qpid']['reconnect_interval_min'] = 0
+default['openstack']['metering']['mq']['qpid']['reconnect_interval_max'] = 0
+default['openstack']['metering']['mq']['qpid']['reconnect_interval'] = 0
+default['openstack']['metering']['mq']['qpid']['heartbeat'] = 60
+default['openstack']['metering']['mq']['qpid']['protocol'] = 'tcp'
+default['openstack']['metering']['mq']['qpid']['tcp_nodelay'] = true
 
+default['openstack']['metering']['conf_dir'] = '/etc/ceilometer'
+default['openstack']['metering']['conf'] = ::File.join(node['openstack']['metering']['conf_dir'], 'ceilometer.conf')
+default['openstack']['metering']['db']['username'] = 'ceilometer'
+default['openstack']['metering']['periodic_interval'] = 600
+default['openstack']['metering']['syslog']['use'] = false
 
-default["openstack"]["metering"]["conf_dir"] = "/etc/ceilometer"
-default["openstack"]["metering"]["conf"] = ::File.join(node["openstack"]["metering"]["conf_dir"], "ceilometer.conf")
-default["openstack"]["metering"]["db"]["username"] = "ceilometer"
-default["openstack"]["metering"]["periodic_interval"] = 600
-default["openstack"]["metering"]["syslog"]["use"] = false
+default['openstack']['metering']['api']['auth']['cache_dir'] = '/var/cache/ceilometer/api'
 
-default["openstack"]["metering"]["api"]["auth"]["cache_dir"] = "/var/cache/ceilometer/api"
+default['openstack']['metering']['user'] = 'ceilometer'
+default['openstack']['metering']['group'] = 'ceilometer'
 
-default["openstack"]["metering"]["user"] = "ceilometer"
-default["openstack"]["metering"]["group"] = "ceilometer"
-
-default["openstack"]["metering"]["region"] = "RegionOne"
+default['openstack']['metering']['region'] = 'RegionOne'
 
 case platform
-when "suse" # :pragma-foodcritic: ~FC024 - won't fix this
-  default["openstack"]["metering"]["platform"] = {
-    "common_packages" => ["openstack-ceilometer"],
-    "agent_central_packages" => ["openstack-ceilometer-agent-central"],
-    "agent_central_service" => "openstack-ceilometer-agent-central",
-    "agent_compute_packages" => ["openstack-ceilometer-agent-compute"],
-    "agent_compute_service" => "openstack-ceilometer-agent-compute",
-    "api_packages" => ["openstack-ceilometer-api"],
-    "api_service" => "openstack-ceilometer-api",
-    "collector_packages" => ["openstack-ceilometer-collector"],
-    "collector_service" => "openstack-ceilometer-collector"
+when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
+  default['openstack']['metering']['platform'] = {
+    'common_packages' => ['openstack-ceilometer'],
+    'agent_central_packages' => ['openstack-ceilometer-agent-central'],
+    'agent_central_service' => 'openstack-ceilometer-agent-central',
+    'agent_compute_packages' => ['openstack-ceilometer-agent-compute'],
+    'agent_compute_service' => 'openstack-ceilometer-agent-compute',
+    'api_packages' => ['openstack-ceilometer-api'],
+    'api_service' => 'openstack-ceilometer-api',
+    'collector_packages' => ['openstack-ceilometer-collector'],
+    'collector_service' => 'openstack-ceilometer-collector'
   }
-when "ubuntu"
-  default["openstack"]["metering"]["platform"] = {
-    "common_packages" => ["ceilometer-common"],
-    "agent_central_packages" => ["ceilometer-agent-central"],
-    "agent_central_service" => "ceilometer-agent-central",
-    "agent_compute_packages" => ["ceilometer-agent-compute"],
-    "agent_compute_service" => "ceilometer-agent-compute",
-    "api_packages" => ["ceilometer-api"],
-    "api_service" => "ceilometer-api",
-    "collector_packages" => ["ceilometer-collector", "python-mysqldb"],
-    "collector_service" => "ceilometer-collector"
+when 'ubuntu'
+  default['openstack']['metering']['platform'] = {
+    'common_packages' => ['ceilometer-common'],
+    'agent_central_packages' => ['ceilometer-agent-central'],
+    'agent_central_service' => 'ceilometer-agent-central',
+    'agent_compute_packages' => ['ceilometer-agent-compute'],
+    'agent_compute_service' => 'ceilometer-agent-compute',
+    'api_packages' => ['ceilometer-api'],
+    'api_service' => 'ceilometer-api',
+    'collector_packages' => ['ceilometer-collector', 'python-mysqldb'],
+    'collector_service' => 'ceilometer-collector'
   }
 end
