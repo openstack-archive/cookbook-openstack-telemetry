@@ -23,38 +23,8 @@
 # that Nova uses
 default['openstack']['metering']['rabbit_server_chef_role'] = 'os-ops-messaging'
 
-# This user's password is stored in an encrypted databag
-# and accessed with openstack-common cookbook library's
-# get_password routine.  You are expected to create
-# the user, pass, vhost in a wrapper rabbitmq cookbook.
-default['openstack']['metering']['rabbit']['username'] = 'guest'
-default['openstack']['metering']['rabbit']['vhost'] = '/'
-default['openstack']['metering']['rabbit']['port'] = 5672
-default['openstack']['metering']['rabbit']['host'] = '127.0.0.1'
-default['openstack']['metering']['rabbit']['ha'] = false
-
-# MQ options
-default['openstack']['metering']['mq']['service_type'] = node['openstack']['mq']['service_type']
-default['openstack']['metering']['mq']['qpid']['host'] = '127.0.0.1'
-default['openstack']['metering']['mq']['qpid']['port'] = '5672'
-default['openstack']['metering']['mq']['qpid']['qpid_hosts'] = ['127.0.0.1:5672']
-
-default['openstack']['metering']['mq']['qpid']['username'] = ''
-default['openstack']['metering']['mq']['qpid']['password'] = ''
-default['openstack']['metering']['mq']['qpid']['sasl_mechanisms'] = ''
-default['openstack']['metering']['mq']['qpid']['reconnect'] = true
-default['openstack']['metering']['mq']['qpid']['reconnect_timeout'] = 0
-default['openstack']['metering']['mq']['qpid']['reconnect_limit'] = 0
-default['openstack']['metering']['mq']['qpid']['reconnect_interval_min'] = 0
-default['openstack']['metering']['mq']['qpid']['reconnect_interval_max'] = 0
-default['openstack']['metering']['mq']['qpid']['reconnect_interval'] = 0
-default['openstack']['metering']['mq']['qpid']['heartbeat'] = 60
-default['openstack']['metering']['mq']['qpid']['protocol'] = 'tcp'
-default['openstack']['metering']['mq']['qpid']['tcp_nodelay'] = true
-
 default['openstack']['metering']['conf_dir'] = '/etc/ceilometer'
 default['openstack']['metering']['conf'] = ::File.join(node['openstack']['metering']['conf_dir'], 'ceilometer.conf')
-default['openstack']['metering']['db']['username'] = 'ceilometer'
 default['openstack']['metering']['periodic_interval'] = 600
 default['openstack']['metering']['syslog']['use'] = false
 

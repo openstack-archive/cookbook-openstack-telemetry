@@ -46,6 +46,7 @@ describe 'openstack-metering::common' do
          /^rabbit_port = 5672$/,
          /^rabbit_host = 127.0.0.1$/,
          /^rabbit_virtual_host = \/$/,
+         /^rabbit_use_ssl = false$/,
          %r{^auth_uri = http://127.0.0.1:5000/v2.0$},
          /^auth_host = 127.0.0.1$/,
          /^auth_port = 35357$/,
@@ -59,7 +60,8 @@ describe 'openstack-metering::common' do
 
       context 'with qpid enabled' do
         before do
-          @chef_run.node.set['openstack']['metering']['mq']['service_type'] = 'qpid'
+          @chef_run.node.set['openstack']['mq']['metering']['service_type'] = 'qpid'
+          @chef_run.converge 'openstack-metering::common'
         end
 
         [/^qpid_hostname=127.0.0.1$/,

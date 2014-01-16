@@ -33,11 +33,11 @@ platform['common_packages'].each do |pkg|
   package pkg
 end
 
-if node['openstack']['metering']['mq']['service_type'] == 'rabbitmq'
-  rabbit_pass = get_password 'user', node['openstack']['metering']['rabbit']['username']
+if node['openstack']['mq']['metering']['service_type'] == 'rabbitmq'
+  rabbit_pass = get_password 'user', node['openstack']['mq']['metering']['rabbit']['userid']
 end
 
-db_user = node['openstack']['metering']['db']['username']
+db_user = node['openstack']['db']['metering']['username']
 db_pass = get_password 'db', 'ceilometer'
 db_uri = db_uri('metering', db_user, db_pass).to_s
 
