@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Cookbook Name:: openstack-metering
 # Recipe:: agent-central
@@ -18,13 +19,13 @@
 # limitations under the License.
 #
 
-include_recipe "openstack-metering::common"
+include_recipe 'openstack-metering::common'
 
-platform = node["openstack"]["metering"]["platform"]
-platform["agent_central_packages"].each do |pkg|
+platform = node['openstack']['metering']['platform']
+platform['agent_central_packages'].each do |pkg|
   package pkg
 end
 
-service platform["agent_central_service"] do
+service platform['agent_central_service'] do
   action :start
 end

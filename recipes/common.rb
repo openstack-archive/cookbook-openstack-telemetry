@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Cookbook Name:: openstack-metering
 # Recipe:: common
@@ -23,65 +24,65 @@ class ::Chef::Recipe
   include ::Openstack
 end
 
-if node["openstack"]["metering"]["syslog"]["use"]
-  include_recipe "openstack-common::logging"
+if node['openstack']['metering']['syslog']['use']
+  include_recipe 'openstack-common::logging'
 end
 
-platform = node["openstack"]["metering"]["platform"]
-platform["common_packages"].each do |pkg|
+platform = node['openstack']['metering']['platform']
+platform['common_packages'].each do |pkg|
   package pkg
 end
 
-if node["openstack"]["metering"]["mq"]["service_type"] == "rabbitmq"
-  rabbit_pass = get_password "user", node["openstack"]["metering"]["rabbit"]["username"]
+if node['openstack']['metering']['mq']['service_type'] == 'rabbitmq'
+  rabbit_pass = get_password 'user', node['openstack']['metering']['rabbit']['username']
 end
 
-db_user = node["openstack"]["metering"]["db"]["username"]
-db_pass = get_password "db", "ceilometer"
-db_uri = db_uri("metering", db_user, db_pass).to_s
+db_user = node['openstack']['metering']['db']['username']
+db_pass = get_password 'db', 'ceilometer'
+db_uri = db_uri('metering', db_user, db_pass).to_s
 
-service_user = node["openstack"]["metering"]["service_user"]
-service_pass = get_password "service", "openstack-compute"
-service_tenant = node["openstack"]["metering"]["service_tenant_name"]
+service_user = node['openstack']['metering']['service_user']
+service_pass = get_password 'service', 'openstack-compute'
+service_tenant = node['openstack']['metering']['service_tenant_name']
 
-identity_endpoint = endpoint "identity-api"
-identity_admin_endpoint = endpoint "identity-admin"
-image_endpoint = endpoint "image-api"
+identity_endpoint = endpoint 'identity-api'
+identity_admin_endpoint = endpoint 'identity-admin'
+image_endpoint = endpoint 'image-api'
 
 Chef::Log.debug("openstack-metering::common:service_user|#{service_user}")
 Chef::Log.debug("openstack-metering::common:service_tenant|#{service_tenant}")
 Chef::Log.debug("openstack-metering::common:identity_endpoint|#{identity_endpoint.to_s}")
 
-directory node["openstack"]["metering"]["conf_dir"] do
-  owner node["openstack"]["metering"]["user"]
-  group node["openstack"]["metering"]["group"]
+directory node['openstack']['metering']['conf_dir'] do
+  owner node['openstack']['metering']['user']
+  group node['openstack']['metering']['group']
   mode  00750
 
   action :create
 end
 
-template node["openstack"]["metering"]["conf"] do
-  source "ceilometer.conf.erb"
-  owner  node["openstack"]["metering"]["user"]
-  group  node["openstack"]["metering"]["group"]
+template node['openstack']['metering']['conf'] do
+  source 'ceilometer.conf.erb'
+  owner  node['openstack']['metering']['user']
+  group  node['openstack']['metering']['group']
   mode   00640
 
   variables(
-    :auth_uri => ::URI.decode(identity_endpoint.to_s),
-    :database_connection => db_uri,
-    :image_endpoint => image_endpoint,
-    :identity_endpoint => identity_endpoint,
-    :identity_admin_endpoint => identity_admin_endpoint,
-    :rabbit_pass => rabbit_pass,
-    :service_pass => service_pass,
-    :service_tenant_name => service_tenant,
-    :service_user => service_user
+    auth_uri: ::URI.decode(identity_endpoint.to_s),
+    database_connection: db_uri,
+    image_endpoint: image_endpoint,
+    identity_endpoint: identity_endpoint,
+    identity_admin_endpoint: identity_admin_endpoint,
+    rabbit_pass: rabbit_pass,
+    service_pass: service_pass,
+    service_tenant_name: service_tenant,
+    service_user: service_user
   )
 end
 
-cookbook_file "/etc/ceilometer/policy.json" do
-  source "policy.json"
+cookbook_file '/etc/ceilometer/policy.json' do
+  source 'policy.json'
   mode   00640
-  owner  node["openstack"]["metering"]["user"]
-  group  node["openstack"]["metering"]["group"]
+  owner  node['openstack']['metering']['user']
+  group  node['openstack']['metering']['group']
 end

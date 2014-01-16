@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Cookbook Name:: openstack-metering
 # Recipe:: collector
@@ -19,29 +20,29 @@
 # limitations under the License.
 #
 
-include_recipe "openstack-metering::common"
+include_recipe 'openstack-metering::common'
 
 conf_switch = "--config-file #{node["openstack"]["metering"]["conf"]}"
 
-execute "database migration" do
+execute 'database migration' do
   command "ceilometer-dbsync #{conf_switch}"
 end
 
-platform = node["openstack"]["metering"]["platform"]
-platform["collector_packages"].each do |pkg|
+platform = node['openstack']['metering']['platform']
+platform['collector_packages'].each do |pkg|
   package pkg
 end
 
 # temp fix for collector init not installing properly ubuntu
 # See https://bugs.launchpad.net/cloud-archive/+bug/1221945
-if node["platform"] == "ubuntu"
-  init_script = "/etc/init/ceilometer-collector.conf"
-  execute "fix init script" do
+if node['platform'] == 'ubuntu'
+  init_script = '/etc/init/ceilometer-collector.conf'
+  execute 'fix init script' do
     command "cp #{init_script}.dpkg-new #{init_script}"
     not_if { ::File.exists?(init_script) }
   end
 end
 
-service platform["collector_service"] do
+service platform['collector_service'] do
   action :start
 end

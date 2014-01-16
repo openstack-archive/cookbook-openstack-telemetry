@@ -1,3 +1,4 @@
+# encoding: UTF-8
 #
 # Cookbook Name:: openstack-metering
 # Recipe:: api
@@ -19,19 +20,19 @@
 # limitations under the License.
 #
 
-include_recipe "openstack-metering::common"
+include_recipe 'openstack-metering::common'
 
-directory ::File.dirname(node["openstack"]["metering"]["api"]["auth"]["cache_dir"]) do
-  owner node["openstack"]["metering"]["user"]
-  group node["openstack"]["metering"]["group"]
+directory ::File.dirname(node['openstack']['metering']['api']['auth']['cache_dir']) do
+  owner node['openstack']['metering']['user']
+  group node['openstack']['metering']['group']
   mode  00700
 end
 
-platform = node["openstack"]["metering"]["platform"]
-platform["api_packages"].each do |pkg|
+platform = node['openstack']['metering']['platform']
+platform['api_packages'].each do |pkg|
   package pkg
 end
 
-service platform["api_service"] do
+service platform['api_service'] do
   action :start
 end
