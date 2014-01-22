@@ -23,7 +23,12 @@ require 'chef/application'
 # TODO(chrislaco): Factor this into proper RSpec shared_contexts
 def metering_stubs # rubocop:disable MethodLength
   ::Chef::Recipe.any_instance.stub(:memcached_servers).and_return([])
-  ::Chef::Recipe.any_instance.stub(:get_password).and_return('')
+  ::Chef::Recipe.any_instance.stub(:get_password)
+    .with('db', anything)
+    .and_return('')
+  ::Chef::Recipe.any_instance.stub(:get_password)
+    .with('service', anything)
+    .and_return('')
   ::Chef::Recipe.any_instance.stub(:get_password)
     .with('user', 'guest')
     .and_return('rabbit-pass')
