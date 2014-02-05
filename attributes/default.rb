@@ -34,6 +34,7 @@ default['openstack']['metering']['user'] = 'ceilometer'
 default['openstack']['metering']['group'] = 'ceilometer'
 
 default['openstack']['metering']['region'] = 'RegionOne'
+default['openstack']['metering']['service_tenant_name'] = 'service'
 
 case platform
 when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
