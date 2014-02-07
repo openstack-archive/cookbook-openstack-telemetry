@@ -3,9 +3,9 @@ require_relative 'spec_helper'
 
 describe 'openstack-metering::api' do
   before { metering_stubs }
-  describe 'opensuse' do
+  describe 'suse' do
     before do
-      @chef_run = ::ChefSpec::Runner.new ::OPENSUSE_OPTS
+      @chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS
       @chef_run.converge 'openstack-metering::api'
     end
 
