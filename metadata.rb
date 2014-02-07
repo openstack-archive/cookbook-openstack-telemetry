@@ -17,5 +17,5 @@ recipe 'openstack-metering::identity_registration', 'Registers the endpoints wit
   supports os
 end
 
-depends 'openstack-common', '~> 8.0'
+depends 'openstack-common', '~> 8.1'
 depends 'openstack-identity', '~> 8.0'

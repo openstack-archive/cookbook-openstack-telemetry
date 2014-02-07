@@ -34,9 +34,9 @@ describe 'openstack-metering::identity_registration' do
       bootstrap_token: 'bootstrap-token',
       service_type: 'metering',
       endpoint_region: 'RegionOne',
-      endpoint_adminurl: 'http://127.0.0.1:8777/v1',
-      endpoint_internalurl: 'http://127.0.0.1:8777/v1',
-      endpoint_publicurl: 'http://127.0.0.1:8777/v1',
+      endpoint_adminurl: 'http://127.0.0.1:8777',
+      endpoint_internalurl: 'http://127.0.0.1:8777',
+      endpoint_publicurl: 'http://127.0.0.1:8777',
       action: [:create_endpoint]
     )
   end
