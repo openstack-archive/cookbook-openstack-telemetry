@@ -28,6 +28,10 @@ api
 ----
 - Installs API service.
 
+client
+----
+- Install the client packages
+
 collector
 ----
 - Installs nova network service.
