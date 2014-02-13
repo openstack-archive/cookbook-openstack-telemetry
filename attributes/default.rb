@@ -49,6 +49,19 @@ when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
     'collector_packages' => ['openstack-ceilometer-collector'],
     'collector_service' => 'openstack-ceilometer-collector'
   }
+when 'fedora', 'redhat', 'centos'
+  default['openstack']['metering']['platform'] = {
+    'common_packages' => ['openstack-ceilometer-common'],
+    'agent_central_packages' => ['openstack-ceilometer-central'],
+    'agent_central_service' => 'openstack-ceilometer-central',
+    'agent_compute_packages' => ['openstack-ceilometer-compute'],
+    'agent_compute_service' => 'openstack-ceilometer-compute',
+    'api_packages' => ['openstack-ceilometer-api'],
+    'api_service' => 'openstack-ceilometer-api',
+    'collector_packages' => ['openstack-ceilometer-collector'],
+    'collector_service' => 'openstack-ceilometer-collector'
+  }
+
 when 'ubuntu'
   default['openstack']['metering']['platform'] = {
     'common_packages' => ['ceilometer-common'],
