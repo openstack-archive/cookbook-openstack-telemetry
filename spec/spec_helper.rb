@@ -43,3 +43,9 @@ def expect_runs_common_recipe
     expect(@chef_run).to include_recipe 'openstack-metering::common'
   end
 end
+
+# README(galstrom21): This will remove any coverage warnings from
+#   dependent cookbooks
+ChefSpec::Coverage.filters << '*/openstack-metering'
+
+at_exit { ChefSpec::Coverage.report! }
