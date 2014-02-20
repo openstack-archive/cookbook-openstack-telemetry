@@ -33,7 +33,7 @@ default['openstack']['metering']['api']['auth']['cache_dir'] = '/var/cache/ceilo
 default['openstack']['metering']['user'] = 'ceilometer'
 default['openstack']['metering']['group'] = 'ceilometer'
 
-default['openstack']['metering']['region'] = 'RegionOne'
+default['openstack']['metering']['region'] = node['openstack']['region']
 default['openstack']['metering']['service_user'] = 'ceilometer'
 default['openstack']['metering']['service_tenant_name'] = 'service'
 

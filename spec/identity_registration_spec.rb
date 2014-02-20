@@ -40,4 +40,21 @@ describe 'openstack-metering::identity_registration' do
       action: [:create_endpoint]
     )
   end
+
+  it 'overrides metering endpoint region' do
+    @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
+      n.set['openstack']['metering']['region'] = 'meteringRegion'
+    end
+    @chef_run.converge 'openstack-metering::identity_registration'
+
+    resource = @chef_run.find_resource(
+      'openstack-identity_register',
+      'Register Metering Endpoint'
+    ).to_hash
+
+    expect(resource).to include(
+      endpoint_region: 'meteringRegion',
+      action: [:create_endpoint]
+    )
+  end
 end
