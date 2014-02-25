@@ -47,6 +47,7 @@ when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
     'agent_compute_service' => 'openstack-ceilometer-agent-compute',
     'api_packages' => ['openstack-ceilometer-api'],
     'api_service' => 'openstack-ceilometer-api',
+    'client_packages' => ['python-ceilometerclient'],
     'collector_packages' => ['openstack-ceilometer-collector'],
     'collector_service' => 'openstack-ceilometer-collector'
   }
@@ -59,6 +60,7 @@ when 'fedora', 'redhat', 'centos'
     'agent_compute_service' => 'openstack-ceilometer-compute',
     'api_packages' => ['openstack-ceilometer-api'],
     'api_service' => 'openstack-ceilometer-api',
+    'client_packages' => ['python-ceilometerclient'],
     'collector_packages' => ['openstack-ceilometer-collector'],
     'collector_service' => 'openstack-ceilometer-collector'
   }
@@ -72,6 +74,7 @@ when 'ubuntu'
     'agent_compute_service' => 'ceilometer-agent-compute',
     'api_packages' => ['ceilometer-api'],
     'api_service' => 'ceilometer-api',
+    'client_packages' => ['python-ceilometerclient'],
     'collector_packages' => ['ceilometer-collector', 'python-mysqldb'],
     'collector_service' => 'ceilometer-collector'
   }
