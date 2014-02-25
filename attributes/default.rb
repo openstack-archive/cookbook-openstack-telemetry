@@ -27,6 +27,8 @@ default['openstack']['metering']['conf_dir'] = '/etc/ceilometer'
 default['openstack']['metering']['conf'] = ::File.join(node['openstack']['metering']['conf_dir'], 'ceilometer.conf')
 default['openstack']['metering']['periodic_interval'] = 600
 default['openstack']['metering']['syslog']['use'] = false
+default['openstack']['metering']['verbose'] = 'true'
+default['openstack']['metering']['debug'] = 'false'
 
 default['openstack']['metering']['api']['auth']['cache_dir'] = '/var/cache/ceilometer/api'
 

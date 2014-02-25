@@ -8,7 +8,11 @@ os_password = <%= @service_pass %>
 os_username = <%= @service_user %>
 policy_file = /etc/ceilometer/policy.json
 database_connection = <%= @database_connection %>
-verbose = True
+verbose = <%= node["openstack"]["metering"]["verbose"] %>
+debug = <%= node["openstack"]["metering"]["debug"] %>
+<% if node["openstack"]["metering"]["syslog"]["use"] %>
+log_config = /etc/openstack/logging.conf
+<% end %>
 
 notification_topics = notifications,glance_notifications
 <% if node["openstack"]["mq"]["metering"]["service_type"] == "rabbitmq"  %>
@@ -45,13 +49,6 @@ qpid_tcp_nodelay=<%= node["openstack"]["mq"]["metering"]["qpid"]["tcp_nodelay"] 
 
 <% end %>
 
-
-<% if node["openstack"]["metering"]["syslog"]["use"] %>
-log_config = /etc/openstack/logging.conf
-<% end %>
-<% if node["openstack"]["metering"]["debug"] %>
-debug = True
-<% end %>
 glance_registry_host = <%= @image_endpoint.host %>
 periodic_interval = <%= node["openstack"]["metering"]["periodic_interval"] %>
 
