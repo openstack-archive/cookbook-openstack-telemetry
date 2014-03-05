@@ -34,7 +34,7 @@ client
 
 collector
 ----
-- Installs nova network service.
+- Installs collector package and service. If the NoSQL database is used for metering service, ceilometer-dbsync will not be executed.
 
 common
 ----

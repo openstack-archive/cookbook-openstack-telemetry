@@ -2,6 +2,10 @@ openstack-metering Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
 
+## 8.2.0
+### Blueprint
+* Add NoSQL support for metering.
+
 ## 8.1.0
 * Add client recipe
 

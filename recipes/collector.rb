@@ -24,8 +24,10 @@ include_recipe 'openstack-metering::common'
 
 conf_switch = "--config-file #{node["openstack"]["metering"]["conf"]}"
 
-execute 'database migration' do
-  command "ceilometer-dbsync #{conf_switch}"
+unless node['openstack']['db']['metering']['nosql']['used']
+  execute 'database migration' do
+    command "ceilometer-dbsync #{conf_switch}"
+  end
 end
 
 platform = node['openstack']['metering']['platform']

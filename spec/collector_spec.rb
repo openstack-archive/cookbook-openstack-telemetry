@@ -16,6 +16,12 @@ describe 'openstack-metering::collector' do
       expect(@chef_run).to run_execute command
     end
 
+    it 'does not execute ceilometer dbsync when nosql database is used' do
+      @chef_run.node.set['openstack']['db']['metering']['nosql']['used'] = true
+      resource = 'execute[database migration]'
+      expect(@chef_run).not_to run_execute resource
+    end
+
     it 'installs python-mysqldb', A: true do
       expect(@chef_run).to install_package 'python-mysqldb'
     end
