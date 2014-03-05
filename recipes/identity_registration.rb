@@ -28,6 +28,42 @@ api_endpoint = endpoint 'metering-api'
 identity_admin_endpoint = endpoint 'identity-admin'
 bootstrap_token = secret 'secrets', 'openstack_identity_bootstrap_token'
 auth_uri = ::URI.decode identity_admin_endpoint.to_s
+service_pass = get_password 'service', 'openstack-ceilometer'
+service_user = node['openstack']['metering']['service_user']
+service_role = node['openstack']['metering']['service_role']
+service_tenant_name = node['openstack']['metering']['service_tenant_name']
+
+# Register Service Tenant
+openstack_identity_register 'Register Service Tenant' do
+  auth_uri auth_uri
+  bootstrap_token bootstrap_token
+  tenant_name service_tenant_name
+  tenant_description 'Service Tenant'
+
+  action :create_tenant
+end
+
+# Register Service User
+openstack_identity_register 'Register Service User' do
+  auth_uri auth_uri
+  bootstrap_token bootstrap_token
+  tenant_name service_tenant_name
+  user_name service_user
+  user_pass service_pass
+
+  action :create_user
+end
+
+# Grant Admin role to Service User for Service Tenant
+openstack_identity_register "Grant 'admin' Role to Service User for Service Tenant" do
+  auth_uri auth_uri
+  bootstrap_token bootstrap_token
+  tenant_name service_tenant_name
+  user_name service_user
+  role_name service_role
+
+  action :grant_role
+end
 
 openstack_identity_register 'Register Metering Service' do
   auth_uri auth_uri

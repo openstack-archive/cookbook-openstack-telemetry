@@ -12,7 +12,7 @@ recipe 'openstack-metering::api', 'Installs API service.'
 recipe 'openstack-metering::client', 'Installs client.'
 recipe 'openstack-metering::collector', 'Installs nova network service.'
 recipe 'openstack-metering::common', 'Common metering configuration.'
-recipe 'openstack-metering::identity_registration', 'Registers the endpoints with Keystone'
+recipe 'openstack-metering::identity_registration', 'Registers the endpoints, tenant and user for metering service with Keystone'
 
 %w{ ubuntu suse }.each do |os|
   supports os

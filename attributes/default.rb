@@ -38,6 +38,7 @@ default['openstack']['metering']['group'] = 'ceilometer'
 default['openstack']['metering']['region'] = node['openstack']['region']
 default['openstack']['metering']['service_user'] = 'ceilometer'
 default['openstack']['metering']['service_tenant_name'] = 'service'
+default['openstack']['metering']['service_role'] = 'admin'
 
 case platform
 when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this

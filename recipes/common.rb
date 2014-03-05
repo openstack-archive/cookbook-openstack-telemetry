@@ -42,7 +42,7 @@ db_pass = get_password 'db', 'ceilometer'
 db_uri = db_uri('metering', db_user, db_pass).to_s
 
 service_user = node['openstack']['metering']['service_user']
-service_pass = get_password 'service', 'openstack-compute'
+service_pass = get_password 'service', 'openstack-ceilometer'
 service_tenant = node['openstack']['metering']['service_tenant_name']
 
 identity_endpoint = endpoint 'identity-api'

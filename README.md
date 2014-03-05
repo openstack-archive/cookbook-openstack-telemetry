@@ -42,7 +42,7 @@ common
 
 identity_registration
 ----
-- Registers the endpoints with Keystone.
+- Registers the endpoints, tenant and user for metering service with Keystone.
 
 Attributes
 ==========

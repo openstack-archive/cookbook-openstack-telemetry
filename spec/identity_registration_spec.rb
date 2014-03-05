@@ -8,36 +8,64 @@ describe 'openstack-metering::identity_registration' do
     @chef_run.converge 'openstack-metering::identity_registration'
   end
 
-  it 'registers metering service' do
-    resource = @chef_run.find_resource(
-      'openstack-identity_register',
-      'Register Metering Service'
-    ).to_hash
+  it 'registers service tenant' do
+    expect(@chef_run).to create_tenant_openstack_identity_register(
+      'Register Service Tenant'
+    ).with(
+      auth_uri: 'http://127.0.0.1:35357/v2.0',
+      bootstrap_token: 'bootstrap-token',
+      tenant_name: 'service',
+      tenant_description: 'Service Tenant'
+    )
+  end
 
-    expect(resource).to include(
+  it 'registers service user' do
+    expect(@chef_run).to create_user_openstack_identity_register(
+      'Register Service User'
+    ).with(
+      auth_uri: 'http://127.0.0.1:35357/v2.0',
+      bootstrap_token: 'bootstrap-token',
+      tenant_name: 'service',
+      user_name: 'ceilometer',
+      user_pass: 'ceilometer-pass'
+    )
+  end
+
+  it 'grants admin role to service user for service tenant' do
+    expect(@chef_run).to grant_role_openstack_identity_register(
+      "Grant 'admin' Role to Service User for Service Tenant"
+    ).with(
+      auth_uri: 'http://127.0.0.1:35357/v2.0',
+      bootstrap_token: 'bootstrap-token',
+      tenant_name: 'service',
+      user_name: 'ceilometer',
+      role_name: 'admin',
+      action: [:grant_role]
+    )
+  end
+
+  it 'registers metering service' do
+    expect(@chef_run).to create_service_openstack_identity_register(
+      'Register Metering Service'
+    ).with(
       auth_uri: 'http://127.0.0.1:35357/v2.0',
       bootstrap_token: 'bootstrap-token',
       service_name: 'ceilometer',
-      service_type: 'metering',
-      action: [:create_service]
+      service_type: 'metering'
     )
   end
 
   it 'registers metering endpoint' do
-    resource = @chef_run.find_resource(
-      'openstack-identity_register',
+    expect(@chef_run).to create_endpoint_openstack_identity_register(
       'Register Metering Endpoint'
-    ).to_hash
-
-    expect(resource).to include(
+    ).with(
       auth_uri: 'http://127.0.0.1:35357/v2.0',
       bootstrap_token: 'bootstrap-token',
       service_type: 'metering',
       endpoint_region: 'RegionOne',
       endpoint_adminurl: 'http://127.0.0.1:8777',
       endpoint_internalurl: 'http://127.0.0.1:8777',
-      endpoint_publicurl: 'http://127.0.0.1:8777',
-      action: [:create_endpoint]
+      endpoint_publicurl: 'http://127.0.0.1:8777'
     )
   end
 
@@ -47,14 +75,10 @@ describe 'openstack-metering::identity_registration' do
     end
     @chef_run.converge 'openstack-metering::identity_registration'
 
-    resource = @chef_run.find_resource(
-      'openstack-identity_register',
+    expect(@chef_run).to create_endpoint_openstack_identity_register(
       'Register Metering Endpoint'
-    ).to_hash
-
-    expect(resource).to include(
-      endpoint_region: 'meteringRegion',
-      action: [:create_endpoint]
+    ).with(
+      endpoint_region: 'meteringRegion'
     )
   end
 end
