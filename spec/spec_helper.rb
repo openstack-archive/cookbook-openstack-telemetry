@@ -31,7 +31,7 @@ def metering_stubs # rubocop:disable MethodLength
     .and_return('ceilometer-pass')
   ::Chef::Recipe.any_instance.stub(:get_password)
     .with('user', 'guest')
-    .and_return('rabbit-pass')
+    .and_return('mq-pass')
   ::Chef::Recipe.any_instance.stub(:secret)
     .with('secrets', 'openstack_identity_bootstrap_token')
     .and_return('bootstrap-token')

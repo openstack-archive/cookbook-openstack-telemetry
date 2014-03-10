@@ -42,7 +42,7 @@ describe 'openstack-metering::common' do
 
       context 'with rabbitmq default' do
         [/^rabbit_userid = guest$/,
-         /^rabbit_password = rabbit-pass$/,
+         /^rabbit_password = mq-pass$/,
          /^rabbit_port = 5672$/,
          /^rabbit_host = 127.0.0.1$/,
          /^rabbit_virtual_host = \/$/,
@@ -61,13 +61,14 @@ describe 'openstack-metering::common' do
       context 'with qpid enabled' do
         before do
           @chef_run.node.set['openstack']['mq']['metering']['service_type'] = 'qpid'
+          @chef_run.node.set['openstack']['mq']['metering']['qpid']['username'] = 'guest'
           @chef_run.converge 'openstack-metering::common'
         end
 
         [/^qpid_hostname=127.0.0.1$/,
          /^qpid_port=5672$/,
-         /^qpid_username=$/,
-         /^qpid_password=$/,
+         /^qpid_username=guest$/,
+         /^qpid_password=mq-pass$/,
          /^qpid_sasl_mechanisms=$/,
          /^qpid_reconnect=true$/,
          /^qpid_reconnect_timeout=0$/,

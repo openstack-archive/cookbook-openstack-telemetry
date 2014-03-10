@@ -15,10 +15,10 @@ log_config = /etc/openstack/logging.conf
 <% end %>
 
 notification_topics = notifications,glance_notifications
-<% if node["openstack"]["mq"]["metering"]["service_type"] == "rabbitmq"  %>
+<% if @mq_service_type == "rabbitmq"  %>
 ##### RABBITMQ #####
 rabbit_userid = <%= node["openstack"]["mq"]["metering"]["rabbit"]["userid"] %>
-rabbit_password = <%= @rabbit_pass %>
+rabbit_password = <%= @mq_password %>
 rabbit_port = <%= node["openstack"]["mq"]["metering"]["rabbit"]["port"] %>
 rabbit_host = <%= node["openstack"]["mq"]["metering"]["rabbit"]["host"] %>
 rabbit_virtual_host = <%= node["openstack"]["mq"]["metering"]["rabbit"]["vhost"] %>
@@ -27,13 +27,13 @@ rpc_backend = ceilometer.openstack.common.rpc.impl_kombu
 <% end %>
 
 
-<% if node["openstack"]["mq"]["metering"]["service_type"] == "qpid"  %>
+<% if @mq_service_type == "qpid"  %>
 ##### QPID #####
 rpc_backend=ceilometer.openstack.common.rpc.impl_qpid
 qpid_hostname=<%= node["openstack"]["mq"]["metering"]["qpid"]["host"] %>
 qpid_port=<%= node["openstack"]["mq"]["metering"]["qpid"]["port"] %>
 
-qpid_password=<%= node["openstack"]["mq"]["metering"]["qpid"]["password"] %>
+qpid_password=<%= @mq_password %>
 qpid_username=<%= node["openstack"]["mq"]["metering"]["qpid"]["username"] %>
 qpid_sasl_mechanisms=<%= node["openstack"]["mq"]["metering"]["qpid"]["sasl_mechanisms"] %>
 qpid_reconnect=<%= node["openstack"]["mq"]["metering"]["qpid"]["reconnect"] %>

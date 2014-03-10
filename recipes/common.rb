@@ -33,8 +33,12 @@ platform['common_packages'].each do |pkg|
   package pkg
 end
 
-if node['openstack']['mq']['metering']['service_type'] == 'rabbitmq'
-  rabbit_pass = get_password 'user', node['openstack']['mq']['metering']['rabbit']['userid']
+mq_service_type = node['openstack']['mq']['metering']['service_type']
+
+if mq_service_type == 'rabbitmq'
+  mq_password = get_password 'user', node['openstack']['mq']['metering']['rabbit']['userid']
+elsif mq_service_type == 'qpid'
+  mq_password = get_password 'user', node['openstack']['mq']['metering']['qpid']['username']
 end
 
 db_user = node['openstack']['db']['metering']['username']
@@ -73,7 +77,8 @@ template node['openstack']['metering']['conf'] do
     image_endpoint: image_endpoint,
     identity_endpoint: identity_endpoint,
     identity_admin_endpoint: identity_admin_endpoint,
-    rabbit_pass: rabbit_pass,
+    mq_service_type: mq_service_type,
+    mq_password: mq_password,
     service_pass: service_pass,
     service_tenant_name: service_tenant,
     service_user: service_user
