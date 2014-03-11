@@ -59,6 +59,8 @@ Chef::Log.debug("openstack-telemetry::common:service_user|#{service_user}")
 Chef::Log.debug("openstack-telemetry::common:service_tenant|#{service_tenant}")
 Chef::Log.debug("openstack-telemetry::common:identity_endpoint|#{identity_endpoint.to_s}")
 
+metering_secret = secret 'secrets', 'openstack_metering_secret'
+
 directory node['openstack']['telemetry']['conf_dir'] do
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
@@ -83,7 +85,8 @@ template node['openstack']['telemetry']['conf'] do
     mq_password: mq_password,
     service_pass: service_pass,
     service_tenant_name: service_tenant,
-    service_user: service_user
+    service_user: service_user,
+    metering_secret: metering_secret
   )
 end
 

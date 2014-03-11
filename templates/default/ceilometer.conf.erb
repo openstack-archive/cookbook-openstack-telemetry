@@ -65,3 +65,6 @@ admin_tenant_name = <%= @service_tenant_name %>
 admin_user = <%= @service_user %>
 admin_password = <%= @service_pass %>
 signing_dir = <%= node["openstack"]["telemetry"]["api"]["auth"]["cache_dir"] %>
+
+[publisher_rpc]
+metering_secret = <%= @metering_secret %>

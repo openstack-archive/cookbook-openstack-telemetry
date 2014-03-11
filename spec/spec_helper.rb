@@ -35,6 +35,9 @@ shared_context 'telemetry-stubs' do
     Chef::Recipe.any_instance.stub(:secret)
       .with('secrets', 'openstack_identity_bootstrap_token')
       .and_return('bootstrap-token')
+    Chef::Recipe.any_instance.stub(:secret)
+      .with('secrets', 'openstack_metering_secret')
+      .and_return('metering_secret')
     Chef::Application.stub(:fatal!)
   end
 end

@@ -145,6 +145,11 @@ describe 'openstack-telemetry::common' do
             /^#{Regexp.quote('signing_dir = /var/cache/ceilometer/api')}$/)
         end
       end
+
+      it 'has metering secret' do
+        r = /^metering_secret = metering_secret$/
+        expect(chef_run).to render_file(file.name).with_content(r)
+      end
     end
 
     describe 'policy.json' do
