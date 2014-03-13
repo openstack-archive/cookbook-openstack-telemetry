@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-metering
+# Cookbook Name:: openstack-telemetry
 # Recipe:: default
 #
 # Copyright 2013, AT&T Services, Inc.
@@ -21,28 +21,28 @@
 
 # The name of the Chef role that knows about the message queue server
 # that Nova uses
-default['openstack']['metering']['rabbit_server_chef_role'] = 'os-ops-messaging'
+default['openstack']['telemetry']['rabbit_server_chef_role'] = 'os-ops-messaging'
 
-default['openstack']['metering']['conf_dir'] = '/etc/ceilometer'
-default['openstack']['metering']['conf'] = ::File.join(node['openstack']['metering']['conf_dir'], 'ceilometer.conf')
-default['openstack']['metering']['periodic_interval'] = 600
-default['openstack']['metering']['syslog']['use'] = false
-default['openstack']['metering']['verbose'] = 'true'
-default['openstack']['metering']['debug'] = 'false'
+default['openstack']['telemetry']['conf_dir'] = '/etc/ceilometer'
+default['openstack']['telemetry']['conf'] = ::File.join(node['openstack']['telemetry']['conf_dir'], 'ceilometer.conf')
+default['openstack']['telemetry']['periodic_interval'] = 600
+default['openstack']['telemetry']['syslog']['use'] = false
+default['openstack']['telemetry']['verbose'] = 'true'
+default['openstack']['telemetry']['debug'] = 'false'
 
-default['openstack']['metering']['api']['auth']['cache_dir'] = '/var/cache/ceilometer/api'
+default['openstack']['telemetry']['api']['auth']['cache_dir'] = '/var/cache/ceilometer/api'
 
-default['openstack']['metering']['user'] = 'ceilometer'
-default['openstack']['metering']['group'] = 'ceilometer'
+default['openstack']['telemetry']['user'] = 'ceilometer'
+default['openstack']['telemetry']['group'] = 'ceilometer'
 
-default['openstack']['metering']['region'] = node['openstack']['region']
-default['openstack']['metering']['service_user'] = 'ceilometer'
-default['openstack']['metering']['service_tenant_name'] = 'service'
-default['openstack']['metering']['service_role'] = 'admin'
+default['openstack']['telemetry']['region'] = node['openstack']['region']
+default['openstack']['telemetry']['service_user'] = 'ceilometer'
+default['openstack']['telemetry']['service_tenant_name'] = 'service'
+default['openstack']['telemetry']['service_role'] = 'admin'
 
 case platform
 when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
-  default['openstack']['metering']['platform'] = {
+  default['openstack']['telemetry']['platform'] = {
     'common_packages' => ['openstack-ceilometer'],
     'agent_central_packages' => ['openstack-ceilometer-agent-central'],
     'agent_central_service' => 'openstack-ceilometer-agent-central',
@@ -55,7 +55,7 @@ when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
     'collector_service' => 'openstack-ceilometer-collector'
   }
 when 'fedora', 'redhat', 'centos'
-  default['openstack']['metering']['platform'] = {
+  default['openstack']['telemetry']['platform'] = {
     'common_packages' => ['openstack-ceilometer-common'],
     'agent_central_packages' => ['openstack-ceilometer-central'],
     'agent_central_service' => 'openstack-ceilometer-central',
@@ -69,7 +69,7 @@ when 'fedora', 'redhat', 'centos'
   }
 
 when 'ubuntu'
-  default['openstack']['metering']['platform'] = {
+  default['openstack']['telemetry']['platform'] = {
     'common_packages' => ['ceilometer-common'],
     'agent_central_packages' => ['ceilometer-agent-central'],
     'agent_central_service' => 'ceilometer-agent-central',

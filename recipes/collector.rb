@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-metering
+# Cookbook Name:: openstack-telemetry
 # Recipe:: collector
 #
 # Copyright 2013, AT&T Services, Inc.
@@ -20,17 +20,17 @@
 # limitations under the License.
 #
 
-include_recipe 'openstack-metering::common'
+include_recipe 'openstack-telemetry::common'
 
-conf_switch = "--config-file #{node["openstack"]["metering"]["conf"]}"
+conf_switch = "--config-file #{node["openstack"]["telemetry"]["conf"]}"
 
-unless node['openstack']['db']['metering']['nosql']['used']
+unless node['openstack']['db']['telemetry']['nosql']['used']
   execute 'database migration' do
     command "ceilometer-dbsync #{conf_switch}"
   end
 end
 
-platform = node['openstack']['metering']['platform']
+platform = node['openstack']['telemetry']['platform']
 platform['collector_packages'].each do |pkg|
   package pkg
 end

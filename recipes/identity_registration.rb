@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-metering
+# Cookbook Name:: openstack-telemetry
 # Recipe:: identity_registration
 #
 # Copyright 2013, AT&T Services, Inc.
@@ -24,14 +24,14 @@ class ::Chef::Recipe # rubocop:disable Documentation
   include ::Openstack
 end
 
-api_endpoint = endpoint 'metering-api'
+api_endpoint = endpoint 'telemetry-api'
 identity_admin_endpoint = endpoint 'identity-admin'
 bootstrap_token = secret 'secrets', 'openstack_identity_bootstrap_token'
 auth_uri = ::URI.decode identity_admin_endpoint.to_s
 service_pass = get_password 'service', 'openstack-ceilometer'
-service_user = node['openstack']['metering']['service_user']
-service_role = node['openstack']['metering']['service_role']
-service_tenant_name = node['openstack']['metering']['service_tenant_name']
+service_user = node['openstack']['telemetry']['service_user']
+service_role = node['openstack']['telemetry']['service_role']
+service_tenant_name = node['openstack']['telemetry']['service_tenant_name']
 
 # Register Service Tenant
 openstack_identity_register 'Register Service Tenant' do
@@ -79,7 +79,7 @@ openstack_identity_register 'Register Metering Endpoint' do
   auth_uri auth_uri
   bootstrap_token bootstrap_token
   service_type 'metering'
-  endpoint_region node['openstack']['metering']['region']
+  endpoint_region node['openstack']['telemetry']['region']
   endpoint_adminurl ::URI.decode api_endpoint.to_s
   endpoint_internalurl ::URI.decode api_endpoint.to_s
   endpoint_publicurl ::URI.decode api_endpoint.to_s

@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-metering
+# Cookbook Name:: openstack-telemetry
 # Recipe:: api
 #
 # Copyright 2013, AT&T Services, Inc.
@@ -20,15 +20,15 @@
 # limitations under the License.
 #
 
-include_recipe 'openstack-metering::common'
+include_recipe 'openstack-telemetry::common'
 
-directory ::File.dirname(node['openstack']['metering']['api']['auth']['cache_dir']) do
-  owner node['openstack']['metering']['user']
-  group node['openstack']['metering']['group']
+directory ::File.dirname(node['openstack']['telemetry']['api']['auth']['cache_dir']) do
+  owner node['openstack']['telemetry']['user']
+  group node['openstack']['telemetry']['group']
   mode  00700
 end
 
-platform = node['openstack']['metering']['platform']
+platform = node['openstack']['telemetry']['platform']
 platform['api_packages'].each do |pkg|
   package pkg
 end

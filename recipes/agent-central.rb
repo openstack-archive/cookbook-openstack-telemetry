@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-metering
+# Cookbook Name:: openstack-telemetry
 # Recipe:: agent-central
 #
 # Copyright 2013, AT&T Services, Inc.
@@ -19,9 +19,9 @@
 # limitations under the License.
 #
 
-include_recipe 'openstack-metering::common'
+include_recipe 'openstack-telemetry::common'
 
-platform = node['openstack']['metering']['platform']
+platform = node['openstack']['telemetry']['platform']
 platform['agent_central_packages'].each do |pkg|
   package pkg
 end

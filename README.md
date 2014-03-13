@@ -72,12 +72,13 @@ License and Author
 | **Author**           |  Justin Shepherd (<jshepher@rackspace.com>)        |
 | **Author**           |  Salman Baset (<sabaset@us.ibm.com>)               |
 | **Author**           |  Ionut Artarisi (<iartarisi@suse.cz>)              |
-| **Author**           |  Eric Zhou (<zyouzhou@cn.ibm.com>)              |
+| **Author**           |  Eric Zhou (<zyouzhou@cn.ibm.com>)                 |
+| **Author**           |  Chen Zhiwei (<zhiwchen@cn.ibm.com>)               |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
 | **Copyright**        |  Copyright (c) 2013, AT&T Services, Inc.           |
 | **Copyright**        |  Copyright (c) 2013, Rackspace US, Inc.            |
-| **Copyright**        |  Copyright (c) 2013, IBM Corp. 	            |
+| **Copyright**        |  Copyright (c) 2013-2014, IBM, Corp.               |
 | **Copyright**        |  Copyright (c) 2013, SUSE Linux GmbH               |
 
 

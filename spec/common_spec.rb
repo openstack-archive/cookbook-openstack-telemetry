@@ -1,14 +1,14 @@
 # encoding: UTF-8
 require_relative 'spec_helper'
 
-describe 'openstack-metering::common' do
-  before { metering_stubs }
+describe 'openstack-telemetry::common' do
+  before { telemetry_stubs }
   describe 'ubuntu' do
     before do
       @chef_run = ::ChefSpec::Runner.new(::UBUNTU_OPTS) do |n|
-        n.set['openstack']['metering']['syslog']['use'] = true
+        n.set['openstack']['telemetry']['syslog']['use'] = true
       end
-      @chef_run.converge 'openstack-metering::common'
+      @chef_run.converge 'openstack-telemetry::common'
     end
 
     it 'runs logging recipe' do
@@ -60,9 +60,9 @@ describe 'openstack-metering::common' do
 
       context 'with qpid enabled' do
         before do
-          @chef_run.node.set['openstack']['mq']['metering']['service_type'] = 'qpid'
-          @chef_run.node.set['openstack']['mq']['metering']['qpid']['username'] = 'guest'
-          @chef_run.converge 'openstack-metering::common'
+          @chef_run.node.set['openstack']['mq']['telemetry']['service_type'] = 'qpid'
+          @chef_run.node.set['openstack']['mq']['telemetry']['qpid']['username'] = 'guest'
+          @chef_run.converge 'openstack-telemetry::common'
         end
 
         [/^qpid_hostname=127.0.0.1$/,

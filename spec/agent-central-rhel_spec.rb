@@ -1,12 +1,12 @@
 # encoding: UTF-8
 require_relative 'spec_helper'
 
-describe 'openstack-metering::agent-central' do
-  before { metering_stubs }
+describe 'openstack-telemetry::agent-central' do
+  before { telemetry_stubs }
   describe 'rhel' do
     before do
       @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
-      @chef_run.converge 'openstack-metering::agent-central'
+      @chef_run.converge 'openstack-telemetry::agent-central'
     end
 
     expect_runs_common_recipe

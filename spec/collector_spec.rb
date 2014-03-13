@@ -1,12 +1,12 @@
 # encoding: UTF-8
 require_relative 'spec_helper'
 
-describe 'openstack-metering::collector' do
-  before { metering_stubs }
+describe 'openstack-telemetry::collector' do
+  before { telemetry_stubs }
   describe 'ubuntu' do
     before do
       @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
-      @chef_run.converge 'openstack-metering::collector'
+      @chef_run.converge 'openstack-telemetry::collector'
     end
 
     expect_runs_common_recipe
@@ -17,7 +17,7 @@ describe 'openstack-metering::collector' do
     end
 
     it 'does not execute ceilometer dbsync when nosql database is used' do
-      @chef_run.node.set['openstack']['db']['metering']['nosql']['used'] = true
+      @chef_run.node.set['openstack']['db']['telemetry']['nosql']['used'] = true
       resource = 'execute[database migration]'
       expect(@chef_run).not_to run_execute resource
     end

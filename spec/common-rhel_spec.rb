@@ -1,12 +1,12 @@
 # encoding: UTF-8
 require_relative 'spec_helper'
 
-describe 'openstack-metering::common' do
-  before { metering_stubs }
+describe 'openstack-telemetry::common' do
+  before { telemetry_stubs }
   describe 'rhel' do
     before do
       @chef_run = ::ChefSpec::Runner.new ::REDHAT_OPTS
-      @chef_run.converge 'openstack-metering::common'
+      @chef_run.converge 'openstack-telemetry::common'
     end
 
     it 'installs the common package' do

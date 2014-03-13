@@ -21,7 +21,7 @@ require 'chef/application'
 }
 
 # TODO(chrislaco): Factor this into proper RSpec shared_contexts
-def metering_stubs # rubocop:disable MethodLength
+def telemetry_stubs # rubocop:disable MethodLength
   ::Chef::Recipe.any_instance.stub(:memcached_servers).and_return([])
   ::Chef::Recipe.any_instance.stub(:get_password)
     .with('db', anything)
@@ -40,12 +40,12 @@ end
 
 def expect_runs_common_recipe
   it 'runs common recipe' do
-    expect(@chef_run).to include_recipe 'openstack-metering::common'
+    expect(@chef_run).to include_recipe 'openstack-telemetry::common'
   end
 end
 
 # README(galstrom21): This will remove any coverage warnings from
 #   dependent cookbooks
-ChefSpec::Coverage.filters << '*/openstack-metering'
+ChefSpec::Coverage.filters << '*/openstack-telemetry'
 
 at_exit { ChefSpec::Coverage.report! }

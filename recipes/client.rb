@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-metering
+# Cookbook Name:: openstack-telemetry
 # Recipe:: client
 #
 # Copyright 2014, IBM Corp.
@@ -22,7 +22,7 @@ class ::Chef::Recipe # rubocop:disable Documentation
   include ::Openstack
 end
 
-platform_options = node['openstack']['metering']['platform']
+platform_options = node['openstack']['telemetry']['platform']
 platform_options['client_packages'].each do |pkg|
   package pkg do
     options platform_options['package_overrides']

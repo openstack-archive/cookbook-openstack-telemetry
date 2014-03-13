@@ -1,12 +1,12 @@
 # encoding: UTF-8
 require_relative 'spec_helper'
 
-describe 'openstack-metering::collector' do
-  before { metering_stubs }
+describe 'openstack-telemetry::collector' do
+  before { telemetry_stubs }
   describe 'suse' do
     before do
       @chef_run = ::ChefSpec::Runner.new ::SUSE_OPTS
-      @chef_run.converge 'openstack-metering::collector'
+      @chef_run.converge 'openstack-telemetry::collector'
     end
 
     it 'installs the collector package' do

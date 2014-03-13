@@ -1,11 +1,11 @@
 # encoding: UTF-8
 require_relative 'spec_helper'
 
-describe 'openstack-metering::identity_registration' do
+describe 'openstack-telemetry::identity_registration' do
   before do
-    metering_stubs
+    telemetry_stubs
     @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
-    @chef_run.converge 'openstack-metering::identity_registration'
+    @chef_run.converge 'openstack-telemetry::identity_registration'
   end
 
   it 'registers service tenant' do
@@ -71,9 +71,9 @@ describe 'openstack-metering::identity_registration' do
 
   it 'overrides metering endpoint region' do
     @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS do |n|
-      n.set['openstack']['metering']['region'] = 'meteringRegion'
+      n.set['openstack']['telemetry']['region'] = 'meteringRegion'
     end
-    @chef_run.converge 'openstack-metering::identity_registration'
+    @chef_run.converge 'openstack-telemetry::identity_registration'
 
     expect(@chef_run).to create_endpoint_openstack_identity_register(
       'Register Metering Endpoint'

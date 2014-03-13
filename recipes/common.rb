@@ -1,6 +1,6 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-metering
+# Cookbook Name:: openstack-telemetry
 # Recipe:: common
 #
 # Copyright 2013, AT&T Services, Inc.
@@ -24,51 +24,51 @@ class ::Chef::Recipe # rubocop:disable Documentation
   include ::Openstack
 end
 
-if node['openstack']['metering']['syslog']['use']
+if node['openstack']['telemetry']['syslog']['use']
   include_recipe 'openstack-common::logging'
 end
 
-platform = node['openstack']['metering']['platform']
+platform = node['openstack']['telemetry']['platform']
 platform['common_packages'].each do |pkg|
   package pkg
 end
 
-mq_service_type = node['openstack']['mq']['metering']['service_type']
+mq_service_type = node['openstack']['mq']['telemetry']['service_type']
 
 if mq_service_type == 'rabbitmq'
-  mq_password = get_password 'user', node['openstack']['mq']['metering']['rabbit']['userid']
+  mq_password = get_password 'user', node['openstack']['mq']['telemetry']['rabbit']['userid']
 elsif mq_service_type == 'qpid'
-  mq_password = get_password 'user', node['openstack']['mq']['metering']['qpid']['username']
+  mq_password = get_password 'user', node['openstack']['mq']['telemetry']['qpid']['username']
 end
 
-db_user = node['openstack']['db']['metering']['username']
+db_user = node['openstack']['db']['telemetry']['username']
 db_pass = get_password 'db', 'ceilometer'
-db_uri = db_uri('metering', db_user, db_pass).to_s
+db_uri = db_uri('telemetry', db_user, db_pass).to_s
 
-service_user = node['openstack']['metering']['service_user']
+service_user = node['openstack']['telemetry']['service_user']
 service_pass = get_password 'service', 'openstack-ceilometer'
-service_tenant = node['openstack']['metering']['service_tenant_name']
+service_tenant = node['openstack']['telemetry']['service_tenant_name']
 
 identity_endpoint = endpoint 'identity-api'
 identity_admin_endpoint = endpoint 'identity-admin'
 image_endpoint = endpoint 'image-api'
 
-Chef::Log.debug("openstack-metering::common:service_user|#{service_user}")
-Chef::Log.debug("openstack-metering::common:service_tenant|#{service_tenant}")
-Chef::Log.debug("openstack-metering::common:identity_endpoint|#{identity_endpoint.to_s}")
+Chef::Log.debug("openstack-telemetry::common:service_user|#{service_user}")
+Chef::Log.debug("openstack-telemetry::common:service_tenant|#{service_tenant}")
+Chef::Log.debug("openstack-telemetry::common:identity_endpoint|#{identity_endpoint.to_s}")
 
-directory node['openstack']['metering']['conf_dir'] do
-  owner node['openstack']['metering']['user']
-  group node['openstack']['metering']['group']
+directory node['openstack']['telemetry']['conf_dir'] do
+  owner node['openstack']['telemetry']['user']
+  group node['openstack']['telemetry']['group']
   mode  00750
 
   action :create
 end
 
-template node['openstack']['metering']['conf'] do
+template node['openstack']['telemetry']['conf'] do
   source 'ceilometer.conf.erb'
-  owner  node['openstack']['metering']['user']
-  group  node['openstack']['metering']['group']
+  owner  node['openstack']['telemetry']['user']
+  group  node['openstack']['telemetry']['group']
   mode   00640
 
   variables(
@@ -88,6 +88,6 @@ end
 cookbook_file '/etc/ceilometer/policy.json' do
   source 'policy.json'
   mode   00640
-  owner  node['openstack']['metering']['user']
-  group  node['openstack']['metering']['group']
+  owner  node['openstack']['telemetry']['user']
+  group  node['openstack']['telemetry']['group']
 end

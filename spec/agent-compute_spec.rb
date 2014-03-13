@@ -1,12 +1,12 @@
 # encoding: UTF-8
 require_relative 'spec_helper'
 
-describe 'openstack-metering::agent-compute' do
-  before { metering_stubs }
+describe 'openstack-telemetry::agent-compute' do
+  before { telemetry_stubs }
   describe 'ubuntu' do
     before do
       @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
-      @chef_run.converge 'openstack-metering::agent-compute'
+      @chef_run.converge 'openstack-telemetry::agent-compute'
     end
 
     expect_runs_common_recipe

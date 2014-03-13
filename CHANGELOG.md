@@ -1,6 +1,9 @@
-openstack-metering Cookbook CHANGELOG
+openstack-telemetry Cookbook CHANGELG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
+
+## 8.3.0
+* Rename openstack-metering to openstack-telemetry
 
 ## 8.2.0
 ### Blueprint
