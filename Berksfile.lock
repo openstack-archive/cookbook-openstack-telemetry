@@ -4,35 +4,44 @@
       "path": "."
     },
     "openstack-common": {
-      "locked_version": "0.4.3",
+      "locked_version": "0.4.7",
       "git": "git://github.com/stackforge/cookbook-openstack-common.git",
-      "ref": "eb5eed7126b6a6efbaf803e8a594d610cf661e97"
+      "ref": "0eead56b697a288ed373947b2efd50f8b24daabb"
     },
     "openstack-identity": {
-      "locked_version": "7.0.0",
+      "locked_version": "7.2.0",
       "git": "git://github.com/stackforge/cookbook-openstack-identity.git",
-      "ref": "b881af26095cfa869a6970067c49597a0ee63586"
+      "ref": "3a9eb50d16d83531ef3a2ba7f17b9140d3e1bd16"
     },
     "apt": {
-      "locked_version": "2.0.0"
+      "locked_version": "2.3.8"
     },
     "database": {
-      "locked_version": "1.4.0"
+      "locked_version": "2.0.0"
     },
     "mysql": {
-      "locked_version": "3.0.2"
+      "locked_version": "4.1.2"
     },
     "openssl": {
-      "locked_version": "1.0.2"
+      "locked_version": "1.1.0"
     },
     "build-essential": {
-      "locked_version": "1.4.0"
+      "locked_version": "1.4.4"
+    },
+    "homebrew": {
+      "locked_version": "1.5.4"
+    },
+    "windows": {
+      "locked_version": "1.30.0"
+    },
+    "chef_handler": {
+      "locked_version": "1.1.5"
     },
     "postgresql": {
-      "locked_version": "3.0.2"
+      "locked_version": "3.3.4"
     },
     "aws": {
-      "locked_version": "0.101.2"
+      "locked_version": "2.1.0"
     },
     "xfs": {
       "locked_version": "1.1.0"
