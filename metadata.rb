@@ -20,3 +20,4 @@ end
 
 depends 'openstack-common', '~> 9.0'
 depends 'openstack-identity', '~> 9.0'
+depends 'openstack-compute', '~> 9.0'
