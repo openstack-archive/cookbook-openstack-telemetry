@@ -53,6 +53,8 @@ identity_endpoint = endpoint 'identity-api'
 identity_admin_endpoint = endpoint 'identity-admin'
 image_endpoint = endpoint 'image-api'
 
+auth_uri = auth_uri_transform identity_endpoint.to_s, node['openstack']['telemetry']['api']['auth']['version']
+
 Chef::Log.debug("openstack-telemetry::common:service_user|#{service_user}")
 Chef::Log.debug("openstack-telemetry::common:service_tenant|#{service_tenant}")
 Chef::Log.debug("openstack-telemetry::common:identity_endpoint|#{identity_endpoint.to_s}")
@@ -72,7 +74,7 @@ template node['openstack']['telemetry']['conf'] do
   mode   00640
 
   variables(
-    auth_uri: ::URI.decode(identity_endpoint.to_s),
+    auth_uri: auth_uri,
     database_connection: db_uri,
     image_endpoint: image_endpoint,
     identity_endpoint: identity_endpoint,

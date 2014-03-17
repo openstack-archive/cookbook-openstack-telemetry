@@ -47,6 +47,8 @@ identity_registration
 Attributes
 ==========
 
+* `openstack['telemetry']['api']['auth']['version']` - Select v2.0 or v3.0. Default v2.0. The auth API version used to interact with identity service.
+
 Testing
 =====
 

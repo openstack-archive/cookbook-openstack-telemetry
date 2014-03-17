@@ -54,10 +54,13 @@ periodic_interval = <%= node["openstack"]["telemetry"]["periodic_interval"] %>
 
 [keystone_authtoken]
 paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
-auth_uri = <%= @identity_endpoint.to_s %>
+auth_uri = <%= @auth_uri %>
 auth_host = <%= @identity_admin_endpoint.host %>
 auth_port = <%= @identity_admin_endpoint.port %>
 auth_protocol = <%= @identity_admin_endpoint.scheme %>
+<% if node['openstack']['telemetry']['api']['auth']['version'] != 'v2.0' %>
+auth_version = <%= node['openstack']['telemetry']['api']['auth']['version'] %>
+<% end %>
 admin_tenant_name = <%= @service_tenant_name %>
 admin_user = <%= @service_user %>
 admin_password = <%= @service_pass %>

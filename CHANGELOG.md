@@ -2,6 +2,10 @@ openstack-telemetry Cookbook CHANGELG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
 
+## 8.4.0
+### Blue print
+# Use the library method auth_uri_transform
+
 ## 8.3.0
 * Rename openstack-metering to openstack-telemetry
 
