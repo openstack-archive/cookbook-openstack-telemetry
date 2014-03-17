@@ -1,22 +1,22 @@
 # encoding: UTF-8
+
 require_relative 'spec_helper'
 
 describe 'openstack-telemetry::agent-central' do
-  before { telemetry_stubs }
   describe 'ubuntu' do
-    before do
-      @chef_run = ::ChefSpec::Runner.new ::UBUNTU_OPTS
-      @chef_run.converge 'openstack-telemetry::agent-central'
-    end
+    let(:runner) { ChefSpec::Runner.new(UBUNTU_OPTS) }
+    let(:node) { runner.node }
+    let(:chef_run) { runner.converge(described_recipe) }
 
-    expect_runs_common_recipe
+    include_context 'telemetry-stubs'
+    include_examples 'expect-runs-common-recipe'
 
     it 'installs the agent-central package' do
-      expect(@chef_run).to install_package 'ceilometer-agent-central'
+      expect(chef_run).to install_package 'ceilometer-agent-central'
     end
 
     it 'starts agent-central service' do
-      expect(@chef_run).to start_service('ceilometer-agent-central')
+      expect(chef_run).to start_service('ceilometer-agent-central')
     end
   end
 end
