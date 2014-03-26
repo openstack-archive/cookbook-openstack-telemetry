@@ -1,6 +1,11 @@
 openstack-telemetry Cookbook CHANGELG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
+## 9.1.0
+### Blue print
+# Add recipes for the ceilometer alarm services (alarm-services)
+# Add recipes for the ceilometer agent notification service (alarm-services)
+
 ## 9.0.0
 * Upgrade to Icehouse
 

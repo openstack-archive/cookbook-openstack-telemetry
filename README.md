@@ -24,6 +24,18 @@ agent-compute
 ----
 - Installs agent compute service.
 
+agent-notification
+----
+- Installs agent notification service.
+
+alarm-evaluator
+----
+- Installs alarm evaluator service.
+
+alarm-notifier
+----
+- Installs alarm notifier service.
+
 api
 ----
 - Installs API service.
