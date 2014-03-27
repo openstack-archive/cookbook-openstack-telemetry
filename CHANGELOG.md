@@ -1,6 +1,8 @@
 openstack-telemetry Cookbook CHANGELG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
+## 9.0.0
+* Upgrade to Icehouse
 
 ## 8.4.0
 ### Blue print
