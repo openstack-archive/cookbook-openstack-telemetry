@@ -1,6 +1,9 @@
 # encoding: UTF-8
 require 'chefspec'
 require 'chefspec/berkshelf'
+
+ChefSpec::Coverage.start! { add_filter 'openstack-telemetry' }
+
 require 'chef/application'
 
 LOG_LEVEL = :fatal
@@ -47,9 +50,3 @@ shared_examples 'expect-runs-common-recipe' do
     expect(chef_run).to include_recipe 'openstack-telemetry::common'
   end
 end
-
-# README(galstrom21): This will remove any coverage warnings from
-#   dependent cookbooks
-ChefSpec::Coverage.filters << '*/openstack-telemetry'
-
-at_exit { ChefSpec::Coverage.report! }
