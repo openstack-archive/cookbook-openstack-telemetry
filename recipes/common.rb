@@ -59,7 +59,7 @@ Chef::Log.debug("openstack-telemetry::common:service_user|#{service_user}")
 Chef::Log.debug("openstack-telemetry::common:service_tenant|#{service_tenant}")
 Chef::Log.debug("openstack-telemetry::common:identity_endpoint|#{identity_endpoint.to_s}")
 
-metering_secret = secret 'secrets', 'openstack_metering_secret'
+metering_secret = get_secret 'openstack_metering_secret'
 
 directory node['openstack']['telemetry']['conf_dir'] do
   owner node['openstack']['telemetry']['user']
