@@ -42,6 +42,13 @@ default['openstack']['telemetry']['service_user'] = 'ceilometer'
 default['openstack']['telemetry']['service_tenant_name'] = 'service'
 default['openstack']['telemetry']['service_role'] = 'admin'
 
+case node['openstack']['compute']['driver']
+when 'libvirt.LibvirtDriver'
+  default['openstack']['telemetry']['hypervisor_inspector'] = 'libvirt'
+else
+  default['openstack']['telemetry']['hypervisor_inspector'] = nil
+end
+
 case platform
 when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['telemetry']['platform'] = {

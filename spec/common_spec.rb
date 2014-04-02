@@ -150,6 +150,11 @@ describe 'openstack-telemetry::common' do
         r = /^metering_secret = metering_secret$/
         expect(chef_run).to render_file(file.name).with_content(r)
       end
+
+      it 'has hypervisor inspector' do
+        r = /^hypervisor_inspector = libvirt$/
+        expect(chef_run).to render_file(file.name).with_content(r)
+      end
     end
 
     describe 'policy.json' do
