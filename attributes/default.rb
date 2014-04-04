@@ -49,7 +49,7 @@ else
   default['openstack']['telemetry']['hypervisor_inspector'] = nil
 end
 
-case platform
+case platform_family
 when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['telemetry']['platform'] = {
     'mysql_python_packages' => ['python-mysql'],
@@ -72,7 +72,7 @@ when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
     'collector_service' => 'openstack-ceilometer-collector'
   }
 
-when 'fedora', 'redhat', 'centos'
+when 'fedora', 'rhel'
   default['openstack']['telemetry']['platform'] = {
     'mysql_python_packages' => ['MySQL-python'],
     'db2_python_packages' => ['python-ibm-db', 'python-ibm-db-sa'],
@@ -95,7 +95,7 @@ when 'fedora', 'redhat', 'centos'
     'collector_service' => 'openstack-ceilometer-collector'
   }
 
-when 'ubuntu'
+when 'debian'
   default['openstack']['telemetry']['platform'] = {
     'mysql_python_packages' => ['python-mysqldb'],
     'postgresql_python_packages' => ['python-psycopg2'],
