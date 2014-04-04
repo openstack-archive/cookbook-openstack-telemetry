@@ -29,6 +29,14 @@ if node['openstack']['telemetry']['syslog']['use']
 end
 
 platform = node['openstack']['telemetry']['platform']
+
+db_type = node['openstack']['db']['telemetry']['service_type']
+platform["#{db_type}_python_packages"].each do |pkg|
+  package pkg do
+    action :install
+  end
+end
+
 platform['common_packages'].each do |pkg|
   package pkg
 end

@@ -52,6 +52,8 @@ end
 case platform
 when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
   default['openstack']['telemetry']['platform'] = {
+    'mysql_python_packages' => ['python-mysql'],
+    'postgresql_python_packages' => ['python-psycopg2'],
     'common_packages' => ['openstack-ceilometer'],
     'agent_central_packages' => ['openstack-ceilometer-agent-central'],
     'agent_central_service' => 'openstack-ceilometer-agent-central',
@@ -72,6 +74,9 @@ when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
 
 when 'fedora', 'redhat', 'centos'
   default['openstack']['telemetry']['platform'] = {
+    'mysql_python_packages' => ['MySQL-python'],
+    'db2_python_packages' => ['python-ibm-db', 'python-ibm-db-sa'],
+    'postgresql_python_packages' => ['python-psycopg2'],
     'common_packages' => ['openstack-ceilometer-common'],
     'agent_central_packages' => ['openstack-ceilometer-central'],
     'agent_central_service' => 'openstack-ceilometer-central',
@@ -92,6 +97,8 @@ when 'fedora', 'redhat', 'centos'
 
 when 'ubuntu'
   default['openstack']['telemetry']['platform'] = {
+    'mysql_python_packages' => ['python-mysqldb'],
+    'postgresql_python_packages' => ['python-psycopg2'],
     'common_packages' => ['ceilometer-common'],
     'agent_central_packages' => ['ceilometer-agent-central'],
     'agent_central_service' => 'ceilometer-agent-central',
