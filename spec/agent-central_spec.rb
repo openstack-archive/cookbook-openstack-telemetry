@@ -15,8 +15,15 @@ describe 'openstack-telemetry::agent-central' do
       expect(chef_run).to install_package 'ceilometer-agent-central'
     end
 
-    it 'starts agent-central service' do
+    it 'starts and enables the agent-central service' do
+      expect(chef_run).to enable_service('ceilometer-agent-central')
       expect(chef_run).to start_service('ceilometer-agent-central')
+    end
+
+    describe 'ceilometer-agent-central' do
+      it 'subscribes to its config file' do
+        expect(chef_run.service('ceilometer-agent-central')).to subscribe_to('template[/etc/ceilometer/ceilometer.conf]').delayed
+      end
     end
   end
 end

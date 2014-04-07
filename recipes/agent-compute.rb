@@ -23,7 +23,9 @@ include_recipe 'openstack-telemetry::common'
 
 platform = node['openstack']['telemetry']['platform']
 platform['agent_compute_packages'].each do |pkg|
-  package pkg
+  package pkg do
+    options platform['package_overrides']
+  end
 end
 
 # temp fix for compute-agent init not installing properly ubuntu
@@ -36,6 +38,10 @@ if node['platform'] == 'ubuntu'
   end
 end
 
-service platform['agent_compute_service'] do
-  action :start
+service 'ceilometer-agent-compute' do
+  service_name platform['agent_compute_service']
+  supports status: true, restart: true
+  subscribes :restart, "template[#{node['openstack']['telemetry']['conf']}]"
+
+  action [:enable, :start]
 end

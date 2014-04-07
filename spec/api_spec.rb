@@ -19,12 +19,19 @@ describe 'openstack-telemetry::api' do
         )
     end
 
-    it 'starts api service' do
+    it 'installs the api package' do
+      expect(chef_run).to install_package 'ceilometer-api'
+    end
+
+    it 'enables and starts the api service' do
+      expect(chef_run).to enable_service('ceilometer-api')
       expect(chef_run).to start_service('ceilometer-api')
     end
 
-    it 'starts api service' do
-      expect(chef_run).to start_service('ceilometer-api')
+    describe 'ceilometer-api' do
+      it 'subscribes to its config file' do
+        expect(chef_run.service('ceilometer-api')).to subscribe_to('template[/etc/ceilometer/ceilometer.conf]').delayed
+      end
     end
   end
 end

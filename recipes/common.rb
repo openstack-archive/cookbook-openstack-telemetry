@@ -38,7 +38,9 @@ platform["#{db_type}_python_packages"].each do |pkg|
 end
 
 platform['common_packages'].each do |pkg|
-  package pkg
+  package pkg do
+    options platform['package_overrides']
+  end
 end
 
 mq_service_type = node['openstack']['mq']['telemetry']['service_type']

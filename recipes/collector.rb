@@ -32,7 +32,9 @@ end
 
 platform = node['openstack']['telemetry']['platform']
 platform['collector_packages'].each do |pkg|
-  package pkg
+  package pkg do
+    options platform['package_overrides']
+  end
 end
 
 # temp fix for collector init not installing properly ubuntu
@@ -45,6 +47,10 @@ if node['platform'] == 'ubuntu'
   end
 end
 
-service platform['collector_service'] do
-  action :start
+service 'ceilometer-collector' do
+  service_name platform['collector_service']
+  supports status: true, restart: true
+  subscribes :restart, "template[#{node['openstack']['telemetry']['conf']}]"
+
+  action [:enable, :start]
 end

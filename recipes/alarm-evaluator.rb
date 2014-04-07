@@ -22,10 +22,15 @@ include_recipe 'openstack-telemetry::common'
 
 platform = node['openstack']['telemetry']['platform']
 platform['alarm_evaluator_packages'].each do |pkg|
-  package pkg
+  package pkg do
+    options platform['package_overrides']
+  end
 end
 
-service platform['alarm_evaluator_service'] do
+service 'ceilometer-agent-evaluator' do
+  service_name platform['alarm_evaluator_service']
   supports status: true, restart: true
-  action :start
+  subscribes :restart, "template[#{node['openstack']['telemetry']['conf']}]"
+
+  action [:enable, :start]
 end
