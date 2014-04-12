@@ -15,8 +15,15 @@ describe 'openstack-telemetry::agent-notification' do
       expect(chef_run).to install_package 'ceilometer-agent-notification'
     end
 
-    it 'starts ceilometer-agent-notification service' do
+    it 'enables and starts ceilometer-agent-notification service' do
+      expect(chef_run).to enable_service('ceilometer-agent-notification')
       expect(chef_run).to start_service('ceilometer-agent-notification')
+    end
+
+    describe 'ceilometer-agent-notification' do
+      it 'subscribes to its config file' do
+        expect(chef_run.service('ceilometer-agent-notification')).to subscribe_to('template[/etc/ceilometer/ceilometer.conf]').delayed
+      end
     end
   end
 end

@@ -22,10 +22,10 @@ class ::Chef::Recipe # rubocop:disable Documentation
   include ::Openstack
 end
 
-platform_options = node['openstack']['telemetry']['platform']
-platform_options['client_packages'].each do |pkg|
+platform = node['openstack']['telemetry']['platform']
+platform['client_packages'].each do |pkg|
   package pkg do
-    options platform_options['package_overrides']
+    options platform['package_overrides']
 
     action :upgrade
   end

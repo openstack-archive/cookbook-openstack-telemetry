@@ -69,7 +69,8 @@ when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
     'api_service' => 'openstack-ceilometer-api',
     'client_packages' => ['python-ceilometerclient'],
     'collector_packages' => ['openstack-ceilometer-collector'],
-    'collector_service' => 'openstack-ceilometer-collector'
+    'collector_service' => 'openstack-ceilometer-collector',
+    'package_overrides' => ''
   }
 
 when 'fedora', 'rhel'
@@ -92,7 +93,8 @@ when 'fedora', 'rhel'
     'api_service' => 'openstack-ceilometer-api',
     'client_packages' => ['python-ceilometerclient'],
     'collector_packages' => ['openstack-ceilometer-collector'],
-    'collector_service' => 'openstack-ceilometer-collector'
+    'collector_service' => 'openstack-ceilometer-collector',
+    'package_overrides' => ''
   }
 
 when 'debian'
@@ -114,6 +116,7 @@ when 'debian'
     'api_service' => 'ceilometer-api',
     'client_packages' => ['python-ceilometerclient'],
     'collector_packages' => ['ceilometer-collector', 'python-mysqldb'],
-    'collector_service' => 'ceilometer-collector'
+    'collector_service' => 'ceilometer-collector',
+    'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end

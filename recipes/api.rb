@@ -30,9 +30,15 @@ end
 
 platform = node['openstack']['telemetry']['platform']
 platform['api_packages'].each do |pkg|
-  package pkg
+  package pkg do
+    options platform['package_overrides']
+  end
 end
 
-service platform['api_service'] do
-  action :start
+service 'ceilometer-api' do
+  service_name platform['api_service']
+  supports status: true, restart: true
+  subscribes :restart, "template[#{node['openstack']['telemetry']['conf']}]"
+
+  action [:enable, :start]
 end

@@ -15,8 +15,15 @@ describe 'openstack-telemetry::alarm-evaluator' do
       expect(chef_run).to install_package 'ceilometer-alarm-evaluator'
     end
 
-    it 'starts alarm-evaluator service' do
+    it 'starts and enables the alarm-evaluator service' do
+      expect(chef_run).to enable_service('ceilometer-alarm-evaluator')
       expect(chef_run).to start_service('ceilometer-alarm-evaluator')
+    end
+
+    describe 'ceilometer-alarm-evaluator' do
+      it 'subscribes to its config file' do
+        expect(chef_run.service('ceilometer-alarm-evaluator')).to subscribe_to('template[/etc/ceilometer/ceilometer.conf]').delayed
+      end
     end
   end
 end
