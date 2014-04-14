@@ -7,7 +7,6 @@ os_tenant_name = <%= @service_tenant_name %>
 os_password = <%= @service_pass %>
 os_username = <%= @service_user %>
 policy_file = /etc/ceilometer/policy.json
-database_connection = <%= @database_connection %>
 verbose = <%= node["openstack"]["telemetry"]["verbose"] %>
 debug = <%= node["openstack"]["telemetry"]["debug"] %>
 <% if node["openstack"]["telemetry"]["hypervisor_inspector"] %>
@@ -54,6 +53,9 @@ qpid_tcp_nodelay=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["tcp_nodelay"]
 
 glance_registry_host = <%= @image_endpoint.host %>
 periodic_interval = <%= node["openstack"]["telemetry"]["periodic_interval"] %>
+
+[database]
+connection=<%= @database_connection %>
 
 [keystone_authtoken]
 paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
