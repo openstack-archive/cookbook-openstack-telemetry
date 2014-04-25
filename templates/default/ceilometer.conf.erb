@@ -1,7 +1,4 @@
 [DEFAULT]
-<% if node["openstack"]["telemetry"]["host"] %>
-host = <%= node["openstack"]["telemetry"]["host"] %>
-<% end %>
 os_auth_url = <%= @auth_uri %>
 os_tenant_name = <%= @service_tenant_name %>
 os_password = <%= @service_pass %>
@@ -56,6 +53,10 @@ periodic_interval = <%= node["openstack"]["telemetry"]["periodic_interval"] %>
 
 [database]
 connection=<%= @database_connection %>
+
+[api]
+host = <%= @api_bind_host %>
+port = <%= @api_bind_port %>
 
 [keystone_authtoken]
 paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory

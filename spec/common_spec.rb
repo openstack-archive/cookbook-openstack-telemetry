@@ -164,6 +164,18 @@ describe 'openstack-telemetry::common' do
         r = /^hypervisor_inspector = libvirt$/
         expect(chef_run).to render_file(file.name).with_content(r)
       end
+
+      it 'has bind_host set' do
+        node.set['openstack']['endpoints']['telemetry-api-bind']['host'] = '1.1.1.1'
+        expect(chef_run).to render_file(file.name).with_content(
+          /^host = 1.1.1.1$/)
+      end
+
+      it 'has bind_port set' do
+        node.set['openstack']['endpoints']['telemetry-api-bind']['port'] = '9999'
+        expect(chef_run).to render_file(file.name).with_content(
+        /^port = 9999$/)
+      end
     end
 
     describe 'policy.json' do
