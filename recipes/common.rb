@@ -52,6 +52,7 @@ service_tenant = node['openstack']['telemetry']['service_tenant_name']
 identity_endpoint = endpoint 'identity-api'
 identity_admin_endpoint = endpoint 'identity-admin'
 image_endpoint = endpoint 'image-api'
+telemetry_api_bind = endpoint 'telemetry-api-bind'
 
 auth_uri = auth_uri_transform identity_endpoint.to_s, node['openstack']['telemetry']['api']['auth']['version']
 
@@ -86,7 +87,9 @@ template node['openstack']['telemetry']['conf'] do
     service_pass: service_pass,
     service_tenant_name: service_tenant,
     service_user: service_user,
-    metering_secret: metering_secret
+    metering_secret: metering_secret,
+    api_bind_host: telemetry_api_bind.host,
+    api_bind_port: telemetry_api_bind.port
   )
 end
 

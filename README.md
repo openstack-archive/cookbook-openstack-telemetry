@@ -49,6 +49,15 @@ Attributes
 
 * `openstack['telemetry']['api']['auth']['version']` - Select v2.0 or v3.0. Default v2.0. The auth API version used to interact with identity service.
 
+The following attributes are defined in attributes/default.rb of the common cookbook, but are documented here due to their relevance:
+
+* `openstack['endpoints']['telemetry-api-bind']['host']` - The IP address to bind the api service to
+* `openstack['endpoints']['telemetry-api-bind']['port']` - The port to bind the api service to
+* `openstack['endpoints']['telemetry-api-bind']['bind_interface']` - The interface name to bind the api service to
+
+If the value of the 'bind_interface' attribute is non-nil, then the telemetry service will be bound to the first IP address on that interface.  If the value of the 'bind_interface' attribute is nil, then the telemetry service will be bound to the IP address specified in>
+
+
 Testing
 =====
 
