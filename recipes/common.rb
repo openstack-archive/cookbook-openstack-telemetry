@@ -102,10 +102,3 @@ template node['openstack']['telemetry']['conf'] do
     api_bind_port: telemetry_api_bind.port
   )
 end
-
-cookbook_file '/etc/ceilometer/policy.json' do
-  source 'policy.json'
-  mode   00640
-  owner  node['openstack']['telemetry']['user']
-  group  node['openstack']['telemetry']['group']
-end

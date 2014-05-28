@@ -1,6 +1,9 @@
 openstack-telemetry Cookbook CHANGELG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
+## 9.1.1
+* Remove policy.json file, it's just a dup of what's in the package
+
 ## 9.1.0
 ### Blue print
 # Add recipes for the ceilometer alarm services (alarm-services)

@@ -177,17 +177,5 @@ describe 'openstack-telemetry::common' do
         /^port = 9999$/)
       end
     end
-
-    describe 'policy.json' do
-      let(:file) { chef_run.cookbook_file('/etc/ceilometer/policy.json') }
-
-      it 'installs the /etc/ceilometer/policy.json file' do
-        expect(chef_run).to create_cookbook_file(file.name).with(
-          user: 'ceilometer',
-          group: 'ceilometer',
-          mode: 0640
-          )
-      end
-    end
   end
 end
