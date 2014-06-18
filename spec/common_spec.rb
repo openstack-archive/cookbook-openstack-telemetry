@@ -56,6 +56,13 @@ describe 'openstack-telemetry::common' do
           )
       end
 
+      it 'has default RPC/AMQP options set' do
+        [/^amqp_durable_queues=false$/,
+         /^amqp_auto_delete=false$/].each do |line|
+          expect(chef_run).to render_file(file.name).with_content(line)
+        end
+      end
+
       context 'rabbit mq backend' do
         before do
           node.set['openstack']['mq']['telemetry']['service_type'] = 'rabbitmq'
@@ -101,7 +108,8 @@ describe 'openstack-telemetry::common' do
             /^qpid_reconnect_interval=0$/,
             /^qpid_heartbeat=60$/,
             /^qpid_protocol=tcp$/,
-            /^qpid_tcp_nodelay=true$/
+            /^qpid_tcp_nodelay=true$/,
+            /^qpid_topology_version=1$/
           ].each do |line|
             expect(chef_run).to render_file(file.name).with_content(line)
           end

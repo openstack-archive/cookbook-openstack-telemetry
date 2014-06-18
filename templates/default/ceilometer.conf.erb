@@ -13,7 +13,11 @@ hypervisor_inspector = <%= node["openstack"]["telemetry"]["hypervisor_inspector"
 log_config = /etc/openstack/logging.conf
 <% end %>
 
+##### AMQP #####
 notification_topics = notifications,glance_notifications
+amqp_durable_queues=<%= node["openstack"]["mq"]["telemetry"]["durable_queues"] %>
+amqp_auto_delete=<%= node["openstack"]["mq"]["telemetry"]["auto_delete"] %>
+
 <% if @mq_service_type == "rabbitmq"  %>
 ##### RABBITMQ #####
 rabbit_userid = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["userid"] %>
@@ -25,13 +29,11 @@ rabbit_use_ssl = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["use_ssl"] %
 rpc_backend = ceilometer.openstack.common.rpc.impl_kombu
 <% end %>
 
-
 <% if @mq_service_type == "qpid"  %>
 ##### QPID #####
 rpc_backend=ceilometer.openstack.common.rpc.impl_qpid
 qpid_hostname=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["host"] %>
 qpid_port=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["port"] %>
-
 qpid_password=<%= @mq_password %>
 qpid_username=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["username"] %>
 qpid_sasl_mechanisms=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["sasl_mechanisms"] %>
@@ -45,7 +47,7 @@ qpid_heartbeat=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["heartbeat"] %>
 # qpid protocol. default 'tcp'. set to 'ssl' to enable SSL
 qpid_protocol=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["protocol"] %>
 qpid_tcp_nodelay=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["tcp_nodelay"] %>
-
+qpid_topology_version=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["topology_version"] %>
 <% end %>
 
 glance_registry_host = <%= @image_endpoint.host %>
