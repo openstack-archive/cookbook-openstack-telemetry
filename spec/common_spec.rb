@@ -56,6 +56,17 @@ describe 'openstack-telemetry::common' do
           )
       end
 
+      it 'has default sample_source set' do
+        expect(chef_run).to render_file(file.name).with_content(
+          /^sample_source = openstack$/)
+      end
+
+      it 'has sample_source set' do
+        node.set['openstack']['telemetry']['sample_source'] = 'RegionOne'
+        expect(chef_run).to render_file(file.name).with_content(
+          /^sample_source = RegionOne$/)
+      end
+
       it 'has default RPC/AMQP options set' do
         [/^amqp_durable_queues=false$/,
          /^amqp_auto_delete=false$/].each do |line|

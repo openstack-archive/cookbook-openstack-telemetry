@@ -1,6 +1,9 @@
 openstack-telemetry Cookbook CHANGELG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
+## 9.1.2
+* Add attribute sample_source
+
 ## 9.1.1
 * Remove policy.json file, it's just a dup of what's in the package
 

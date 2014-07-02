@@ -12,6 +12,7 @@ hypervisor_inspector = <%= node["openstack"]["telemetry"]["hypervisor_inspector"
 <% if node["openstack"]["telemetry"]["syslog"]["use"] %>
 log_config = /etc/openstack/logging.conf
 <% end %>
+sample_source = <%= node["openstack"]["telemetry"]["sample_source"] %>
 
 ##### AMQP #####
 notification_topics = notifications,glance_notifications
