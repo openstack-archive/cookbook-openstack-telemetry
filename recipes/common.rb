@@ -5,7 +5,7 @@
 #
 # Copyright 2013, AT&T Services, Inc.
 # Copyright 2013, Craig Tracey <craigtracey@gmail.com>
-# Copyright 2013, SUSE Linux GmbH
+# Copyright 2013-2014, SUSE Linux GmbH
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ end
 platform = node['openstack']['telemetry']['platform']
 
 db_type = node['openstack']['db']['telemetry']['service_type']
-platform["#{db_type}_python_packages"].each do |pkg|
+node['openstack']['db']['python_packages'][db_type].each do |pkg|
   package pkg do
     action :upgrade
   end

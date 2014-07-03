@@ -60,8 +60,6 @@ Attributes
 ==========
 
 * `openstack['telemetry']['api']['auth']['version']` - Select v2.0 or v3.0. Default v2.0. The auth API version used to interact with identity service.
-TODO: Add DB2 support on other platforms
-* `openstack['telemetry']['platform']['db2_python_packages']` - Array of DB2 python packages, only available on redhat platform
 * `openstack['telemetry']['sample_source']  -  The source name of emitted samples, default value is openstack.
 
 The following attributes are defined in attributes/default.rb of the common cookbook, but are documented here due to their relevance:
@@ -104,7 +102,7 @@ License and Author
 | **Copyright**        |  Copyright (c) 2013, AT&T Services, Inc.           |
 | **Copyright**        |  Copyright (c) 2013, Rackspace US, Inc.            |
 | **Copyright**        |  Copyright (c) 2013-2014, IBM, Corp.               |
-| **Copyright**        |  Copyright (c) 2013, SUSE Linux GmbH               |
+| **Copyright**        |  Copyright (c) 2013-2014, SUSE Linux GmbH          |
 
 
 Licensed under the Apache License, Version 2.0 (the "License");
