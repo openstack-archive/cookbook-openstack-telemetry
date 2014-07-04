@@ -1,6 +1,9 @@
 openstack-telemetry Cookbook CHANGELG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
+## 9.2.0
+* Change the action of all package resources from default to :upgrade
+
 ## 9.1.2
 * Add attribute sample_source
 

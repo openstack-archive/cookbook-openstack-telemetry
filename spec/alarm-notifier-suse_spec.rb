@@ -11,7 +11,7 @@ describe 'openstack-telemetry::alarm-notifier' do
     include_context 'telemetry-stubs'
 
     it 'installs the alarm-notifier package' do
-      expect(chef_run).to install_package 'openstack-ceilometer-alarm-notifier'
+      expect(chef_run).to upgrade_package 'openstack-ceilometer-alarm-notifier'
     end
 
     it 'starts the alarm-notifier service' do

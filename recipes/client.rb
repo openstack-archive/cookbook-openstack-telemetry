@@ -26,7 +26,6 @@ platform = node['openstack']['telemetry']['platform']
 platform['client_packages'].each do |pkg|
   package pkg do
     options platform['package_overrides']
-
     action :upgrade
   end
 end

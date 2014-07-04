@@ -11,7 +11,7 @@ describe 'openstack-telemetry::agent-central' do
     include_context 'telemetry-stubs'
 
     it 'installs the agent-central package' do
-      expect(chef_run).to install_package 'openstack-ceilometer-agent-central'
+      expect(chef_run).to upgrade_package 'openstack-ceilometer-agent-central'
     end
 
     it 'starts the agent-central service' do

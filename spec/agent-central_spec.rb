@@ -12,7 +12,7 @@ describe 'openstack-telemetry::agent-central' do
     include_examples 'expect-runs-common-recipe'
 
     it 'installs the agent-central package' do
-      expect(chef_run).to install_package 'ceilometer-agent-central'
+      expect(chef_run).to upgrade_package 'ceilometer-agent-central'
     end
 
     it 'starts and enables the agent-central service' do

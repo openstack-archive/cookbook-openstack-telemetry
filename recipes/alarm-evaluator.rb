@@ -24,6 +24,7 @@ platform = node['openstack']['telemetry']['platform']
 platform['alarm_evaluator_packages'].each do |pkg|
   package pkg do
     options platform['package_overrides']
+    action :upgrade
   end
 end
 

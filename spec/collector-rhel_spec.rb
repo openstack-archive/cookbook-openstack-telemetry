@@ -17,7 +17,7 @@ describe 'openstack-telemetry::collector' do
     end
 
     it 'installs the collector package' do
-      expect(chef_run).to install_package('openstack-ceilometer-collector')
+      expect(chef_run).to upgrade_package('openstack-ceilometer-collector')
     end
 
     it 'starts collector service' do

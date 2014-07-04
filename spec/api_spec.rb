@@ -20,7 +20,7 @@ describe 'openstack-telemetry::api' do
     end
 
     it 'installs the api package' do
-      expect(chef_run).to install_package 'ceilometer-api'
+      expect(chef_run).to upgrade_package 'ceilometer-api'
     end
 
     it 'enables and starts the api service' do

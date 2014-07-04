@@ -12,7 +12,7 @@ describe 'openstack-telemetry::alarm-evaluator' do
     include_examples 'expect-runs-common-recipe'
 
     it 'installs the alarm-evaluator package' do
-      expect(chef_run).to install_package 'ceilometer-alarm-evaluator'
+      expect(chef_run).to upgrade_package 'ceilometer-alarm-evaluator'
     end
 
     it 'starts and enables the alarm-evaluator service' do

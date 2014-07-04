@@ -11,7 +11,7 @@ describe 'openstack-telemetry::api' do
     include_context 'telemetry-stubs'
 
     it 'installs the api package' do
-      expect(chef_run).to install_package('openstack-ceilometer-api')
+      expect(chef_run).to upgrade_package('openstack-ceilometer-api')
     end
 
     it 'starts api service' do

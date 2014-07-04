@@ -12,7 +12,7 @@ describe 'openstack-telemetry::collector' do
     include_examples 'expect-runs-common-recipe'
 
     it 'installs the collector package' do
-      expect(chef_run).to install_package 'ceilometer-collector'
+      expect(chef_run).to upgrade_package 'ceilometer-collector'
     end
 
     it 'executes ceilometer dbsync' do
@@ -27,7 +27,7 @@ describe 'openstack-telemetry::collector' do
     end
 
     it 'installs python-mysqldb' do
-      expect(chef_run).to install_package('python-mysqldb')
+      expect(chef_run).to upgrade_package('python-mysqldb')
     end
 
     it 'starts and enables the collector service' do

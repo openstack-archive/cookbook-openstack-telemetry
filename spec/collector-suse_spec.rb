@@ -11,7 +11,7 @@ describe 'openstack-telemetry::collector' do
     include_context 'telemetry-stubs'
 
     it 'installs the collector package' do
-      expect(chef_run).to install_package 'openstack-ceilometer-collector'
+      expect(chef_run).to upgrade_package 'openstack-ceilometer-collector'
     end
 
     it 'starts the collector service' do
