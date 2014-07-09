@@ -1,4 +1,5 @@
 # encoding: UTF-8
+require 'rspec/expectations'
 require 'chefspec'
 require 'chefspec/berkshelf'
 require 'chef/application'
@@ -47,9 +48,5 @@ shared_examples 'expect-runs-common-recipe' do
     expect(chef_run).to include_recipe 'openstack-telemetry::common'
   end
 end
-
-# README(galstrom21): This will remove any coverage warnings from
-#   dependent cookbooks
-ChefSpec::Coverage.filters << '*/openstack-telemetry'
 
 at_exit { ChefSpec::Coverage.report! }
