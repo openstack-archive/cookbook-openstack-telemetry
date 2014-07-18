@@ -5,6 +5,7 @@ This file is used to list changes made in each version of the openstack-metering
 ## 9.3.0
 * python_packages database client attributes have been migrated to
 the -common cookbook
+* fix fauxhai version for suse and redhat
 
 ## 9.2.0
 * Change the action of all package resources from default to :upgrade
