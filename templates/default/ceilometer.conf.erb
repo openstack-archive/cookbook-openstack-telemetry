@@ -77,3 +77,15 @@ signing_dir = <%= node["openstack"]["telemetry"]["api"]["auth"]["cache_dir"] %>
 
 [publisher_rpc]
 metering_secret = <%= @metering_secret %>
+
+<% if node["openstack"]["telemetry"]["hypervisor_inspector"] == 'vsphere'%>
+[vmware]
+host_ip = <%= node['openstack']['compute']['vmware']['host_ip'] %>
+host_username = <%= node['openstack']['compute']['vmware']['host_username'] %>
+host_password = <%= @vmware_host_pass %>
+task_poll_interval = <%= node['openstack']['compute']['vmware']['task_poll_interval'] %>
+api_retry_count = <%= node['openstack']['compute']['vmware']['api_retry_count'] %>
+  <% if node['openstack']['compute']['vmware']['wsdl_location'] %>
+wsdl_location = <%= node['openstack']['compute']['vmware']['wsdl_location'] %>
+  <% end %>
+<% end %>

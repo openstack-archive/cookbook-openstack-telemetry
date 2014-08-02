@@ -195,6 +195,20 @@ describe 'openstack-telemetry::common' do
         expect(chef_run).to render_file(file.name).with_content(
         /^port = 9999$/)
       end
+
+      it 'has vmware section' do
+        node.set['openstack']['compute']['driver'] = 'vmwareapi.VMwareVCDriver'
+        [
+          /^host_ip = $/,
+          /^host_username = $/,
+          /^host_password = vmware_secret_name$/,
+          /^task_poll_interval = 0.5$/,
+          /^api_retry_count = 10$/
+        ].each do |line|
+          expect(chef_run).to render_file(file.name).with_content(line)
+        end
+      end
+
     end
   end
 end

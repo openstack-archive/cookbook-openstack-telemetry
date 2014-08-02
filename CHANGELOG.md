@@ -2,6 +2,9 @@ openstack-telemetry Cookbook CHANGELG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
 
+## 9.3.1
+* Support vmware hypervisor
+
 ## 9.3.0
 * python_packages database client attributes have been migrated to
 the -common cookbook

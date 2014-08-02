@@ -47,6 +47,8 @@ default['openstack']['telemetry']['sample_source'] = 'openstack'
 case node['openstack']['compute']['driver']
 when 'libvirt.LibvirtDriver'
   default['openstack']['telemetry']['hypervisor_inspector'] = 'libvirt'
+when 'vmwareapi.VMwareESXDriver', 'vmwareapi.VMwareVCDriver'
+  default['openstack']['telemetry']['hypervisor_inspector'] = 'vsphere'
 else
   default['openstack']['telemetry']['hypervisor_inspector'] = nil
 end

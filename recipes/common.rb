@@ -81,6 +81,10 @@ directory node['openstack']['telemetry']['conf_dir'] do
   action :create
 end
 
+if node['openstack']['telemetry']['hypervisor_inspector'] == 'vsphere'
+  vmware_host_pass = get_secret node['openstack']['compute']['vmware']['secret_name']
+end
+
 template node['openstack']['telemetry']['conf'] do
   source 'ceilometer.conf.erb'
   owner  node['openstack']['telemetry']['user']
@@ -100,6 +104,7 @@ template node['openstack']['telemetry']['conf'] do
     service_user: service_user,
     metering_secret: metering_secret,
     api_bind_host: telemetry_api_bind.host,
-    api_bind_port: telemetry_api_bind.port
+    api_bind_port: telemetry_api_bind.port,
+    vmware_host_pass: vmware_host_pass
   )
 end
