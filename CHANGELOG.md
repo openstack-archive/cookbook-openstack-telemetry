@@ -2,6 +2,9 @@ openstack-telemetry Cookbook CHANGELG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
 
+## 10.0.1
+* Support vmware hypervisor
+
 ## 10.0.0
 * Upgrading to Juno
 

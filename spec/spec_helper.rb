@@ -41,6 +41,9 @@ shared_context 'telemetry-stubs' do
     Chef::Recipe.any_instance.stub(:get_secret)
       .with('openstack_metering_secret')
       .and_return('metering_secret')
+    Chef::Recipe.any_instance.stub(:get_secret)
+      .with('openstack_vmware_secret_name')
+      .and_return 'vmware_secret_name'
     Chef::Application.stub(:fatal!)
   end
 end
