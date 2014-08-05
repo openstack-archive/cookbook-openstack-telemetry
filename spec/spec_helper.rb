@@ -25,26 +25,26 @@ UBUNTU_OPTS = {
 
 shared_context 'telemetry-stubs' do
   before do
-    Chef::Recipe.any_instance.stub(:memcached_servers).and_return([])
-    Chef::Recipe.any_instance.stub(:get_password)
+    allow_any_instance_of(Chef::Recipe).to receive(:memcached_servers).and_return([])
+    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
       .with('db', anything)
       .and_return('')
-    Chef::Recipe.any_instance.stub(:get_password)
+    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
       .with('service', 'openstack-ceilometer')
       .and_return('ceilometer-pass')
-    Chef::Recipe.any_instance.stub(:get_password)
+    allow_any_instance_of(Chef::Recipe).to receive(:get_password)
       .with('user', 'guest')
       .and_return('mq-pass')
-    Chef::Recipe.any_instance.stub(:get_secret)
+    allow_any_instance_of(Chef::Recipe).to receive(:get_secret)
       .with('openstack_identity_bootstrap_token')
       .and_return('bootstrap-token')
-    Chef::Recipe.any_instance.stub(:get_secret)
+    allow_any_instance_of(Chef::Recipe).to receive(:get_secret)
       .with('openstack_metering_secret')
       .and_return('metering_secret')
-    Chef::Recipe.any_instance.stub(:get_secret)
+    allow_any_instance_of(Chef::Recipe).to receive(:get_secret)
       .with('openstack_vmware_secret_name')
       .and_return 'vmware_secret_name'
-    Chef::Application.stub(:fatal!)
+    allow(Chef::Application).to receive(:fatal!)
   end
 end
 

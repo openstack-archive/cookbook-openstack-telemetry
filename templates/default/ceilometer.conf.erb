@@ -62,7 +62,6 @@ host = <%= @api_bind_host %>
 port = <%= @api_bind_port %>
 
 [keystone_authtoken]
-paste.filter_factory = keystoneclient.middleware.auth_token:filter_factory
 auth_uri = <%= @auth_uri %>
 auth_host = <%= @identity_admin_endpoint.host %>
 auth_port = <%= @identity_admin_endpoint.port %>
