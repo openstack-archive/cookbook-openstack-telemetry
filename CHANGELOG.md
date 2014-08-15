@@ -6,6 +6,7 @@ This file is used to list changes made in each version of the openstack-metering
 * Support vmware hypervisor
 * Sync conf files with Juno
 * Set os_region_name properly
+* Upgrading berkshelf from 2.0.18 to 3.1.5
 
 ## 10.0.0
 * Upgrading to Juno
