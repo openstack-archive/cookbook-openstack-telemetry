@@ -61,6 +61,11 @@ describe 'openstack-telemetry::common' do
           /^sample_source = openstack$/)
       end
 
+      it 'has default os_region_name set' do
+        expect(chef_run).to render_file(file.name).with_content(
+          /^os_region_name = RegionOne$/)
+      end
+
       it 'has sample_source set' do
         node.set['openstack']['telemetry']['sample_source'] = 'RegionOne'
         expect(chef_run).to render_file(file.name).with_content(

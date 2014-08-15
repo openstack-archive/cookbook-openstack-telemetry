@@ -88,3 +88,6 @@ api_retry_count = <%= node['openstack']['compute']['vmware']['api_retry_count'] 
 wsdl_location = <%= node['openstack']['compute']['vmware']['wsdl_location'] %>
   <% end %>
 <% end %>
+
+[service_credentials]
+os_region_name = <%= node['openstack']['telemetry']['region'] %>
