@@ -34,6 +34,24 @@ default['openstack']['telemetry']['api']['auth']['cache_dir'] = '/var/cache/ceil
 
 default['openstack']['telemetry']['api']['auth']['version'] = node['openstack']['api']['auth']['version']
 
+# A list of memcached server(s) to use for caching
+default['openstack']['telemetry']['api']['auth']['memcached_servers'] = nil
+
+# Whether token data should be authenticated or authenticated and encrypted. Acceptable values are MAC or ENCRYPT
+default['openstack']['telemetry']['api']['auth']['memcache_security_strategy'] = nil
+
+# This string is used for key derivation
+default['openstack']['telemetry']['api']['auth']['memcache_secret_key'] = nil
+
+# Hash algorithms to use for hashing PKI tokens
+default['openstack']['telemetry']['api']['auth']['hash_algorithms'] = 'md5'
+
+# A PEM encoded Certificate Authority to use when verifying HTTPs connections
+default['openstack']['telemetry']['api']['auth']['cafile'] = nil
+
+# Verify HTTPS connections
+default['openstack']['telemetry']['api']['auth']['insecure'] = false
+
 default['openstack']['telemetry']['user'] = 'ceilometer'
 default['openstack']['telemetry']['group'] = 'ceilometer'
 
@@ -41,6 +59,12 @@ default['openstack']['telemetry']['region'] = node['openstack']['region']
 default['openstack']['telemetry']['service_user'] = 'ceilometer'
 default['openstack']['telemetry']['service_tenant_name'] = 'service'
 default['openstack']['telemetry']['service_role'] = 'admin'
+
+# A PEM encoded Certificate Authority to use when verifying HTTPs connections (for service polling authentication)
+default['openstack']['telemetry']['service-credentials']['cafile'] = nil
+
+# Verify HTTPS connections (for service polling authentication)
+default['openstack']['telemetry']['service-credentials']['insecure'] = false
 
 default['openstack']['telemetry']['sample_source'] = 'openstack'
 

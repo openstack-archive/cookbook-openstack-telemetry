@@ -132,6 +132,50 @@ describe 'openstack-telemetry::common' do
         end
       end
 
+      context 'service_credentials attributes with default values' do
+        it 'sets cafile' do
+          expect(chef_run).not_to render_file(file.name).with_content(/^os_cacert = $/)
+        end
+
+        it 'sets insecure' do
+          expect(chef_run).to render_file(file.name).with_content(/^insecure = false$/)
+        end
+      end
+
+      context 'service_credentials attributes' do
+        it 'sets cafile' do
+          node.set['openstack']['telemetry']['service-credentials']['cafile'] = 'dir/to/path'
+          expect(chef_run).to render_file(file.name).with_content(%r{^os_cacert = dir/to/path$})
+        end
+
+        it 'sets insecure' do
+          node.set['openstack']['telemetry']['service-credentials']['insecure'] = true
+          expect(chef_run).to render_file(file.name).with_content(/^insecure = true$/)
+        end
+      end
+
+      context 'keystone authtoken attributes with default values' do
+        it 'sets memcached server(s)' do
+          expect(chef_run).not_to render_file(file.name).with_content(/^memcached_servers = $/)
+        end
+
+        it 'sets memcache security strategy' do
+          expect(chef_run).not_to render_file(file.name).with_content(/^memcache_security_strategy = $/)
+        end
+
+        it 'sets memcache secret key' do
+          expect(chef_run).not_to render_file(file.name).with_content(/^memcache_secret_key = $/)
+        end
+
+        it 'sets cafile' do
+          expect(chef_run).not_to render_file(file.name).with_content(/^cafile = $/)
+        end
+
+        it 'sets token hash algorithms' do
+          expect(chef_run).to render_file(file.name).with_content(/^hash_algorithms = md5$/)
+        end
+      end
+
       context 'has keystone authtoken configuration' do
         it 'has auth_uri' do
           expect(chef_run).to render_file(file.name).with_content(
@@ -176,6 +220,36 @@ describe 'openstack-telemetry::common' do
         it 'has signing_dir' do
           expect(chef_run).to render_file(file.name).with_content(
             /^#{Regexp.quote('signing_dir = /var/cache/ceilometer/api')}$/)
+        end
+
+        it 'sets memcached server(s)' do
+          node.set['openstack']['telemetry']['api']['auth']['memcached_servers'] = 'localhost:11211'
+          expect(chef_run).to render_file(file.name).with_content(/^memcached_servers = localhost:11211$/)
+        end
+
+        it 'sets memcache security strategy' do
+          node.set['openstack']['telemetry']['api']['auth']['memcache_security_strategy'] = 'MAC'
+          expect(chef_run).to render_file(file.name).with_content(/^memcache_security_strategy = MAC$/)
+        end
+
+        it 'sets memcache secret key' do
+          node.set['openstack']['telemetry']['api']['auth']['memcache_secret_key'] = '0123456789ABCDEF'
+          expect(chef_run).to render_file(file.name).with_content(/^memcache_secret_key = 0123456789ABCDEF$/)
+        end
+
+        it 'sets cafile' do
+          node.set['openstack']['telemetry']['api']['auth']['cafile'] = 'dir/to/path'
+          expect(chef_run).to render_file(file.name).with_content(%r{^cafile = dir/to/path$})
+        end
+
+        it 'sets insecure' do
+          node.set['openstack']['telemetry']['api']['auth']['insecure'] = true
+          expect(chef_run).to render_file(file.name).with_content(/^insecure = true$/)
+        end
+
+        it 'sets token hash algorithm' do
+          node.set['openstack']['telemetry']['api']['auth']['hash_algorithms'] = 'sha2'
+          expect(chef_run).to render_file(file.name).with_content(/^hash_algorithms = sha2$/)
         end
       end
 

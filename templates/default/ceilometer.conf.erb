@@ -74,6 +74,32 @@ admin_user = <%= @service_user %>
 admin_password = <%= @service_pass %>
 signing_dir = <%= node["openstack"]["telemetry"]["api"]["auth"]["cache_dir"] %>
 
+# A list of memcached server(s) to use for caching.
+<% if node['openstack']['telemetry']['api']['auth']['memcached_servers'] %>
+memcached_servers = <%= node['openstack']['telemetry']['api']['auth']['memcached_servers'] %>
+<% end %>
+
+# Whether token data should be authenticated or authenticated and encrypted. Acceptable values are MAC or ENCRYPT.
+<% if node['openstack']['telemetry']['api']['auth']['memcache_security_strategy'] %>
+memcache_security_strategy = <%= node['openstack']['telemetry']['api']['auth']['memcache_security_strategy'] %>
+<% end %>
+
+# This string is used for key derivation.
+<% if node['openstack']['telemetry']['api']['auth']['memcache_secret_key'] %>
+memcache_secret_key = <%= node['openstack']['telemetry']['api']['auth']['memcache_secret_key'] %>
+<% end %>
+
+# Hash algorithms to use for hashing PKI tokens.
+hash_algorithms = <%= node['openstack']['telemetry']['api']['auth']['hash_algorithms'] %>
+
+# A PEM encoded Certificate Authority to use when verifying HTTPs connections.
+<% if node['openstack']['telemetry']['api']['auth']['cafile'] %>
+cafile = <%= node['openstack']['telemetry']['api']['auth']['cafile'] %>
+<% end %>
+
+# Verify HTTPS connections. (boolean value)
+insecure = <%= node['openstack']['telemetry']['api']['auth']['insecure'] %>
+
 [publisher_rpc]
 metering_secret = <%= @metering_secret %>
 
@@ -91,3 +117,11 @@ wsdl_location = <%= node['openstack']['compute']['vmware']['wsdl_location'] %>
 
 [service_credentials]
 os_region_name = <%= node['openstack']['telemetry']['region'] %>
+
+# A PEM encoded Certificate Authority to use when verifying HTTPs connections. (for service polling authentication)
+<% if node['openstack']['telemetry']['service-credentials']['cafile'] %>
+os_cacert = <%= node['openstack']['telemetry']['service-credentials']['cafile'] %>
+<% end %>
+
+# Verify HTTPS connections. (boolean value, for service polling authentication)
+insecure = <%= node['openstack']['telemetry']['service-credentials']['insecure'] %>

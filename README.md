@@ -60,7 +60,15 @@ Attributes
 ==========
 
 * `openstack['telemetry']['api']['auth']['version']` - Select v2.0 or v3.0. Default v2.0. The auth API version used to interact with identity service.
-* `openstack['telemetry']['sample_source']  -  The source name of emitted samples, default value is openstack.
+* `openstack['telemetry']['sample_source']` -  The source name of emitted samples, default value is openstack.
+* `openstack['telemetry']['api']['auth']['memcached_servers']` - A list of memcached server(s) to use for caching
+* `openstack['telemetry']['api']['auth']['memcache_security_strategy']` - Whether token data should be authenticated or authenticated and encrypted. Acceptable values are MAC or ENCRYPT
+* `openstack['telemetry']['api']['auth']['memcache_secret_key']` - This string is used for key derivation
+* `openstack['telemetry']['api']['auth']['hash_algorithms']` - Hash algorithms to use for hashing PKI tokens
+* `openstack['telemetry']['api']['auth']['cafile']` - A PEM encoded Certificate Authority to use when verifying HTTPs connections
+* `openstack['telemetry']['api']['auth']['insecure']` - Set whether to verify HTTPS connections
+* `openstack['telemetry']['service-credentials']['cafile']` - A PEM encoded Certificate Authority to use when verifying HTTPs connections (for service polling authentication)
+* `openstack['telemetry']['service-credentials']['insecure']` - Set whether to verify HTTPS connections (for service polling authentication)
 
 The following attributes are defined in attributes/default.rb of the common cookbook, but are documented here due to their relevance:
 
