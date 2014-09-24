@@ -9,6 +9,7 @@ This file is used to list changes made in each version of the openstack-metering
 * Upgrading berkshelf from 2.0.18 to 3.1.5
 * Allow cafile, os_cacert, insecure, memcached_servers, memcache_security_strategy, memcache_secret_key and has
 h_algorithms to be configurable
+* Remove old nosql check for running dbsync
 
 ## 10.0.0
 * Upgrading to Juno

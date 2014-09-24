@@ -24,10 +24,8 @@ include_recipe 'openstack-telemetry::common'
 
 conf_switch = "--config-file #{node["openstack"]["telemetry"]["conf"]}"
 
-unless node['openstack']['db']['telemetry']['nosql']['used']
-  execute 'database migration' do
-    command "ceilometer-dbsync #{conf_switch}"
-  end
+execute 'database migration' do
+  command "ceilometer-dbsync #{conf_switch}"
 end
 
 platform = node['openstack']['telemetry']['platform']

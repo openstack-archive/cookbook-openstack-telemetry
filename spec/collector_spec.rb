@@ -20,12 +20,6 @@ describe 'openstack-telemetry::collector' do
       expect(chef_run).to run_execute command
     end
 
-    it 'does not execute ceilometer dbsync when nosql database is used' do
-      node.set['openstack']['db']['telemetry']['nosql']['used'] = true
-
-      expect(chef_run).not_to run_execute('execute[database migration]')
-    end
-
     it 'installs python-mysqldb' do
       expect(chef_run).to upgrade_package('python-mysqldb')
     end
