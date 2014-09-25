@@ -1,6 +1,8 @@
-openstack-telemetry Cookbook CHANGELG
+openstack-telemetry Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the openstack-metering cookbook.
+## 9.3.2
+* Updated Berksfile.lock for the UTF8 issue in common
 
 ## 9.3.1
 * Support vmware hypervisor
