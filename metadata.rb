@@ -1,6 +1,6 @@
 name             'openstack-telemetry'
-maintainer       'AT&T Services, Inc.'
-maintainer_email 'cookbooks@lists.tfoundry.com'
+maintainer       'openstack-chef'
+maintainer_email 'opscode-chef-openstack@googlegroups.com'
 license          'Apache 2.0'
 description      'The OpenStack Metering service Ceilometer.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))

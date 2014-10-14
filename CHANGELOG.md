@@ -10,7 +10,6 @@ This file is used to list changes made in each version of the openstack-metering
 * Allow cafile, os_cacert, insecure, memcached_servers, memcache_security_strategy, memcache_secret_key and has
 h_algorithms to be configurable
 * Remove old nosql check for running dbsync
-
 * Bump Chef gem to 11.16
 
 ## 10.0.0

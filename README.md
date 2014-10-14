@@ -13,6 +13,12 @@ Requirements
 Cookbooks
 ---------
 
+The following cookbooks are dependencies:
+
+* openstack-common
+* openstack-identity
+* openstack-compute
+
 Usage
 =====
 
@@ -105,7 +111,8 @@ License and Author
 | **Author**           |  Ionut Artarisi (<iartarisi@suse.cz>)              |
 | **Author**           |  Eric Zhou (<zyouzhou@cn.ibm.com>)                 |
 | **Author**           |  Chen Zhiwei (<zhiwchen@cn.ibm.com>)               |
-| **Author**           |  David Geng (<gengjh@cn.ibm.com>)               |
+| **Author**           |  David Geng (<gengjh@cn.ibm.com>)                  |
+| **Author**           |  Mark Vanderwiel (<vanderwl@us.ibm.com>)           |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
 | **Copyright**        |  Copyright (c) 2013, AT&T Services, Inc.           |
