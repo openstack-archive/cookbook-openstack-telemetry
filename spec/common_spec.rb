@@ -84,20 +84,63 @@ describe 'openstack-telemetry::common' do
           node.set['openstack']['mq']['telemetry']['service_type'] = 'rabbitmq'
         end
 
-        it 'has default rabbit_* options set' do
-          [
-            /^rabbit_userid = guest$/,
-            /^rabbit_password = mq-pass$/,
-            /^rabbit_port = 5672$/,
-            /^rabbit_host = 127.0.0.1$/,
-            /^rabbit_virtual_host = \/$/,
-            /^rabbit_use_ssl = false$/,
-            %r{^auth_uri = http://127.0.0.1:5000/v2.0$},
-            /^auth_host = 127.0.0.1$/,
-            /^auth_port = 35357$/,
-            /^auth_protocol = http$/
-          ].each do |line|
-            expect(chef_run).to render_file(file.name).with_content(line)
+        describe 'ha rabbit disabled' do
+          before do
+            node.override['openstack']['mq']['telemetry']['rabbit']['ha'] = false
+          end
+
+          it 'has default rabbit_* options set' do
+            [
+              /^rabbit_userid = guest$/,
+              /^rabbit_password = mq-pass$/,
+              /^rabbit_port = 5672$/,
+              /^rabbit_host = 127.0.0.1$/,
+              /^rabbit_virtual_host = \/$/,
+              /^rabbit_use_ssl = false$/,
+              %r{^auth_uri = http://127.0.0.1:5000/v2.0$},
+              /^auth_host = 127.0.0.1$/,
+              /^auth_port = 35357$/,
+              /^auth_protocol = http$/
+            ].each do |line|
+              expect(chef_run).to render_file(file.name).with_content(line)
+            end
+          end
+
+          it 'does not have ha rabbit options set' do
+            [/^rabbit_hosts = /,
+             /^rabbit_ha_queues = /].each do |line|
+              expect(chef_run).not_to render_file(file.name).with_content(line)
+            end
+          end
+        end
+
+        describe 'ha rabbit enabled' do
+          before do
+            node.override['openstack']['mq']['telemetry']['rabbit']['ha'] = true
+          end
+
+          it 'sets ha rabbit options correctly' do
+            [
+              /^rabbit_userid = guest$/,
+              /^rabbit_password = mq-pass$/,
+              /^rabbit_hosts = 1.1.1.1:5672,2.2.2.2:5672$/,
+              /^rabbit_ha_queues = True$/,
+              /^rabbit_virtual_host = \/$/,
+              /^rabbit_use_ssl = false$/,
+              %r{^auth_uri = http://127.0.0.1:5000/v2.0$},
+              /^auth_host = 127.0.0.1$/,
+              /^auth_port = 35357$/,
+              /^auth_protocol = http$/
+            ].each do |line|
+              expect(chef_run).to render_file(file.name).with_content(line)
+            end
+          end
+
+          it 'does not have non-ha rabbit options set' do
+            [/^rabbit_host = /,
+             /^rabbit_port = /].each do |line|
+              expect(chef_run).not_to render_file(file.name).with_content(line)
+            end
           end
         end
       end

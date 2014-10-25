@@ -47,6 +47,7 @@ end
 mq_service_type = node['openstack']['mq']['telemetry']['service_type']
 
 if mq_service_type == 'rabbitmq'
+  node['openstack']['mq']['telemetry']['rabbit']['ha'] && (rabbit_hosts = rabbit_servers)
   mq_password = get_password 'user', node['openstack']['mq']['telemetry']['rabbit']['userid']
 elsif mq_service_type == 'qpid'
   mq_password = get_password 'user', node['openstack']['mq']['telemetry']['qpid']['username']
@@ -99,6 +100,7 @@ template node['openstack']['telemetry']['conf'] do
     identity_admin_endpoint: identity_admin_endpoint,
     mq_service_type: mq_service_type,
     mq_password: mq_password,
+    rabbit_hosts: rabbit_hosts,
     service_pass: service_pass,
     service_tenant_name: service_tenant,
     service_user: service_user,

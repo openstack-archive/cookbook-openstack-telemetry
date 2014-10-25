@@ -11,6 +11,7 @@ This file is used to list changes made in each version of the openstack-metering
 h_algorithms to be configurable
 * Remove old nosql check for running dbsync
 * Bump Chef gem to 11.16
+* Allow rabbit_hosts and rabbit_ha_queues to be configurable
 
 ## 10.0.0
 * Upgrading to Juno

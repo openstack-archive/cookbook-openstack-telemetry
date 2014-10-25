@@ -25,6 +25,8 @@ UBUNTU_OPTS = {
 
 shared_context 'telemetry-stubs' do
   before do
+    allow_any_instance_of(Chef::Recipe).to receive(:rabbit_servers)
+      .and_return '1.1.1.1:5672,2.2.2.2:5672'
     allow_any_instance_of(Chef::Recipe).to receive(:memcached_servers).and_return([])
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)
       .with('db', anything)
