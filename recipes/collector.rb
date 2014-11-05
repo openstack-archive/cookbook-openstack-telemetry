@@ -26,6 +26,7 @@ conf_switch = "--config-file #{node["openstack"]["telemetry"]["conf"]}"
 
 execute 'database migration' do
   command "ceilometer-dbsync #{conf_switch}"
+  timeout node['openstack']['telemetry']['dbsync_timeout']
 end
 
 platform = node['openstack']['telemetry']['platform']

@@ -75,6 +75,7 @@ Attributes
 * `openstack['telemetry']['api']['auth']['insecure']` - Set whether to verify HTTPS connections
 * `openstack['telemetry']['service-credentials']['cafile']` - A PEM encoded Certificate Authority to use when verifying HTTPs connections (for service polling authentication)
 * `openstack['telemetry']['service-credentials']['insecure']` - Set whether to verify HTTPS connections (for service polling authentication)
+* `openstack['telemetry']['dbsync_timeout']` - Set dbsync command timeout value
 
 The following attributes are defined in attributes/default.rb of the common cookbook, but are documented here due to their relevance:
 

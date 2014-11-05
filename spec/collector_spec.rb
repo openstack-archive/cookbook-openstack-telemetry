@@ -16,8 +16,11 @@ describe 'openstack-telemetry::collector' do
     end
 
     it 'executes ceilometer dbsync' do
+      node.set['openstack']['telemetry']['dbsync_timeout'] = 36000
       command = 'ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf'
-      expect(chef_run).to run_execute command
+      expect(chef_run).to run_execute(command).with(
+        timeout: 36000
+      )
     end
 
     it 'installs python-mysqldb' do
