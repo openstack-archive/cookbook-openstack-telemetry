@@ -24,8 +24,10 @@ class ::Chef::Recipe # rubocop:disable Documentation
   include ::Openstack
 end
 
-api_endpoint = endpoint 'telemetry-api'
-identity_admin_endpoint = endpoint 'identity-admin'
+admin_api_endpoint = admin_endpoint 'telemetry-api'
+internal_api_endpoint = internal_endpoint 'telemetry-api'
+public_api_endpoint = public_endpoint 'telemetry-api'
+identity_admin_endpoint = admin_endpoint 'identity-admin'
 bootstrap_token = get_secret 'openstack_identity_bootstrap_token'
 auth_uri = ::URI.decode identity_admin_endpoint.to_s
 service_pass = get_password 'service', 'openstack-ceilometer'
@@ -80,9 +82,9 @@ openstack_identity_register 'Register Metering Endpoint' do
   bootstrap_token bootstrap_token
   service_type 'metering'
   endpoint_region node['openstack']['telemetry']['region']
-  endpoint_adminurl ::URI.decode api_endpoint.to_s
-  endpoint_internalurl ::URI.decode api_endpoint.to_s
-  endpoint_publicurl ::URI.decode api_endpoint.to_s
+  endpoint_adminurl ::URI.decode admin_api_endpoint.to_s
+  endpoint_internalurl ::URI.decode internal_api_endpoint.to_s
+  endpoint_publicurl ::URI.decode public_api_endpoint.to_s
 
   action :create_endpoint
 end

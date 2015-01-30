@@ -13,6 +13,7 @@ h_algorithms to be configurable
 * Bump Chef gem to 11.16
 * Allow rabbit_hosts and rabbit_ha_queues to be configurable
 * Allow dbsync_timeout to be configurable
+* Use common specific_endpoint routines (bug 1412919)
 
 ## 10.0.0
 * Upgrading to Juno

@@ -61,9 +61,9 @@ service_user = node['openstack']['telemetry']['service_user']
 service_pass = get_password 'service', 'openstack-ceilometer'
 service_tenant = node['openstack']['telemetry']['service_tenant_name']
 
-identity_endpoint = endpoint 'identity-api'
-identity_admin_endpoint = endpoint 'identity-admin'
-image_endpoint = endpoint 'image-api'
+identity_endpoint = internal_endpoint 'identity-api'
+identity_admin_endpoint = admin_endpoint 'identity-admin'
+image_endpoint = internal_endpoint 'image-api'
 telemetry_api_bind = endpoint 'telemetry-api-bind'
 
 auth_uri = auth_uri_transform identity_endpoint.to_s, node['openstack']['telemetry']['api']['auth']['version']
