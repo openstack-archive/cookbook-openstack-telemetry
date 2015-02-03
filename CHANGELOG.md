@@ -14,6 +14,7 @@ h_algorithms to be configurable
 * Allow rabbit_hosts and rabbit_ha_queues to be configurable
 * Allow dbsync_timeout to be configurable
 * Use common specific_endpoint routines (bug 1412919)
+* Use identity-internal endpoint (bug 1412919)
 
 ## 10.0.0
 * Upgrading to Juno
