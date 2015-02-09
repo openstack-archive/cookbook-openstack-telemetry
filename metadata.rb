@@ -21,6 +21,6 @@ recipe 'openstack-telemetry::identity_registration', 'Registers the endpoints, t
   supports os
 end
 
-depends 'openstack-common', '~> 10.0'
-depends 'openstack-identity', '~> 10.0'
-depends 'openstack-compute', '~> 10.0'
+depends 'openstack-common', '>= 10.2.0'
+depends 'openstack-identity', '>= 10.0.0'
+depends 'openstack-compute', '>= 10.0.0'
