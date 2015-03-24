@@ -143,3 +143,6 @@ when 'debian'
     'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end
+
+# The time to live value for samples which is specified in seconds, override to -1 if no data expiry is required
+default['openstack']['telemetry']['database']['time_to_live'] = 1800

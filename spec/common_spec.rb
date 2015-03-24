@@ -175,6 +175,13 @@ describe 'openstack-telemetry::common' do
         end
       end
 
+      context 'database' do
+        it 'has time_to_live set' do
+          expect(chef_run).to render_config_file(file.name)\
+            .with_section_content('database', /^time_to_live=1800$/)
+        end
+      end
+
       context 'service_credentials attributes with default values' do
         it 'sets cafile' do
           expect(chef_run).not_to render_file(file.name).with_content(/^os_cacert = $/)

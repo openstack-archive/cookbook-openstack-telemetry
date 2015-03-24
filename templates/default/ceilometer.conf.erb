@@ -61,6 +61,7 @@ periodic_interval = <%= node["openstack"]["telemetry"]["periodic_interval"] %>
 
 [database]
 connection=<%= @database_connection %>
+time_to_live=<%= node["openstack"]["telemetry"]["database"]["time_to_live"] %>
 
 [api]
 host = <%= @api_bind_host %>
