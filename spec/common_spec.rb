@@ -143,6 +143,17 @@ describe 'openstack-telemetry::common' do
             end
           end
         end
+
+        it 'does not have kombu ssl version set' do
+          expect(chef_run).not_to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+        end
+
+        it 'sets kombu ssl version' do
+          node.set['openstack']['mq']['telemetry']['rabbit']['use_ssl'] = true
+          node.set['openstack']['mq']['telemetry']['rabbit']['kombu_ssl_version'] = 'TLSv1.2'
+
+          expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+        end
       end
 
       context 'qpid mq backend' do
