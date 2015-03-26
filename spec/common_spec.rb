@@ -96,11 +96,7 @@ describe 'openstack-telemetry::common' do
               /^rabbit_port = 5672$/,
               /^rabbit_host = 127.0.0.1$/,
               /^rabbit_virtual_host = \/$/,
-              /^rabbit_use_ssl = false$/,
-              %r{^auth_uri = http://127.0.0.1:5000/v2.0$},
-              /^auth_host = 127.0.0.1$/,
-              /^auth_port = 35357$/,
-              /^auth_protocol = http$/
+              /^rabbit_use_ssl = false$/
             ].each do |line|
               expect(chef_run).to render_file(file.name).with_content(line)
             end
@@ -126,11 +122,7 @@ describe 'openstack-telemetry::common' do
               /^rabbit_hosts = 1.1.1.1:5672,2.2.2.2:5672$/,
               /^rabbit_ha_queues = True$/,
               /^rabbit_virtual_host = \/$/,
-              /^rabbit_use_ssl = false$/,
-              %r{^auth_uri = http://127.0.0.1:5000/v2.0$},
-              /^auth_host = 127.0.0.1$/,
-              /^auth_port = 35357$/,
-              /^auth_protocol = http$/
+              /^rabbit_use_ssl = false$/
             ].each do |line|
               expect(chef_run).to render_file(file.name).with_content(line)
             end
@@ -243,19 +235,9 @@ describe 'openstack-telemetry::common' do
             /^#{Regexp.quote('auth_uri = http://127.0.0.1:5000/v2.0')}$/)
         end
 
-        it 'has auth_host' do
+        it 'has identity_uri' do
           expect(chef_run).to render_file(file.name).with_content(
-            /^#{Regexp.quote('auth_host = 127.0.0.1')}$/)
-        end
-
-        it 'has auth_port' do
-          expect(chef_run).to render_file(file.name).with_content(
-            /^auth_port = 35357$/)
-        end
-
-        it 'has auth_protocol' do
-          expect(chef_run).to render_file(file.name).with_content(
-            /^auth_protocol = http$/)
+            /^#{Regexp.quote('identity_uri = http://127.0.0.1:35357/')}$/)
         end
 
         it 'has no auth_version' do

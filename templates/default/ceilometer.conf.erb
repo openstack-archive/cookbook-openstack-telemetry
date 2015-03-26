@@ -72,9 +72,7 @@ port = <%= @api_bind_port %>
 
 [keystone_authtoken]
 auth_uri = <%= @auth_uri %>
-auth_host = <%= @identity_admin_endpoint.host %>
-auth_port = <%= @identity_admin_endpoint.port %>
-auth_protocol = <%= @identity_admin_endpoint.scheme %>
+identity_uri = <%= @identity_uri %>
 <% if node['openstack']['telemetry']['api']['auth']['version'] != 'v2.0' %>
 auth_version = <%= node['openstack']['telemetry']['api']['auth']['version'] %>
 <% end %>
