@@ -349,6 +349,13 @@ describe 'openstack-telemetry::common' do
         end
       end
 
+      context 'notification' do
+        it 'has store_events option' do
+          expect(chef_run).to render_config_file(file.name)\
+            .with_section_content('notification', /^store_events = false$/)
+        end
+      end
+
     end
   end
 end

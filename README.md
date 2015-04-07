@@ -77,6 +77,7 @@ Attributes
 * `openstack['telemetry']['service-credentials']['insecure']` - Set whether to verify HTTPS connections (for service polling authentication)
 * `openstack['telemetry']['dbsync_timeout']` - Set dbsync command timeout value
 * `openstack['telemetry']['database']['time_to_live']` - Set a time_to_live parameter (ttl) for samples. Set -1 for no expiry
+* `openstack['telemetry']['notification']['store_events']` - Set a store_events parameter for notification service
 
 The following attributes are defined in attributes/default.rb of the common cookbook, but are documented here due to their relevance:
 

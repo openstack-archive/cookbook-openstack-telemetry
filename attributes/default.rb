@@ -146,3 +146,6 @@ end
 
 # The time to live value for samples which is specified in seconds, override to -1 if no data expiry is required
 default['openstack']['telemetry']['database']['time_to_live'] = 1800
+
+# Decide whether to store events in notification service or not
+default['openstack']['telemetry']['notification']['store_events'] = false

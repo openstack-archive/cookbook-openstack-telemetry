@@ -134,3 +134,6 @@ os_cacert = <%= node['openstack']['telemetry']['service-credentials']['cafile'] 
 
 # Verify HTTPS connections. (boolean value, for service polling authentication)
 insecure = <%= node['openstack']['telemetry']['service-credentials']['insecure'] %>
+
+[notification]
+store_events = <%= node['openstack']['telemetry']['notification']['store_events'] %>
