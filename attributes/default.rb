@@ -58,7 +58,7 @@ default['openstack']['telemetry']['group'] = 'ceilometer'
 default['openstack']['telemetry']['region'] = node['openstack']['region']
 default['openstack']['telemetry']['service_user'] = 'ceilometer'
 default['openstack']['telemetry']['service_tenant_name'] = 'service'
-default['openstack']['telemetry']['service_role'] = 'service'
+default['openstack']['telemetry']['service_role'] = 'admin'
 
 # A PEM encoded Certificate Authority to use when verifying HTTPs connections (for service polling authentication)
 default['openstack']['telemetry']['service-credentials']['cafile'] = nil
