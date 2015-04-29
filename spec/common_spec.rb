@@ -56,6 +56,21 @@ describe 'openstack-telemetry::common' do
           )
       end
 
+      it 'has default values' do
+        node.set['openstack']['telemetry']['syslog']['use'] = true
+        [%r(^os_auth_url = http://127.0.0.1:5000/v2.0$),
+         /^os_tenant_name = service$/,
+         /^os_password = ceilometer-pass$/,
+         /^os_username = ceilometer$/,
+         /^verbose = true$/,
+         /^debug = false$/,
+         %r(^log_config = /etc/openstack/logging.conf$),
+         /^glance_registry_host = 127.0.0.1$/,
+         /^periodic_interval = 600$/].each do |line|
+          expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', line)
+        end
+      end
+
       it 'has default sample_source set' do
         expect(chef_run).to render_file(file.name).with_content(
           /^sample_source = openstack$/)
@@ -179,6 +194,11 @@ describe 'openstack-telemetry::common' do
       end
 
       context 'database' do
+        it 'has connection set' do
+          expect(chef_run).to render_config_file(file.name)\
+            .with_section_content('database', /^#{Regexp.quote('connection=mysql://ceilometer:@127.0.0.1:3306/ceilometer?charset=utf8')}$/)
+        end
+
         it 'has time_to_live set' do
           expect(chef_run).to render_config_file(file.name)\
             .with_section_content('database', /^time_to_live=1800$/)
