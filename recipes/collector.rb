@@ -22,7 +22,7 @@
 
 include_recipe 'openstack-telemetry::common'
 
-conf_switch = "--config-file #{node["openstack"]["telemetry"]["conf"]}"
+conf_switch = "--config-file #{node['openstack']['telemetry']['conf']}"
 
 execute 'database migration' do
   command "ceilometer-dbsync #{conf_switch}"
@@ -43,7 +43,7 @@ if node['platform'] == 'ubuntu'
   init_script = '/etc/init/ceilometer-collector.conf'
   execute 'fix init script' do
     command "cp #{init_script}.dpkg-new #{init_script}"
-    not_if { ::File.exists?(init_script) }
+    not_if { ::File.exist?(init_script) }
   end
 end
 

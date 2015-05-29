@@ -58,13 +58,13 @@ describe 'openstack-telemetry::common' do
 
       it 'has default values' do
         node.set['openstack']['telemetry']['syslog']['use'] = true
-        [%r(^os_auth_url = http://127.0.0.1:5000/v2.0$),
+        [%r{^os_auth_url = http://127.0.0.1:5000/v2.0$},
          /^os_tenant_name = service$/,
          /^os_password = ceilometer-pass$/,
          /^os_username = ceilometer$/,
          /^verbose = true$/,
          /^debug = false$/,
-         %r(^log_config = /etc/openstack/logging.conf$),
+         %r{^log_config = /etc/openstack/logging.conf$},
          /^glance_registry_host = 127.0.0.1$/,
          /^periodic_interval = 600$/].each do |line|
           expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', line)
@@ -334,8 +334,7 @@ describe 'openstack-telemetry::common' do
 
       it 'has bind_port set' do
         node.set['openstack']['endpoints']['telemetry-api-bind']['port'] = '9999'
-        expect(chef_run).to render_file(file.name).with_content(
-        /^port = 9999$/)
+        expect(chef_run).to render_file(file.name).with_content(/^port = 9999$/)
       end
 
       it 'has vmware section' do
@@ -357,7 +356,6 @@ describe 'openstack-telemetry::common' do
             .with_section_content('notification', /^store_events = false$/)
         end
       end
-
     end
   end
 end

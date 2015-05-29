@@ -1,10 +1,10 @@
-name             'openstack-telemetry'
-maintainer       'openstack-chef'
+name 'openstack-telemetry'
+maintainer 'openstack-chef'
 maintainer_email 'opscode-chef-openstack@googlegroups.com'
-license          'Apache 2.0'
-description      'The OpenStack Metering service Ceilometer.'
+license 'Apache 2.0'
+description 'The OpenStack Metering service Ceilometer.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '11.0.0'
+version '11.0.0'
 
 recipe 'openstack-telemetry::agent-central', 'Installs agent central service.'
 recipe 'openstack-telemetry::agent-compute', 'Installs agent compute service.'
@@ -17,7 +17,7 @@ recipe 'openstack-telemetry::alarm-notifier', 'Installs the alarm notifier servi
 recipe 'openstack-telemetry::common', 'Common metering configuration.'
 recipe 'openstack-telemetry::identity_registration', 'Registers the endpoints, tenant and user for metering service with Keystone'
 
-%w{ ubuntu suse }.each do |os|
+%w(ubuntu suse).each do |os|
   supports os
 end
 

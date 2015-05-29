@@ -25,7 +25,7 @@ include_recipe 'openstack-telemetry::common'
 directory ::File.dirname(node['openstack']['telemetry']['api']['auth']['cache_dir']) do
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode  00700
+  mode 00700
 end
 
 platform = node['openstack']['telemetry']['platform']

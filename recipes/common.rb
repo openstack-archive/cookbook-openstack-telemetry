@@ -71,14 +71,14 @@ identity_uri = identity_uri_transform(identity_admin_endpoint)
 
 Chef::Log.debug("openstack-telemetry::common:service_user|#{service_user}")
 Chef::Log.debug("openstack-telemetry::common:service_tenant|#{service_tenant}")
-Chef::Log.debug("openstack-telemetry::common:identity_endpoint|#{identity_endpoint.to_s}")
+Chef::Log.debug("openstack-telemetry::common:identity_endpoint|#{identity_endpoint}")
 
 metering_secret = get_secret 'openstack_metering_secret'
 
 directory node['openstack']['telemetry']['conf_dir'] do
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode  00750
+  mode 00750
 
   action :create
 end
@@ -89,9 +89,9 @@ end
 
 template node['openstack']['telemetry']['conf'] do
   source 'ceilometer.conf.erb'
-  owner  node['openstack']['telemetry']['user']
-  group  node['openstack']['telemetry']['group']
-  mode   00640
+  owner node['openstack']['telemetry']['user']
+  group node['openstack']['telemetry']['group']
+  mode 00640
 
   variables(
     auth_uri: auth_uri,

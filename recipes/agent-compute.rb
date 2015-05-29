@@ -35,7 +35,7 @@ if node['platform'] == 'ubuntu'
   init_script = '/etc/init/ceilometer-agent-compute.conf'
   execute 'fix init script' do
     command "cp #{init_script}.dpkg-new #{init_script}"
-    not_if { ::File.exists?(init_script) }
+    not_if { ::File.exist?(init_script) }
   end
 end
 
