@@ -16,48 +16,6 @@ sample_source = <%= node["openstack"]["telemetry"]["sample_source"] %>
 
 ##### AMQP #####
 notification_topics = notifications,glance_notifications
-amqp_durable_queues=<%= node["openstack"]["mq"]["telemetry"]["durable_queues"] %>
-amqp_auto_delete=<%= node["openstack"]["mq"]["telemetry"]["auto_delete"] %>
-
-<% if @mq_service_type == "rabbitmq"  %>
-<% if node["openstack"]["mq"]["telemetry"]["rabbit"]["use_ssl"] && node["openstack"]["mq"]["telemetry"]["rabbit"]["kombu_ssl_version"] %>
-kombu_ssl_version=<%= node["openstack"]["mq"]["telemetry"]["rabbit"]["kombu_ssl_version"] %>
-<% end -%>
-##### RABBITMQ #####
-rabbit_userid = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["userid"] %>
-rabbit_password = <%= @mq_password %>
-<% if node["openstack"]["mq"]["telemetry"]["rabbit"]["ha"] %>
-rabbit_hosts = <%= @rabbit_hosts %>
-rabbit_ha_queues = True
-<% else %>
-rabbit_port = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["port"] %>
-rabbit_host = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["host"] %>
-<% end %>
-rabbit_virtual_host = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["vhost"] %>
-rabbit_use_ssl = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["use_ssl"] %>
-rpc_backend = ceilometer.openstack.common.rpc.impl_kombu
-<% end %>
-
-<% if @mq_service_type == "qpid"  %>
-##### QPID #####
-rpc_backend=ceilometer.openstack.common.rpc.impl_qpid
-qpid_hostname=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["host"] %>
-qpid_port=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["port"] %>
-qpid_password=<%= @mq_password %>
-qpid_username=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["username"] %>
-qpid_sasl_mechanisms=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["sasl_mechanisms"] %>
-qpid_reconnect=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect"] %>
-qpid_reconnect_timeout=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect_timeout"] %>
-qpid_reconnect_limit=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect_limit"] %>
-qpid_reconnect_interval_min=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect_interval_min"] %>
-qpid_reconnect_interval_max=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect_interval_max"] %>
-qpid_reconnect_interval=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect_interval"] %>
-qpid_heartbeat=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["heartbeat"] %>
-# qpid protocol. default 'tcp'. set to 'ssl' to enable SSL
-qpid_protocol=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["protocol"] %>
-qpid_tcp_nodelay=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["tcp_nodelay"] %>
-qpid_topology_version=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["topology_version"] %>
-<% end %>
 
 glance_registry_host = <%= @image_endpoint.host %>
 periodic_interval = <%= node["openstack"]["telemetry"]["periodic_interval"] %>
@@ -106,6 +64,70 @@ cafile = <%= node['openstack']['telemetry']['api']['auth']['cafile'] %>
 
 # Verify HTTPS connections. (boolean value)
 insecure = <%= node['openstack']['telemetry']['api']['auth']['insecure'] %>
+
+<% if @mq_service_type == "qpid"  %>
+[oslo_messaging_qpid]
+
+#
+# From oslo.messaging
+#
+
+# Use durable queues in AMQP. (boolean value)
+amqp_durable_queues=<%= node["openstack"]["mq"]["telemetry"]["durable_queues"] %>
+
+# Auto-delete queues in AMQP. (boolean value)
+amqp_auto_delete=<%= node["openstack"]["mq"]["telemetry"]["auto_delete"] %>
+
+##### QPID #####
+rpc_backend=ceilometer.openstack.common.rpc.impl_qpid
+qpid_hostname=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["host"] %>
+qpid_port=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["port"] %>
+qpid_password=<%= @mq_password %>
+qpid_username=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["username"] %>
+qpid_sasl_mechanisms=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["sasl_mechanisms"] %>
+qpid_reconnect=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect"] %>
+qpid_reconnect_timeout=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect_timeout"] %>
+qpid_reconnect_limit=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect_limit"] %>
+qpid_reconnect_interval_min=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect_interval_min"] %>
+qpid_reconnect_interval_max=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect_interval_max"] %>
+qpid_reconnect_interval=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["reconnect_interval"] %>
+qpid_heartbeat=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["heartbeat"] %>
+# qpid protocol. default 'tcp'. set to 'ssl' to enable SSL
+qpid_protocol=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["protocol"] %>
+qpid_tcp_nodelay=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["tcp_nodelay"] %>
+qpid_topology_version=<%= node["openstack"]["mq"]["telemetry"]["qpid"]["topology_version"] %>
+<% end %>
+
+<% if @mq_service_type == "rabbitmq"  %>
+[oslo_messaging_rabbit]
+
+#
+# From oslo.messaging
+#
+
+# Use durable queues in AMQP. (boolean value)
+amqp_durable_queues=<%= node["openstack"]["mq"]["telemetry"]["durable_queues"] %>
+
+# Auto-delete queues in AMQP. (boolean value)
+amqp_auto_delete=<%= node["openstack"]["mq"]["telemetry"]["auto_delete"] %>
+
+<% if node["openstack"]["mq"]["telemetry"]["rabbit"]["use_ssl"] && node["openstack"]["mq"]["telemetry"]["rabbit"]["kombu_ssl_version"] %>
+kombu_ssl_version=<%= node["openstack"]["mq"]["telemetry"]["rabbit"]["kombu_ssl_version"] %>
+<% end -%>
+##### RABBITMQ #####
+rabbit_userid = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["userid"] %>
+rabbit_password = <%= @mq_password %>
+<% if node["openstack"]["mq"]["telemetry"]["rabbit"]["ha"] %>
+rabbit_hosts = <%= @rabbit_hosts %>
+rabbit_ha_queues = True
+<% else %>
+rabbit_port = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["port"] %>
+rabbit_host = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["host"] %>
+<% end %>
+rabbit_virtual_host = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["vhost"] %>
+rabbit_use_ssl = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["use_ssl"] %>
+rpc_backend = ceilometer.openstack.common.rpc.impl_kombu
+<% end %>
 
 [publisher_rpc]
 metering_secret = <%= @metering_secret %>

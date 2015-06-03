@@ -87,16 +87,16 @@ describe 'openstack-telemetry::common' do
           /^sample_source = RegionOne$/)
       end
 
-      it 'has default RPC/AMQP options set' do
-        [/^amqp_durable_queues=false$/,
-         /^amqp_auto_delete=false$/].each do |line|
-          expect(chef_run).to render_file(file.name).with_content(line)
-        end
-      end
-
       context 'rabbit mq backend' do
         before do
           node.set['openstack']['mq']['telemetry']['service_type'] = 'rabbitmq'
+        end
+
+        it 'has default RPC/AMQP options set' do
+          [/^amqp_durable_queues=false$/,
+           /^amqp_auto_delete=false$/].each do |line|
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', line)
+          end
         end
 
         describe 'ha rabbit disabled' do
@@ -113,14 +113,14 @@ describe 'openstack-telemetry::common' do
               /^rabbit_virtual_host = \/$/,
               /^rabbit_use_ssl = false$/
             ].each do |line|
-              expect(chef_run).to render_file(file.name).with_content(line)
+              expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', line)
             end
           end
 
           it 'does not have ha rabbit options set' do
             [/^rabbit_hosts = /,
              /^rabbit_ha_queues = /].each do |line|
-              expect(chef_run).not_to render_file(file.name).with_content(line)
+              expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', line)
             end
           end
         end
@@ -139,27 +139,27 @@ describe 'openstack-telemetry::common' do
               /^rabbit_virtual_host = \/$/,
               /^rabbit_use_ssl = false$/
             ].each do |line|
-              expect(chef_run).to render_file(file.name).with_content(line)
+              expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', line)
             end
           end
 
           it 'does not have non-ha rabbit options set' do
             [/^rabbit_host = /,
              /^rabbit_port = /].each do |line|
-              expect(chef_run).not_to render_file(file.name).with_content(line)
+              expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', line)
             end
           end
         end
 
         it 'does not have kombu ssl version set' do
-          expect(chef_run).not_to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+          expect(chef_run).not_to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^kombu_ssl_version=TLSv1.2$/)
         end
 
         it 'sets kombu ssl version' do
           node.set['openstack']['mq']['telemetry']['rabbit']['use_ssl'] = true
           node.set['openstack']['mq']['telemetry']['rabbit']['kombu_ssl_version'] = 'TLSv1.2'
 
-          expect(chef_run).to render_config_file(file.name).with_section_content('DEFAULT', /^kombu_ssl_version=TLSv1.2$/)
+          expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', /^kombu_ssl_version=TLSv1.2$/)
         end
       end
 
@@ -167,6 +167,13 @@ describe 'openstack-telemetry::common' do
         before do
           node.set['openstack']['mq']['telemetry']['service_type'] = 'qpid'
           node.set['openstack']['mq']['telemetry']['qpid']['username'] = 'guest'
+        end
+
+        it 'has default RPC/AMQP options set' do
+          [/^amqp_durable_queues=false$/,
+           /^amqp_auto_delete=false$/].each do |line|
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', line)
+          end
         end
 
         it 'has default qpid_* options set' do
@@ -188,7 +195,7 @@ describe 'openstack-telemetry::common' do
             /^qpid_tcp_nodelay=true$/,
             /^qpid_topology_version=1$/
           ].each do |line|
-            expect(chef_run).to render_file(file.name).with_content(line)
+            expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_qpid', line)
           end
         end
       end
