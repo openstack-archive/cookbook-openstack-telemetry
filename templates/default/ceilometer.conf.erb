@@ -127,6 +127,13 @@ rabbit_host = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["host"] %>
 rabbit_virtual_host = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["vhost"] %>
 rabbit_use_ssl = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["use_ssl"] %>
 rpc_backend = ceilometer.openstack.common.rpc.impl_kombu
+
+# Maximum retries with trying to connect to RabbitMQ
+# (the default of 0 implies an infinite retry count)
+rabbit_max_retries = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["rabbit_max_retries"] %>
+
+# RabbitMQ connection retry interval
+rabbit_retry_interval = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["rabbit_retry_interval"] %>
 <% end %>
 
 [publisher_rpc]

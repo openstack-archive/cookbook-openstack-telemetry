@@ -111,7 +111,9 @@ describe 'openstack-telemetry::common' do
               /^rabbit_port = 5672$/,
               /^rabbit_host = 127.0.0.1$/,
               /^rabbit_virtual_host = \/$/,
-              /^rabbit_use_ssl = false$/
+              /^rabbit_use_ssl = false$/,
+              /^rabbit_max_retries = 0$/,
+              /^rabbit_retry_interval = 1$/
             ].each do |line|
               expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', line)
             end
