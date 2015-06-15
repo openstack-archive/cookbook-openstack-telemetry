@@ -94,7 +94,9 @@ describe 'openstack-telemetry::common' do
 
         it 'has default RPC/AMQP options set' do
           [/^amqp_durable_queues=false$/,
-           /^amqp_auto_delete=false$/].each do |line|
+           /^amqp_auto_delete=false$/,
+           /^heartbeat_timeout_threshold=0$/,
+           /^heartbeat_rate=2$/].each do |line|
             expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', line)
           end
         end
