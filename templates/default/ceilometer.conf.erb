@@ -117,9 +117,36 @@ amqp_durable_queues=<%= node["openstack"]["mq"]["telemetry"]["durable_queues"] %
 # Auto-delete queues in AMQP. (boolean value)
 amqp_auto_delete=<%= node["openstack"]["mq"]["telemetry"]["auto_delete"] %>
 
-<% if node["openstack"]["mq"]["telemetry"]["rabbit"]["use_ssl"] && node["openstack"]["mq"]["telemetry"]["rabbit"]["kombu_ssl_version"] %>
-kombu_ssl_version=<%= node["openstack"]["mq"]["telemetry"]["rabbit"]["kombu_ssl_version"] %>
+<% if node['openstack']['mq']['telemetry']['rabbit']['use_ssl'] -%>
+
+# Connect over SSL for RabbitMQ. (boolean value)
+rabbit_use_ssl=true
+
+<%   if node['openstack']['mq']['telemetry']['rabbit']['kombu_ssl_version'] -%>
+# SSL version to use (valid only if SSL enabled). valid values
+# are TLSv1 and SSLv23. SSLv2 and SSLv3 may be available on
+# some distributions. (string value)
+kombu_ssl_version=<%= node['openstack']['mq']['telemetry']['rabbit']['kombu_ssl_version'] %>
+<%   end -%>
+<%   if node['openstack']['mq']['telemetry']['rabbit']['kombu_ssl_keyfile'] -%>
+# SSL key file (valid only if SSL enabled)
+kombu_ssl_keyfile=<%= node['openstack']['mq']['telemetry']['rabbit']['kombu_ssl_keyfile'] %>
+<%   end -%>
+<%   if node['openstack']['mq']['telemetry']['rabbit']['kombu_ssl_certfile'] -%>
+# SSL cert file (valid only if SSL enabled)
+kombu_ssl_certfile=<%= node['openstack']['mq']['telemetry']['rabbit']['kombu_ssl_certfile'] %>
+<%   end -%>
+<%   if node['openstack']['mq']['telemetry']['rabbit']['kombu_ssl_ca_certs'] -%>
+# SSL certification authority file (valid only if SSL enabled)
+kombu_ssl_ca_certs=<%= node['openstack']['mq']['telemetry']['rabbit']['kombu_ssl_ca_certs'] %>
+<%   end -%>
+# How long to wait before reconnecting in response to an AMQP consumer cancel notification
+kombu_reconnect_delay=<%= node['openstack']['mq']['telemetry']['rabbit']['kombu_reconnect_delay'] %>
+# How long to wait before considering a reconnect attempt to have failed.
+# This value should not be longer than rpc_response_timeout
+kombu_reconnect_timeout=<%= node['openstack']['mq']['telemetry']['rabbit']['kombu_reconnect_timeout'] %>
 <% end -%>
+
 ##### RABBITMQ #####
 rabbit_userid = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["userid"] %>
 rabbit_password = <%= @mq_password %>
@@ -131,7 +158,6 @@ rabbit_port = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["port"] %>
 rabbit_host = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["host"] %>
 <% end %>
 rabbit_virtual_host = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["vhost"] %>
-rabbit_use_ssl = <%= node["openstack"]["mq"]["telemetry"]["rabbit"]["use_ssl"] %>
 rpc_backend = ceilometer.openstack.common.rpc.impl_kombu
 
 # Maximum retries with trying to connect to RabbitMQ
