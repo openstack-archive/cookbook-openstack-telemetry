@@ -73,7 +73,7 @@ Chef::Log.debug("openstack-telemetry::common:service_user|#{service_user}")
 Chef::Log.debug("openstack-telemetry::common:service_tenant|#{service_tenant}")
 Chef::Log.debug("openstack-telemetry::common:identity_endpoint|#{identity_endpoint}")
 
-metering_secret = get_secret 'openstack_metering_secret'
+metering_secret = get_password 'token', 'openstack_metering_secret'
 
 directory node['openstack']['telemetry']['conf_dir'] do
   owner node['openstack']['telemetry']['user']
@@ -84,7 +84,7 @@ directory node['openstack']['telemetry']['conf_dir'] do
 end
 
 if node['openstack']['telemetry']['hypervisor_inspector'] == 'vsphere'
-  vmware_host_pass = get_secret node['openstack']['compute']['vmware']['secret_name']
+  vmware_host_pass = get_password 'token', node['openstack']['compute']['vmware']['secret_name']
 end
 
 template node['openstack']['telemetry']['conf'] do
