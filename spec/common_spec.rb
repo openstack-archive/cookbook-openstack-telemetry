@@ -345,6 +345,23 @@ describe 'openstack-telemetry::common' do
         end
       end
 
+      context 'set correct os_auth_url' do
+        it 'set default value for os_auth_url' do
+          node.set['openstack']['telemetry']['api']['auth']['version'] = 'v3.0'
+          expect(chef_run).to render_config_file(file.name)\
+            .with_section_content('DEFAULT', %r{^os_auth_url = http://127.0.0.1:5000/v2.0$})
+        end
+
+        it 'set customized os_auth_url' do
+          node.set['openstack']['endpoints']['identity-internal']['scheme'] = 'https'
+          node.set['openstack']['endpoints']['identity-internal']['host'] = 'fakehost'
+          node.set['openstack']['endpoints']['identity-internal']['port'] = '8888'
+          node.set['openstack']['endpoints']['identity-internal']['path'] = '/v3'
+          expect(chef_run).to render_config_file(file.name)\
+            .with_section_content('DEFAULT', %r{^os_auth_url = https://fakehost:8888/v3$})
+        end
+      end
+
       it 'has metering secret' do
         r = /^metering_secret = metering_secret$/
         expect(chef_run).to render_file(file.name).with_content(r)
