@@ -16,7 +16,7 @@ describe 'openstack-telemetry::api' do
         user: 'ceilometer',
         group: 'ceilometer',
         mode: 0700
-        )
+      )
     end
 
     it 'installs the api package' do

@@ -41,7 +41,7 @@ describe 'openstack-telemetry::common' do
           user: 'ceilometer',
           group: 'ceilometer',
           mode: 0750
-          )
+        )
       end
     end
 
@@ -53,7 +53,7 @@ describe 'openstack-telemetry::common' do
           user: 'ceilometer',
           group: 'ceilometer',
           mode: 0640
-          )
+        )
       end
 
       it 'has default values' do
@@ -112,7 +112,7 @@ describe 'openstack-telemetry::common' do
               /^rabbit_password = mq-pass$/,
               /^rabbit_port = 5672$/,
               /^rabbit_host = 127.0.0.1$/,
-              /^rabbit_virtual_host = \/$/,
+              %r{^rabbit_virtual_host = /$},
               /^rabbit_max_retries = 0$/,
               /^rabbit_retry_interval = 1$/
             ].each do |line|
@@ -139,7 +139,7 @@ describe 'openstack-telemetry::common' do
               /^rabbit_password = mq-pass$/,
               /^rabbit_hosts = 1.1.1.1:5672,2.2.2.2:5672$/,
               /^rabbit_ha_queues = True$/,
-              /^rabbit_virtual_host = \/$/
+              %r{^rabbit_virtual_host = /$}
             ].each do |line|
               expect(chef_run).to render_config_file(file.name).with_section_content('oslo_messaging_rabbit', line)
             end
