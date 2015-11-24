@@ -239,6 +239,10 @@ describe 'openstack-telemetry::common' do
           expect(chef_run).not_to render_file(file.name).with_content(/^os_cacert = $/)
         end
 
+        it 'sets os_endpoint_type' do
+          expect(chef_run).to render_config_file(file.name).with_section_content('service_credentials', /^os_endpoint_type = publicURL$/)
+        end
+
         it 'sets insecure' do
           expect(chef_run).to render_file(file.name).with_content(/^insecure = false$/)
         end
