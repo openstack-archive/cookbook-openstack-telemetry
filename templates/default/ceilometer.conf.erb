@@ -191,6 +191,10 @@ os_region_name = <%= node['openstack']['telemetry']['region'] %>
 os_cacert = <%= node['openstack']['telemetry']['service-credentials']['cafile'] %>
 <% end %>
 
+# Type of endpoint in Identity service catalog to use for
+# communication with OpenStack services. (string value)
+os_endpoint_type = <%= node['openstack']['telemetry']['service-credentials']['os_endpoint_type'] %>
+
 # Verify HTTPS connections. (boolean value, for service polling authentication)
 insecure = <%= node['openstack']['telemetry']['service-credentials']['insecure'] %>
 
