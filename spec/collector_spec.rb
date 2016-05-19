@@ -11,24 +11,25 @@ describe 'openstack-telemetry::collector' do
     include_context 'telemetry-stubs'
     include_examples 'expect-runs-common-recipe'
 
-    it 'installs the collector package' do
+    it do
       expect(chef_run).to upgrade_package 'ceilometer-collector'
     end
 
-    it 'executes ceilometer dbsync' do
-      node.set['openstack']['telemetry']['dbsync_timeout'] = 36000
-      command = 'ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf'
-      expect(chef_run).to run_execute(command).with(
-        timeout: 36000
+    it do
+      expect(chef_run).to run_execute(
+        'ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf'
       )
     end
 
-    it 'installs python-mysqldb' do
+    it do
       expect(chef_run).to upgrade_package('python-mysqldb')
     end
 
-    it 'starts and enables the collector service' do
+    it do
       expect(chef_run).to enable_service('ceilometer-collector')
+    end
+
+    it do
       expect(chef_run).to start_service('ceilometer-collector')
     end
 

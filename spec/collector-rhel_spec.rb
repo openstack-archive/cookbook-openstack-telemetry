@@ -11,14 +11,6 @@ describe 'openstack-telemetry::collector' do
     include_context 'telemetry-stubs'
     include_examples 'expect-runs-common-recipe'
 
-    it 'executes ceilometer dbsync' do
-      node.set['openstack']['telemetry']['dbsync_timeout'] = 36000
-      command = 'ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf'
-      expect(chef_run).to run_execute(command).with(
-        timeout: 36000
-      )
-    end
-
     it 'installs the collector package' do
       expect(chef_run).to upgrade_package('openstack-ceilometer-collector')
     end

@@ -22,12 +22,6 @@
 
 include_recipe 'openstack-telemetry::common'
 
-directory ::File.dirname(node['openstack']['telemetry']['api']['auth']['cache_dir']) do
-  owner node['openstack']['telemetry']['user']
-  group node['openstack']['telemetry']['group']
-  mode 00700
-end
-
 platform = node['openstack']['telemetry']['platform']
 platform['api_packages'].each do |pkg|
   package pkg do
@@ -38,8 +32,6 @@ end
 
 service 'ceilometer-api' do
   service_name platform['api_service']
-  supports status: true, restart: true
-  subscribes :restart, "template[#{node['openstack']['telemetry']['conf']}]"
-
+  subscribes :restart, "template[#{node['openstack']['telemetry']['conf_file']}]"
   action [:enable, :start]
 end

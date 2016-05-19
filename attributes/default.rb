@@ -19,104 +19,61 @@
 # limitations under the License.
 #
 
-# The name of the Chef role that knows about the message queue server
-# that Nova uses
-default['openstack']['telemetry']['rabbit_server_chef_role'] = 'os-ops-messaging'
+# Set the endpoints for the telemetry services to allow all other cookbooks to
+# access and use them
+%w(telemetry telemetry-metric).each do |ts|
+  %w(public internal admin).each do |ep_type|
+    default['openstack']['endpoints'][ep_type][ts]['host'] = '127.0.0.1'
+    default['openstack']['endpoints'][ep_type][ts]['scheme'] = 'http'
+    default['openstack']['endpoints'][ep_type][ts]['path'] = ''
+    default['openstack']['endpoints'][ep_type]['telemetry']['port'] = 8777
+    default['openstack']['endpoints'][ep_type]['telemetry-metric']['port'] = 8041
+    # web-service (e.g. apache) listen address (can be different from openstack
+    # telemetry endpoints)
+  end
+  default['openstack']['bind_service']['all'][ts]['host'] = '127.0.0.1'
+end
+default['openstack']['bind_service']['all']['telemetry']['port'] = 8777
+default['openstack']['bind_service']['all']['telemetry-metric']['port'] = 8041
 
 default['openstack']['telemetry']['conf_dir'] = '/etc/ceilometer'
-default['openstack']['telemetry']['conf'] = ::File.join(node['openstack']['telemetry']['conf_dir'], 'ceilometer.conf')
-default['openstack']['telemetry']['periodic_interval'] = 600
+default['openstack']['telemetry']['conf_file'] =
+  ::File.join(node['openstack']['telemetry']['conf_dir'], 'ceilometer.conf')
+default['openstack']['telemetry-metric']['conf_dir'] = '/etc/gnocchi'
+default['openstack']['telemetry-metric']['conf_file'] =
+  ::File.join(node['openstack']['telemetry-metric']['conf_dir'], 'gnocchi.conf')
 default['openstack']['telemetry']['syslog']['use'] = false
-default['openstack']['telemetry']['verbose'] = 'true'
-default['openstack']['telemetry']['debug'] = 'false'
-
-default['openstack']['telemetry']['api']['auth']['cache_dir'] = '/var/cache/ceilometer/api'
-
-default['openstack']['telemetry']['api']['auth']['version'] = node['openstack']['api']['auth']['version']
-
-# A list of memcached server(s) to use for caching
-default['openstack']['telemetry']['api']['auth']['memcached_servers'] = nil
-
-# Whether token data should be authenticated or authenticated and encrypted. Acceptable values are MAC or ENCRYPT
-default['openstack']['telemetry']['api']['auth']['memcache_security_strategy'] = nil
-
-# This string is used for key derivation
-default['openstack']['telemetry']['api']['auth']['memcache_secret_key'] = nil
-
-# Hash algorithms to use for hashing PKI tokens
-default['openstack']['telemetry']['api']['auth']['hash_algorithms'] = 'md5'
-
-# A PEM encoded Certificate Authority to use when verifying HTTPs connections
-default['openstack']['telemetry']['api']['auth']['cafile'] = nil
-
-# Verify HTTPS connections
-default['openstack']['telemetry']['api']['auth']['insecure'] = false
 
 default['openstack']['telemetry']['user'] = 'ceilometer'
 default['openstack']['telemetry']['group'] = 'ceilometer'
 
-default['openstack']['telemetry']['region'] = node['openstack']['region']
-default['openstack']['telemetry']['service_user'] = 'ceilometer'
-default['openstack']['telemetry']['service_tenant_name'] = 'service'
+default['openstack']['telemetry-metric']['user'] = 'gnocchi'
+default['openstack']['telemetry-metric']['group'] = 'gnocchi'
+
 default['openstack']['telemetry']['service_role'] = 'admin'
+default['openstack']['telemetry-metric']['service_role'] = 'admin'
 
-# A PEM encoded Certificate Authority to use when verifying HTTPs connections (for service polling authentication)
-default['openstack']['telemetry']['service-credentials']['cafile'] = nil
-
-# Verify HTTPS connections (for service polling authentication)
-default['openstack']['telemetry']['service-credentials']['insecure'] = false
-
-default['openstack']['telemetry']['sample_source'] = 'openstack'
-
-default['openstack']['telemetry']['dbsync_timeout'] = 3600
-
-case node['openstack']['compute']['driver']
-when 'libvirt.LibvirtDriver'
-  default['openstack']['telemetry']['hypervisor_inspector'] = 'libvirt'
-when 'vmwareapi.VMwareESXDriver', 'vmwareapi.VMwareVCDriver'
-  default['openstack']['telemetry']['hypervisor_inspector'] = 'vsphere'
-else
-  default['openstack']['telemetry']['hypervisor_inspector'] = nil
-end
+default['openstack']['telemetry']['identity-api']['auth']['version'] =
+  node['openstack']['api']['auth']['version']
+default['openstack']['telemetry-metric']['identity-api']['auth']['version'] =
+  node['openstack']['api']['auth']['version']
 
 case platform_family
-when 'suse' # :pragma-foodcritic: ~FC024 - won't fix this
-  default['openstack']['telemetry']['platform'] = {
-    'common_packages' => ['openstack-ceilometer'],
-    'agent_central_packages' => ['openstack-ceilometer-agent-central'],
-    'agent_central_service' => 'openstack-ceilometer-agent-central',
-    'agent_compute_packages' => ['openstack-ceilometer-agent-compute'],
-    'agent_compute_service' => 'openstack-ceilometer-agent-compute',
-    'agent_notification_packages' => ['openstack-ceilometer-agent-notification'],
-    'agent_notification_service' => 'openstack-ceilometer-agent-notification',
-    'alarm_evaluator_packages' => ['openstack-ceilometer-alarm-evaluator'],
-    'alarm_evaluator_service' => 'openstack-ceilometer-alarm-evaluator',
-    'alarm_notifier_packages' => ['openstack-ceilometer-alarm-notifier'],
-    'alarm_notifier_service' => 'openstack-ceilometer-alarm-notifier',
-    'api_packages' => ['openstack-ceilometer-api'],
-    'api_service' => 'openstack-ceilometer-api',
-    'client_packages' => ['python-ceilometerclient'],
-    'collector_packages' => ['openstack-ceilometer-collector'],
-    'collector_service' => 'openstack-ceilometer-collector',
-    'package_overrides' => ''
-  }
-
-when 'fedora', 'rhel'
+when 'rhel'
   default['openstack']['telemetry']['platform'] = {
     'common_packages' => ['openstack-ceilometer-common'],
+    'gnocchi_packages' => ['openstack-gnocchi-api', 'openstack-gnocchi-metricd'],
+    'gnocchi-api_service' => 'openstack-gnocchi-api',
+    'gnocchi-metricd_service' => 'openstack-gnocchi-metricd',
     'agent_central_packages' => ['openstack-ceilometer-central'],
     'agent_central_service' => 'openstack-ceilometer-central',
     'agent_compute_packages' => ['openstack-ceilometer-compute'],
     'agent_compute_service' => 'openstack-ceilometer-compute',
     'agent_notification_packages' => ['openstack-ceilometer-collector'],
     'agent_notification_service' => 'openstack-ceilometer-notification',
-    'alarm_evaluator_packages' => ['openstack-ceilometer-alarm'],
-    'alarm_evaluator_service' => 'openstack-ceilometer-alarm-evaluator',
-    'alarm_notifier_packages' => ['openstack-ceilometer-alarm'],
-    'alarm_notifier_service' => 'openstack-ceilometer-alarm-notifier',
     'api_packages' => ['openstack-ceilometer-api'],
     'api_service' => 'openstack-ceilometer-api',
-    'client_packages' => ['python-ceilometerclient'],
+    'client_packages' => ['python-ceilometerclient', 'python-gnocchiclient'],
     'collector_packages' => ['openstack-ceilometer-collector'],
     'collector_service' => 'openstack-ceilometer-collector',
     'package_overrides' => ''
@@ -125,27 +82,20 @@ when 'fedora', 'rhel'
 when 'debian'
   default['openstack']['telemetry']['platform'] = {
     'common_packages' => ['ceilometer-common'],
+    'gnocchi_packages' => ['gnocchi-api', 'gnocchi-metricd'],
+    'gnocchi-api_service' => 'gnocchi-api',
+    'gnocchi-metricd_service' => 'gnocchi-metricd',
     'agent_central_packages' => ['ceilometer-agent-central'],
     'agent_central_service' => 'ceilometer-agent-central',
     'agent_compute_packages' => ['ceilometer-agent-compute'],
     'agent_compute_service' => 'ceilometer-agent-compute',
     'agent_notification_packages' => ['ceilometer-agent-notification'],
     'agent_notification_service' => 'ceilometer-agent-notification',
-    'alarm_evaluator_packages' => ['ceilometer-alarm-evaluator'],
-    'alarm_evaluator_service' => 'ceilometer-alarm-evaluator',
-    'alarm_notifier_packages' => ['ceilometer-alarm-notifier'],
-    'alarm_notifier_service' => 'ceilometer-alarm-notifier',
     'api_packages' => ['ceilometer-api'],
     'api_service' => 'ceilometer-api',
-    'client_packages' => ['python-ceilometerclient'],
+    'client_packages' => ['python-ceilometerclient', 'python-gnocchiclient'],
     'collector_packages' => ['ceilometer-collector', 'python-mysqldb'],
     'collector_service' => 'ceilometer-collector',
     'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
   }
 end
-
-# The time to live value for samples which is specified in seconds, override to -1 if no data expiry is required
-default['openstack']['telemetry']['database']['time_to_live'] = 1800
-
-# Decide whether to store events in notification service or not
-default['openstack']['telemetry']['notification']['store_events'] = false

@@ -11,14 +11,6 @@ describe 'openstack-telemetry::api' do
     include_context 'telemetry-stubs'
     include_examples 'expect-runs-common-recipe'
 
-    it 'creates the /var/cache/ceilometer directory' do
-      expect(chef_run).to create_directory('/var/cache/ceilometer').with(
-        user: 'ceilometer',
-        group: 'ceilometer',
-        mode: 0700
-      )
-    end
-
     it 'installs the api package' do
       expect(chef_run).to upgrade_package('openstack-ceilometer-api')
     end

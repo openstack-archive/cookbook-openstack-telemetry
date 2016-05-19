@@ -31,8 +31,6 @@ end
 
 service 'ceilometer-agent-central' do
   service_name platform['agent_central_service']
-  supports status: true, restart: true
-  subscribes :restart, "template[#{node['openstack']['telemetry']['conf']}]"
-
+  subscribes :restart, "template[#{node['openstack']['telemetry']['conf_file']}]"
   action [:enable, :start]
 end

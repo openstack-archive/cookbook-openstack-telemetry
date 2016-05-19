@@ -1,9 +1,7 @@
 # encoding: UTF-8
 #
 # Cookbook Name:: openstack-telemetry
-# Recipe:: alarm-evaluator
-#
-# Copyright 2014, IBM Corp.
+# Recipe:: gnocchi_install
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,17 +19,9 @@
 include_recipe 'openstack-telemetry::common'
 
 platform = node['openstack']['telemetry']['platform']
-platform['alarm_evaluator_packages'].each do |pkg|
+platform['gnocchi_packages'].each do |pkg|
   package pkg do
     options platform['package_overrides']
     action :upgrade
   end
-end
-
-service 'ceilometer-agent-evaluator' do
-  service_name platform['alarm_evaluator_service']
-  supports status: true, restart: true
-  subscribes :restart, "template[#{node['openstack']['telemetry']['conf']}]"
-
-  action [:enable, :start]
 end

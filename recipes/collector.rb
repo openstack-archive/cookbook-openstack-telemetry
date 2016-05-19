@@ -22,13 +22,6 @@
 
 include_recipe 'openstack-telemetry::common'
 
-conf_switch = "--config-file #{node['openstack']['telemetry']['conf']}"
-
-execute 'database migration' do
-  command "ceilometer-dbsync #{conf_switch}"
-  timeout node['openstack']['telemetry']['dbsync_timeout']
-end
-
 platform = node['openstack']['telemetry']['platform']
 platform['collector_packages'].each do |pkg|
   package pkg do
@@ -37,20 +30,13 @@ platform['collector_packages'].each do |pkg|
   end
 end
 
-# temp fix for collector init not installing properly ubuntu
-# See https://bugs.launchpad.net/cloud-archive/+bug/1221945
-if node['platform'] == 'ubuntu'
-  init_script = '/etc/init/ceilometer-collector.conf'
-  execute 'fix init script' do
-    command "cp #{init_script}.dpkg-new #{init_script}"
-    not_if { ::File.exist?(init_script) }
-  end
+conf_switch = "--config-file #{node['openstack']['telemetry']['conf_file']}"
+execute 'database migration' do
+  command "ceilometer-dbsync #{conf_switch}"
 end
 
 service 'ceilometer-collector' do
   service_name platform['collector_service']
-  supports status: true, restart: true
-  subscribes :restart, "template[#{node['openstack']['telemetry']['conf']}]"
-
+  subscribes :restart, "template[#{node['openstack']['telemetry']['conf_file']}]"
   action [:enable, :start]
 end

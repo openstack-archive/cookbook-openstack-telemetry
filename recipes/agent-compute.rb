@@ -29,20 +29,8 @@ platform['agent_compute_packages'].each do |pkg|
   end
 end
 
-# temp fix for compute-agent init not installing properly ubuntu
-# See https://bugs.launchpad.net/cloud-archive/+bug/1221945
-if node['platform'] == 'ubuntu'
-  init_script = '/etc/init/ceilometer-agent-compute.conf'
-  execute 'fix init script' do
-    command "cp #{init_script}.dpkg-new #{init_script}"
-    not_if { ::File.exist?(init_script) }
-  end
-end
-
 service 'ceilometer-agent-compute' do
   service_name platform['agent_compute_service']
-  supports status: true, restart: true
-  subscribes :restart, "template[#{node['openstack']['telemetry']['conf']}]"
-
+  subscribes :restart, "template[#{node['openstack']['telemetry']['conf_file']}]"
   action [:enable, :start]
 end

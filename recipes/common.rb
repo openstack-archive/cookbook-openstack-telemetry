@@ -44,70 +44,63 @@ platform['common_packages'].each do |pkg|
   end
 end
 
-mq_service_type = node['openstack']['mq']['telemetry']['service_type']
-
-if mq_service_type == 'rabbitmq'
-  node['openstack']['mq']['telemetry']['rabbit']['ha'] && (rabbit_hosts = rabbit_servers)
-  mq_password = get_password 'user', node['openstack']['mq']['telemetry']['rabbit']['userid']
-elsif mq_service_type == 'qpid'
-  mq_password = get_password 'user', node['openstack']['mq']['telemetry']['qpid']['username']
+if node['openstack']['telemetry']['conf']['DEFAULT']['rpc_backend'] == 'rabbit'
+  user = node['openstack']['mq']['telemetry']['rabbit']['userid']
+  node.default['openstack']['telemetry']['conf_secrets']
+    .[]('oslo_messaging_rabbit')['rabbit_userid'] = user
+  node.default['openstack']['telemetry']['conf_secrets']
+    .[]('oslo_messaging_rabbit')['rabbit_password'] =
+    get_password 'user', user
 end
 
 db_user = node['openstack']['db']['telemetry']['username']
 db_pass = get_password 'db', 'ceilometer'
-db_uri = db_uri('telemetry', db_user, db_pass).to_s
+bind_service = node['openstack']['bind_service']['all']['telemetry']
+bind_service_address = bind_address bind_service
 
-service_user = node['openstack']['telemetry']['service_user']
-service_pass = get_password 'service', 'openstack-ceilometer'
-service_tenant = node['openstack']['telemetry']['service_tenant_name']
+# define secrets that are needed in the ceilometer.conf
+node.default['openstack']['telemetry']['conf_secrets'].tap do |conf_secrets|
+  conf_secrets['database']['connection'] =
+    db_uri('telemetry', db_user, db_pass)
+  conf_secrets['service_credentials']['password'] =
+    get_password 'service', 'openstack-telemetry'
+  conf_secrets['keystone_authtoken']['password'] =
+    get_password 'service', 'openstack-telemetry'
+end
 
-identity_endpoint = internal_endpoint 'identity-internal'
-identity_admin_endpoint = admin_endpoint 'identity-admin'
-image_endpoint = internal_endpoint 'image-api'
-telemetry_api_bind = endpoint 'telemetry-api-bind'
+identity_public_endpoint = public_endpoint 'identity'
+auth_url =
+  auth_uri_transform(
+    identity_public_endpoint.to_s,
+    node['openstack']['telemetry']['identity-api']['auth']['version']
+  )
 
-auth_uri = auth_uri_transform identity_endpoint.to_s, node['openstack']['telemetry']['api']['auth']['version']
-identity_uri = identity_uri_transform(identity_admin_endpoint)
-
-Chef::Log.debug("openstack-telemetry::common:service_user|#{service_user}")
-Chef::Log.debug("openstack-telemetry::common:service_tenant|#{service_tenant}")
-Chef::Log.debug("openstack-telemetry::common:identity_endpoint|#{identity_endpoint}")
-
-metering_secret = get_password 'token', 'openstack_metering_secret'
+node.default['openstack']['telemetry']['conf'].tap do |conf|
+  conf['api']['host'] = bind_service_address
+  conf['api']['port'] = bind_service.port
+  conf['keystone_authtoken']['auth_url'] = auth_url
+  conf['service_credentials']['auth_url'] = auth_url
+  conf['dispatcher_gnocchi']['url'] = public_endpoint 'telemetry-metric'
+  conf['dispatcher_gnocchi']['filter_project'] = 'service'
+end
 
 directory node['openstack']['telemetry']['conf_dir'] do
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
   mode 00750
-
   action :create
 end
 
-if node['openstack']['telemetry']['hypervisor_inspector'] == 'vsphere'
-  vmware_host_pass = get_password 'token', node['openstack']['compute']['vmware']['secret_name']
-end
+# merge all config options and secrets to be used in the ceilometer.conf
+ceilometer_conf_options = merge_config_options 'telemetry'
 
-template node['openstack']['telemetry']['conf'] do
-  source 'ceilometer.conf.erb'
+template node['openstack']['telemetry']['conf_file'] do
+  source 'openstack-service.conf.erb'
+  cookbook 'openstack-common'
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
   mode 00640
-
   variables(
-    auth_uri: auth_uri,
-    identity_uri: identity_uri,
-    database_connection: db_uri,
-    image_endpoint: image_endpoint,
-    identity_endpoint: identity_endpoint,
-    mq_service_type: mq_service_type,
-    mq_password: mq_password,
-    rabbit_hosts: rabbit_hosts,
-    service_pass: service_pass,
-    service_tenant_name: service_tenant,
-    service_user: service_user,
-    metering_secret: metering_secret,
-    api_bind_host: telemetry_api_bind.host,
-    api_bind_port: telemetry_api_bind.port,
-    vmware_host_pass: vmware_host_pass
+    service_config: ceilometer_conf_options
   )
 end
