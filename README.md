@@ -12,8 +12,8 @@ Requirements
 ============
 
 - Chef 12 or higher
-- chefdk 0.9.0 for testing (also includes berkshelf for cookbook dependency
-  resolution)
+- chefdk 0.9.0 or higher for testing (also includes berkshelf for cookbook
+  dependency resolution)
 
 WARNING:
 - Currently there are no gnocchi packages included for Ubuntu Trusty. The
