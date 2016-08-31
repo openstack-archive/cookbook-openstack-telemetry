@@ -25,3 +25,4 @@ end
 
 depends 'openstack-common', '>= 14.0.0'
 depends 'openstack-identity', '>= 14.0.0'
+depends 'openstackclient'

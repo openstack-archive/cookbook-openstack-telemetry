@@ -20,14 +20,26 @@
 
 require 'uri'
 
-class ::Chef::Recipe # rubocop:disable Documentation
+# Include OS
+class ::Chef::Recipe
   include ::Openstack
 end
 
 identity_admin_endpoint = admin_endpoint 'identity'
 
-bootstrap_token = get_password 'token', 'openstack_identity_bootstrap_token'
-auth_uri = ::URI.decode identity_admin_endpoint.to_s
+auth_url = ::URI.decode identity_admin_endpoint.to_s
+admin_user = node['openstack']['identity']['admin_user']
+admin_pass = get_password 'user', node['openstack']['identity']['admin_user']
+admin_project = node['openstack']['identity']['admin_project']
+admin_domain = node['openstack']['identity']['admin_domain_name']
+service_domain_name = node['openstack']['telemetry']['conf']['keystone_authtoken']['user_domain_name']
+connection_params = {
+  openstack_auth_url:     "#{auth_url}/auth/tokens",
+  openstack_username:     admin_user,
+  openstack_api_key:      admin_pass,
+  openstack_project_name: admin_project,
+  openstack_domain_name:    admin_domain
+}
 
 %w(telemetry telemetry-metric).each do |telemetry_service|
   case telemetry_service
@@ -37,11 +49,13 @@ auth_uri = ::URI.decode identity_admin_endpoint.to_s
   when 'telemetry-metric'
     service_name = 'gnocchi'
     service_type = 'metric'
-  end
 
-  admin_api_endpoint = admin_endpoint telemetry_service
-  internal_api_endpoint = internal_endpoint telemetry_service
-  public_api_endpoint = public_endpoint telemetry_service
+  end
+  interfaces = {
+    public: { url: public_endpoint(telemetry_service) },
+    internal: { url: internal_endpoint(telemetry_service) },
+    admin: { url: admin_endpoint(telemetry_service) }
+  }
 
   service_pass = get_password 'service', "openstack-#{telemetry_service}"
   service_role = node['openstack'][telemetry_service]['service_role']
@@ -49,58 +63,51 @@ auth_uri = ::URI.decode identity_admin_endpoint.to_s
     node['openstack'][telemetry_service]['conf']['keystone_authtoken']['username']
   service_tenant_name =
     node['openstack'][telemetry_service]['conf']['keystone_authtoken']['project_name']
+  region = node['openstack']['region']
+
+  # Register telemetry_service Service
+  openstack_service service_name do
+    type service_type
+    connection_params connection_params
+  end
+
+  interfaces.each do |interface, res|
+    # Register telemetry_service Endpoints
+    openstack_endpoint service_type do
+      service_name service_name
+      interface interface.to_s
+      url res[:url].to_s
+      region region
+      connection_params connection_params
+    end
+  end
 
   # Register Service Tenant
-  openstack_identity_register "Register Service Tenant for #{telemetry_service}" do
-    auth_uri auth_uri
-    bootstrap_token bootstrap_token
-    tenant_name service_tenant_name
-    tenant_description 'Service Tenant'
-
-    action :create_tenant
+  openstack_project service_tenant_name do
+    connection_params connection_params
   end
 
   # Register Service User
-  openstack_identity_register "Register #{service_user} User" do
-    auth_uri auth_uri
-    bootstrap_token bootstrap_token
-    tenant_name service_tenant_name
-    user_name service_user
-    user_pass service_pass
-
-    action :create_user
+  openstack_user service_user do
+    project_name service_tenant_name
+    role_name service_role
+    password service_pass
+    connection_params connection_params
   end
 
-  # Grant Admin role to Service User for Service Tenant
-  openstack_identity_register "Grant 'admin' Role to #{service_user} User for Service Tenant" do
-    auth_uri auth_uri
-    bootstrap_token bootstrap_token
-    tenant_name service_tenant_name
-    user_name service_user
+  ## Grant Service role to Service User for Service Tenant ##
+  openstack_user service_user do
     role_name service_role
-
+    project_name service_tenant_name
+    connection_params connection_params
     action :grant_role
   end
 
-  openstack_identity_register "Register Service #{telemetry_service}" do
-    auth_uri auth_uri
-    bootstrap_token bootstrap_token
-    service_name service_name
-    service_type service_type
-    service_description 'Ceilometer Service'
-
-    action :create_service
-  end
-
-  openstack_identity_register "Register #{service_type} Endpoint" do
-    auth_uri auth_uri
-    bootstrap_token bootstrap_token
-    service_type service_type
-    endpoint_region node['openstack'][telemetry_service]['conf']['keystone_authtoken']['region_name']
-    endpoint_adminurl ::URI.decode admin_api_endpoint.to_s
-    endpoint_internalurl ::URI.decode internal_api_endpoint.to_s
-    endpoint_publicurl ::URI.decode public_api_endpoint.to_s
-
-    action :create_endpoint
+  openstack_user service_user do
+    domain_name service_domain_name
+    role_name service_role
+    user_name service_user
+    connection_params connection_params
+    action :grant_domain
   end
 end

@@ -39,8 +39,8 @@ shared_context 'telemetry-stubs' do
       .with('user', 'guest')
       .and_return('mq-pass')
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)
-      .with('token', 'openstack_identity_bootstrap_token')
-      .and_return('bootstrap-token')
+      .with('user', 'admin')
+      .and_return('admin-pass')
     allow(Chef::Application).to receive(:fatal!)
   end
 end

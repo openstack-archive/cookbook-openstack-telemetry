@@ -65,9 +65,11 @@ describe 'openstack-telemetry::common' do
         [
           /^username = ceilometer$/,
           /^project_name = service$/,
-          /^auth_type = password$/,
+          /^user_domain_name = Default/,
+          /^project_domain_name = Default/,
+          /^auth_type = v3password$/,
           /^region_name = RegionOne$/,
-          %r{auth_url = http://127\.0\.0\.1:5000/v2\.0},
+          %r{auth_url = http://127\.0\.0\.1:5000/v3},
           /^password = ceilometer-pass$/
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)
@@ -79,10 +81,12 @@ describe 'openstack-telemetry::common' do
         [
           /^username = ceilometer$/,
           /^project_name = service$/,
-          /^auth_type = password$/,
+          /^user_domain_name = Default/,
+          /^project_domain_name = Default/,
+          /^auth_type = v3password$/,
           /^interface = internal$/,
           /^region_name = RegionOne$/,
-          %r{auth_url = http://127\.0\.0\.1:5000/v2\.0},
+          %r{auth_url = http://127\.0\.0\.1:5000/v3},
           /^password = ceilometer-pass$/
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)

@@ -33,6 +33,7 @@ The following cookbooks are dependencies:
 
 - 'openstack-common', '>= 14.0.0'
 - 'openstack-identity', '>= 14.0.0'
+- 'openstackclient', '>= 0.1.0'
 
 Attributes
 ==========
@@ -89,7 +90,8 @@ License and Author
 | **Author**           |  Chen Zhiwei (<zhiwchen@cn.ibm.com>)               |
 | **Author**           |  David Geng (<gengjh@cn.ibm.com>)                  |
 | **Author**           |  Mark Vanderwiel (<vanderwl@us.ibm.com>)           |
-| **Author**           |  Jan Klare (<j.klare@cloudbau.de>)                    |
+| **Author**           |  Jan Klare (<j.klare@cloudbau.de>)                 |
+| **Author**           |  Christoph Albers (<c.albers@x-ion.de>)            |
 |                      |                                                    |
 | **Copyright**        |  Copyright (c) 2013, Opscode, Inc.                 |
 | **Copyright**        |  Copyright (c) 2013, AT&T Services, Inc.           |

@@ -15,75 +15,92 @@ describe 'openstack-telemetry::identity_registration' do
       when 'telemetry'
         service_name = 'ceilometer'
         service_type = 'metering'
-        user_pass = 'ceilometer-pass'
+        password = 'ceilometer-pass'
         port = 8777
       when 'telemetry-metric'
         service_name = 'gnocchi'
         service_type = 'metric'
-        user_pass = 'gnocchi-pass'
+        password = 'gnocchi-pass'
         port = 8041
       end
 
-      it do
-        expect(chef_run).to create_tenant_openstack_identity_register(
-          "Register Service Tenant for #{telemetry_service}"
+      connection_params = {
+        openstack_auth_url: 'http://127.0.0.1:35357/v3/auth/tokens',
+        openstack_username: 'admin',
+        openstack_api_key: 'admin-pass',
+        openstack_project_name: 'admin',
+        openstack_domain_name: 'default'
+      }
+      service_user = service_name
+      url = "http://127.0.0.1:#{port}"
+      region = 'RegionOne'
+      project_name = 'service'
+      role_name = 'admin'
+      domain_name = 'Default'
+
+      it "registers #{project_name} Project" do
+        expect(chef_run).to create_openstack_project(
+          project_name
         ).with(
-          auth_uri: 'http://127.0.0.1:35357/v2.0',
-          bootstrap_token: 'bootstrap-token',
-          tenant_name: 'service',
-          tenant_description: 'Service Tenant'
+          connection_params: connection_params
         )
       end
 
-      it do
-        expect(chef_run).to create_user_openstack_identity_register(
-          "Register #{service_name} User"
+      it "registers #{service_name} service" do
+        expect(chef_run).to create_openstack_service(
+          service_name
         ).with(
-          auth_uri: 'http://127.0.0.1:35357/v2.0',
-          bootstrap_token: 'bootstrap-token',
-          tenant_name: 'service',
-          user_name: service_name,
-          user_pass: user_pass
+          connection_params: connection_params,
+          type: service_type
         )
       end
 
-      it do
-        expect(chef_run).to grant_role_openstack_identity_register(
-          "Grant 'admin' Role to #{service_name} User for Service Tenant"
-        ).with(
-          auth_uri: 'http://127.0.0.1:35357/v2.0',
-          bootstrap_token: 'bootstrap-token',
-          tenant_name: 'service',
-          user_name: service_name,
-          role_name: 'admin'
-        )
-      end
-
-      it do
-        expect(chef_run).to create_service_openstack_identity_register(
-          "Register Service #{telemetry_service}"
-        ).with(
-          auth_uri: 'http://127.0.0.1:35357/v2.0',
-          bootstrap_token: 'bootstrap-token',
-          service_name: service_name,
-          service_type: service_type
-        )
-      end
-
-      context "registers #{service_type} endpoint" do
-        it do
-          expect(chef_run).to create_endpoint_openstack_identity_register(
-            "Register #{service_type} Endpoint"
-          ).with(
-            auth_uri: 'http://127.0.0.1:35357/v2.0',
-            bootstrap_token: 'bootstrap-token',
-            service_type: service_type,
-            endpoint_region: 'RegionOne',
-            endpoint_adminurl: "http://127.0.0.1:#{port}",
-            endpoint_internalurl: "http://127.0.0.1:#{port}",
-            endpoint_publicurl: "http://127.0.0.1:#{port}"
-          )
+      context "registers #{service_name} endpoint" do
+        %w(admin internal public).each do |interface|
+          it "#{interface} endpoint with default values" do
+            expect(chef_run).to create_openstack_endpoint(
+              service_type
+            ).with(
+              service_name: service_name,
+              # interface: interface,
+              url: url,
+              region: region,
+              connection_params: connection_params
+            )
+          end
         end
+      end
+
+      it 'registers service user' do
+        expect(chef_run).to create_openstack_user(
+          service_user
+        ).with(
+          project_name: project_name,
+          role_name: role_name,
+          password: password,
+          connection_params: connection_params
+        )
+      end
+
+      it do
+        expect(chef_run).to grant_domain_openstack_user(
+          service_user
+        ).with(
+          domain_name: domain_name,
+          role_name: role_name,
+          connection_params: connection_params
+        )
+      end
+
+      it do
+        expect(chef_run).to grant_role_openstack_user(
+          service_user
+        ).with(
+          project_name: project_name,
+          role_name: role_name,
+          password: password,
+          connection_params: connection_params
+        )
       end
     end
   end

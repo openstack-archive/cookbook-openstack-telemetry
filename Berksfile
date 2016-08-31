@@ -12,3 +12,6 @@ cookbook "openstack-image",
   github: "openstack/cookbook-openstack-image"
 cookbook "openstack-network",
   github: "openstack/cookbook-openstack-network"
+cookbook "openstackclient",
+  github: "cloudbau/cookbook-openstackclient"
+
