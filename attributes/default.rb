@@ -98,7 +98,6 @@ when 'rhel'
     'agent_notification_service' => 'openstack-ceilometer-notification',
     'api_packages' => ['openstack-ceilometer-api'],
     'api_service' => 'openstack-ceilometer-api',
-    'client_packages' => ['python-ceilometerclient', 'python-gnocchiclient'],
     'collector_packages' => ['openstack-ceilometer-collector'],
     'collector_service' => 'openstack-ceilometer-collector',
     'package_overrides' => ''
@@ -120,7 +119,6 @@ when 'debian'
     'gnocchi-api_wsgi_file' => '/usr/share/gnocchi-common/app.wsgi',
     'api_packages' => ['ceilometer-api'],
     'api_service' => 'ceilometer-api',
-    'client_packages' => ['python-ceilometerclient', 'python-gnocchiclient'],
     'collector_packages' => ['ceilometer-collector', 'python-mysqldb'],
     'collector_service' => 'ceilometer-collector',
     'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'"
