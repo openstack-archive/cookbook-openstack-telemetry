@@ -22,6 +22,6 @@ platform = node['openstack']['telemetry']['platform']
 platform['gnocchi_packages'].each do |pkg|
   package pkg do
     options platform['package_overrides']
-    action :upgrade
+    version '2.0.2-4'
   end
 end

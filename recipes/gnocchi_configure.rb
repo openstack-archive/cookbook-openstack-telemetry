@@ -15,7 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+class ::Chef::Recipe
+  include ::Openstack
+end
 platform = node['openstack']['telemetry']['platform']
 db_user = node['openstack']['db']['telemetry-metric']['username']
 db_pass = get_password 'db', 'gnocchi'
@@ -95,10 +97,58 @@ execute 'gnocchi-upgrade' do
   user node['openstack']['telemetry-metric']['user']
 end
 
-service 'gnocchi-api' do
-  service_name platform['gnocchi-api_service']
-  subscribes :restart, "template[#{node['openstack']['telemetry-metric']['conf_file']}]"
-  action [:enable, :start]
+#### Start of Apache specific work
+
+# configure attributes for apache2 cookbook to align with openstack settings
+apache_listen = Array(node['apache']['listen']) # include already defined listen attributes
+# Remove the default apache2 cookbook port, as that is also the default for horizon, but with
+# a different address syntax.  *:80   vs  0.0.0.0:80
+apache_listen -= ['*:80']
+apache_listen += ["#{bind_service_address}:#{bind_service.port}"]
+node.normal['apache']['listen'] = apache_listen.uniq
+
+# include the apache2 default recipe and the recipes for mod_wsgi
+include_recipe 'apache2'
+include_recipe 'apache2::mod_wsgi'
+# include the apache2 mod_ssl recipe if ssl is enabled for identity
+include_recipe 'apache2::mod_ssl' if node['openstack']['identity']['ssl']['enabled']
+
+# create the gnocchi-api apache directory
+gnocchi_apache_dir = "#{node['apache']['docroot_dir']}/gnocchi"
+directory gnocchi_apache_dir do
+  owner 'root'
+  group 'root'
+  mode 00755
+end
+
+gnocchi_server_entry = "#{gnocchi_apache_dir}/app"
+# Note: Using lazy here as the wsgi file is not available until after
+# the gnocchik-api package is installed during execution phase.
+file gnocchi_server_entry do
+  content lazy { IO.read(platform['gnocchi-api_wsgi_file']) }
+  owner 'root'
+  group 'root'
+  mode 00755
+end
+
+web_app 'gnocchi-api' do
+  template 'wsgi-template.conf.erb'
+  deamon_process 'gnocchi-api'
+  server_host node['openstack']['telemetry-metric']['conf']['api']['host']
+  server_port node['openstack']['telemetry-metric']['conf']['api']['port']
+  server_entry gnocchi_server_entry
+  log_dir node['apache']['log_dir']
+  log_debug node['openstack']['telemetry-metric']['debug']
+  user node['openstack']['telemetry-metric']['user']
+  group node['openstack']['telemetry-metric']['group']
+  use_ssl node['openstack']['telemetry-metric']['ssl']['enabled']
+  cert_file node['openstack']['telemetry-metric']['ssl']['certfile']
+  chain_file node['openstack']['telemetry-metric']['ssl']['chainfile']
+  key_file node['openstack']['telemetry-metric']['ssl']['keyfile']
+  ca_certs_path node['openstack']['telemetry-metric']['ssl']['ca_certs_path']
+  cert_required node['openstack']['telemetry-metric']['ssl']['cert_required']
+  protocol node['openstack']['telemetry-metric']['ssl']['protocol']
+  ciphers node['openstack']['telemetry-metric']['ssl']['ciphers']
 end
 
 service 'gnocchi-metricd' do

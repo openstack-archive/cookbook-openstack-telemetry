@@ -20,7 +20,14 @@
 # limitations under the License.
 #
 
-include_recipe 'openstack-telemetry::common'
+require 'uri'
+
+# load the methods defined in cookbook-openstack-common libraries
+class ::Chef::Recipe
+  include ::Openstack
+end
+
+# include_recipe 'openstack-telemetry::common'
 
 platform = node['openstack']['telemetry']['platform']
 platform['api_packages'].each do |pkg|
@@ -29,9 +36,58 @@ platform['api_packages'].each do |pkg|
     action :upgrade
   end
 end
+bind_service = node['openstack']['bind_service']['all']['telemetry']
+bind_service_address = bind_address bind_service
+#### Start of Apache specific work
 
-service 'ceilometer-api' do
-  service_name platform['api_service']
-  subscribes :restart, "template[#{node['openstack']['telemetry']['conf_file']}]"
-  action [:enable, :start]
+# configure attributes for apache2 cookbook to align with openstack settings
+apache_listen = Array(node['apache']['listen']) # include already defined listen attributes
+# Remove the default apache2 cookbook port, as that is also the default for horizon, but with
+# a different address syntax.  *:80   vs  0.0.0.0:80
+apache_listen -= ['*:80']
+apache_listen += ["#{bind_service_address}:#{bind_service.port}"]
+node.normal['apache']['listen'] = apache_listen.uniq
+
+# include the apache2 default recipe and the recipes for mod_wsgi
+include_recipe 'apache2'
+include_recipe 'apache2::mod_wsgi'
+# include the apache2 mod_ssl recipe if ssl is enabled for identity
+include_recipe 'apache2::mod_ssl' if node['openstack']['telemetry']['ssl']['enabled']
+
+# create the ceilometer-api apache directory
+ceilometer_apache_dir = "#{node['apache']['docroot_dir']}/ceilometer"
+directory ceilometer_apache_dir do
+  owner 'root'
+  group 'root'
+  mode 00755
+end
+
+ceilometer_server_entry = "#{ceilometer_apache_dir}/app"
+# Note: Using lazy here as the wsgi file is not available until after
+# the ceilometer-api package is installed during execution phase.
+file ceilometer_server_entry do
+  content lazy { IO.read(platform['ceilometer-api_wsgi_file']) }
+  owner 'root'
+  group 'root'
+  mode 00755
+end
+
+web_app 'ceilometer-api' do
+  template 'wsgi-template.conf.erb'
+  deamon_process 'ceilometer-api'
+  server_host node['openstack']['telemetry']['conf']['api']['host']
+  server_port node['openstack']['telemetry']['conf']['api']['port']
+  server_entry ceilometer_server_entry
+  log_dir node['apache']['log_dir']
+  log_debug node['openstack']['telemetry']['debug']
+  user node['openstack']['telemetry']['user']
+  group node['openstack']['telemetry']['group']
+  use_ssl node['openstack']['telemetry']['ssl']['enabled']
+  cert_file node['openstack']['telemetry']['ssl']['certfile']
+  chain_file node['openstack']['telemetry']['ssl']['chainfile']
+  key_file node['openstack']['telemetry']['ssl']['keyfile']
+  ca_certs_path node['openstack']['telemetry']['ssl']['ca_certs_path']
+  cert_required node['openstack']['telemetry']['ssl']['cert_required']
+  protocol node['openstack']['telemetry']['ssl']['protocol']
+  ciphers node['openstack']['telemetry']['ssl']['ciphers']
 end

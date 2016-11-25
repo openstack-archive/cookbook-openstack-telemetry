@@ -115,12 +115,115 @@ describe 'openstack-telemetry::gnocchi_configure' do
         .with(user: 'gnocchi')
     end
 
-    %w(gnocchi-api gnocchi-metricd).each do |service|
-      it do
-        expect(chef_run).to enable_service(service)
+    it do
+      expect(chef_run).to enable_service('gnocchi-metricd')
+    end
+
+    it do
+      expect(chef_run).to start_service('gnocchi-metricd')
+    end
+
+    describe 'apache recipes' do
+      it 'include apache recipes' do
+        expect(chef_run).to include_recipe('apache2')
+        expect(chef_run).to include_recipe('apache2::mod_wsgi')
+        expect(chef_run).not_to include_recipe('apache2::mod_ssl')
       end
-      it do
-        expect(chef_run).to start_service(service)
+
+      it 'include apache recipes' do
+        node.set['openstack']['identity']['ssl']['enabled'] = true
+        expect(chef_run).to include_recipe('apache2::mod_ssl')
+      end
+    end
+
+    it 'creates directory /var/www/html/gnocchi' do
+      expect(chef_run).to create_directory('/var/www/html/gnocchi').with(
+        user: 'root',
+        group: 'root',
+        mode: 00755
+      )
+    end
+
+    it 'creates wsgi file' do
+      expect(chef_run).to create_file('/var/www/html/gnocchi/app').with(
+        user: 'root',
+        group: 'root',
+        mode: 00755
+      )
+    end
+
+    describe 'apache wsgi' do
+      file = '/etc/apache2/sites-available/gnocchi-api.conf'
+      it "creates #{file}" do
+        expect(chef_run).to create_template(file).with(
+          user: 'root',
+          group: 'root',
+          mode: '0644'
+        )
+      end
+
+      it "configures #{file} common lines" do
+        node.set['openstack']['telemetry-metric']['custom_template_banner'] = 'custom_template_banner_value'
+        [/user=gnocchi/,
+         /group=gnocchi/,
+         %r{^  ErrorLog /var/log/apache2/gnocchi-api_error.log$},
+         %r{^  CustomLog /var/log/apache2/gnocchi-api_access.log combined$}].each do |line|
+          expect(chef_run).to render_file(file).with_content(line)
+        end
+      end
+
+      it "does not configure #{file} triggered common lines" do
+        [/^    LogLevel/,
+         /^    SSL/].each do |line|
+          expect(chef_run).not_to render_file(file).with_content(line)
+        end
+      end
+      context 'Enable SSL' do
+        before do
+          node.set['openstack']['telemetry-metric']['ssl']['enabled'] = true
+        end
+        it "configures #{file} common ssl lines" do
+          [/^      SSLEngine On$/,
+           %r{^      SSLCertificateFile /etc/ceilometer/ssl/certs/sslcert.pem$},
+           %r{^      SSLCertificateKeyFile /etc/ceilometer/ssl/private/sslkey.pem$},
+           %r{^      SSLCACertificatePath /etc/ceilometer/ssl/certs/$},
+           /^      SSLProtocol All -SSLv2 -SSLv3$/].each do |line|
+            expect(chef_run).to render_file(file).with_content(line)
+          end
+        end
+        it "does not configure #{file} common ssl lines" do
+          [/^          SSLCertificateChainFile/,
+           /^          SSLCipherSuite/,
+           /^          SSLVerifyClient require/].each do |line|
+            expect(chef_run).not_to render_file(file).with_content(line)
+          end
+        end
+        it "configures #{file} chainfile when set" do
+          node.set['openstack']['telemetry-metric']['ssl']['chainfile'] = '/etc/ceilometer/ssl/certs/chainfile.pem'
+          expect(chef_run).to render_file(file)
+            .with_content(%r{^          SSLCertificateChainFile /etc/ceilometer/ssl/certs/chainfile.pem$})
+        end
+        it "configures #{file} ciphers when set" do
+          node.set['openstack']['telemetry-metric']['ssl']['ciphers'] = 'ciphers_value'
+          expect(chef_run).to render_file(file)
+            .with_content(/^          SSLCipherSuite ciphers_value$/)
+        end
+        it "configures #{file} cert_required set" do
+          node.set['openstack']['telemetry-metric']['ssl']['cert_required'] = true
+          expect(chef_run).to render_file(file)
+            .with_content(/^          SSLVerifyClient require$/)
+        end
+      end
+
+      describe 'gnocchi-api WSGI app' do
+        it 'configures required lines' do
+          [/^<VirtualHost 127.0.0.1:8041>$/,
+           /^  WSGIDaemonProcess gnocchi-api/,
+           /^  WSGIProcessGroup gnocchi-api$/,
+           %r{^  WSGIScriptAlias / /var/www/html/gnocchi/app$}].each do |line|
+            expect(chef_run).to render_file('/etc/apache2/sites-available/gnocchi-api.conf').with_content(line)
+          end
+        end
       end
     end
   end

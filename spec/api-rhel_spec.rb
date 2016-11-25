@@ -9,14 +9,9 @@ describe 'openstack-telemetry::api' do
     let(:chef_run) { runner.converge(described_recipe) }
 
     include_context 'telemetry-stubs'
-    include_examples 'expect-runs-common-recipe'
 
     it 'installs the api package' do
-      expect(chef_run).to upgrade_package('openstack-ceilometer-api')
-    end
-
-    it 'starts api service' do
-      expect(chef_run).to start_service('openstack-ceilometer-api')
+      expect(chef_run).to upgrade_package 'openstack-ceilometer-api'
     end
   end
 end
