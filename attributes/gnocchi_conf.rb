@@ -1,8 +1,6 @@
 default['openstack']['telemetry-metric']['conf_secrets'] = {}
 
 default['openstack']['telemetry-metric']['conf'].tap do |conf|
-  # [DEFAULT] section
-  conf['DEFAULT']['rpc_backend'] = node['openstack']['mq']['service_type']
   # [keystone_authtoken] section
   conf['keystone_authtoken']['username'] = 'gnocchi'
   conf['keystone_authtoken']['project_name'] = 'service'

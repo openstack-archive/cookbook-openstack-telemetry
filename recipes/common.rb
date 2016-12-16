@@ -44,13 +44,8 @@ platform['common_packages'].each do |pkg|
   end
 end
 
-if node['openstack']['telemetry']['conf']['DEFAULT']['rpc_backend'] == 'rabbit'
-  user = node['openstack']['mq']['telemetry']['rabbit']['userid']
-  node.default['openstack']['telemetry']['conf_secrets']
-    .[]('oslo_messaging_rabbit')['rabbit_userid'] = user
-  node.default['openstack']['telemetry']['conf_secrets']
-    .[]('oslo_messaging_rabbit')['rabbit_password'] =
-    get_password 'user', user
+if node['openstack']['mq']['service_type'] == 'rabbit'
+  node.default['openstack']['telemetry']['conf_secrets']['DEFAULT']['transport_url'] = rabbit_transport_url 'telemetry'
 end
 
 db_user = node['openstack']['db']['telemetry']['username']

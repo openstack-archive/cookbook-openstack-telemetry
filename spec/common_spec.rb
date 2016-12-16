@@ -116,11 +116,10 @@ describe 'openstack-telemetry::common' do
 
       it do
         [
-          /^rabbit_userid = guest$/,
-          /^rabbit_password = mq-pass$/
+          %r{^transport_url = rabbit://guest:mypass@127.0.0.1:5672$}
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)
-            .with_section_content('oslo_messaging_rabbit', line)
+            .with_section_content('DEFAULT', line)
         end
       end
 
