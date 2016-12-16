@@ -75,8 +75,8 @@ end
 web_app 'ceilometer-api' do
   template 'wsgi-template.conf.erb'
   deamon_process 'ceilometer-api'
-  server_host node['openstack']['telemetry']['conf']['api']['host']
-  server_port node['openstack']['telemetry']['conf']['api']['port']
+  server_host bind_service.host
+  server_port bind_service.port
   server_entry ceilometer_server_entry
   log_dir node['apache']['log_dir']
   log_debug node['openstack']['telemetry']['debug']

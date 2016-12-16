@@ -42,10 +42,6 @@ shared_context 'telemetry-stubs' do
       .with('user', 'admin')
       .and_return('admin-pass')
     allow(Chef::Application).to receive(:fatal!)
-    node.set['openstack']['telemetry']['conf']['api']['host'] = '127.0.0.1'
-    node.set['openstack']['telemetry']['conf']['api']['port'] = '8777'
-    node.set['openstack']['telemetry-metric']['conf']['api']['host'] = '127.0.0.1'
-    node.set['openstack']['telemetry-metric']['conf']['api']['port'] = '8041'
     stub_command('/usr/sbin/apache2 -t')
     stub_command('/usr/sbin/httpd -t')
   end
