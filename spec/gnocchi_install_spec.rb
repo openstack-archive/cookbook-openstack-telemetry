@@ -15,6 +15,11 @@ describe 'openstack-telemetry::gnocchi_install' do
     end
 
     it do
+      expect(chef_run).to stop_service('gnocchi-api')
+      expect(chef_run).to disable_service('gnocchi-api')
+    end
+
+    it do
       expect(chef_run).to install_package 'gnocchi-metricd'
     end
   end

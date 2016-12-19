@@ -36,6 +36,12 @@ platform['api_packages'].each do |pkg|
     action :upgrade
   end
 end
+# stop and disable the service ceilometer-api itself, since it should be run inside
+# of apache
+service platform['api_service'] do
+  action [:stop, :disable]
+end
+
 bind_service = node['openstack']['bind_service']['all']['telemetry']
 bind_service_address = bind_address bind_service
 #### Start of Apache specific work
