@@ -13,6 +13,10 @@ describe 'openstack-telemetry::api' do
     it 'installs the api package' do
       expect(chef_run).to upgrade_package 'ceilometer-api'
     end
+    it do
+      expect(chef_run).to stop_service('ceilometer-api')
+      expect(chef_run).to disable_service('ceilometer-api')
+    end
 
     describe 'apache recipes' do
       it 'include apache recipes' do

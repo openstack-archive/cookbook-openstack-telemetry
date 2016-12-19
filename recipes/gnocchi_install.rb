@@ -25,3 +25,8 @@ platform['gnocchi_packages'].each do |pkg|
     version '2.0.2-4'
   end
 end
+# stop and disable the service gnocchi-api_service itself, since it should be run inside
+# of apache
+service platform['gnocchi-api_service'] do
+  action [:stop, :disable]
+end
