@@ -96,6 +96,8 @@ when 'rhel'
     'agent_compute_service' => 'openstack-ceilometer-compute',
     'agent_notification_packages' => ['openstack-ceilometer-collector'],
     'agent_notification_service' => 'openstack-ceilometer-notification',
+    'ceilometer-api_wsgi_file' => '/usr/lib/python2.7/site-packages/ceilometer/api/app.wsgi',
+    'gnocchi-api_wsgi_file' => '/usr/share/gnocchi-common/app.wsgi',
     'api_packages' => ['openstack-ceilometer-api'],
     'api_service' => 'openstack-ceilometer-api',
     'collector_packages' => ['openstack-ceilometer-collector'],
