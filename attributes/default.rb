@@ -108,7 +108,7 @@ when 'rhel'
 when 'debian'
   default['openstack']['telemetry']['platform'] = {
     'common_packages' => ['ceilometer-common'],
-    'gnocchi_packages' => ['python-gnocchi', 'gnocchi-common', 'gnocchi-api', 'gnocchi-metricd'],
+    'gnocchi_packages' => ['python-gnocchi', 'gnocchi-common', 'gnocchi-api', 'gnocchi-metricd', 'python-gnocchiclient'],
     'gnocchi-api_service' => 'gnocchi-api',
     'gnocchi-metricd_service' => 'gnocchi-metricd',
     'agent_central_packages' => ['ceilometer-agent-central'],

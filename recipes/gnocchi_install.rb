@@ -22,7 +22,7 @@ platform = node['openstack']['telemetry']['platform']
 platform['gnocchi_packages'].each do |pkg|
   package pkg do
     options platform['package_overrides']
-    version '2.0.2-4'
+    action :upgrade
   end
 end
 # stop and disable the service gnocchi-api_service itself, since it should be run inside
