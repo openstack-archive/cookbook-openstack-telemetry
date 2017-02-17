@@ -60,6 +60,7 @@ default['openstack']['telemetry']['identity-api']['auth']['version'] =
   node['openstack']['api']['auth']['version']
 default['openstack']['telemetry-metric']['identity-api']['auth']['version'] =
   node['openstack']['api']['auth']['version']
+default['openstack']['telemetry-metric']['gnocchi-upgrade-options'] = ''
 
 %w(telemetry telemetry-metric).each do |ts|
   # specify whether to enable SSL for ceilometer API endpoint

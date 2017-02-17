@@ -93,7 +93,8 @@ if node['openstack']['telemetry-metric']['conf']['storage']['driver'] == 'file'
 end
 
 # dbsync for gnocchi
-execute 'gnocchi-upgrade' do
+execute 'run gnocchi-upgrade' do
+  command "gnocchi-upgrade #{node['openstack']['telemetry-metric']['gnocchi-upgrade-options']}"
   user node['openstack']['telemetry-metric']['user']
 end
 

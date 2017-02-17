@@ -111,8 +111,11 @@ describe 'openstack-telemetry::gnocchi_configure' do
     end
 
     it do
-      expect(chef_run).to run_execute('gnocchi-upgrade')
-        .with(user: 'gnocchi')
+      expect(chef_run).to run_execute('run gnocchi-upgrade')
+        .with(
+          command: 'gnocchi-upgrade ',
+          user: 'gnocchi'
+        )
     end
 
     it do
