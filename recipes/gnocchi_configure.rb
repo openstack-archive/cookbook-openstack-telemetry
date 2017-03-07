@@ -134,10 +134,11 @@ end
 
 web_app 'gnocchi-api' do
   template 'wsgi-template.conf.erb'
-  deamon_process 'gnocchi-api'
+  daemon_process 'gnocchi-api'
   server_host bind_service.host
   server_port bind_service.port
   server_entry gnocchi_server_entry
+  run_dir node['apache']['run_dir']
   log_dir node['apache']['log_dir']
   log_debug node['openstack']['telemetry-metric']['debug']
   user node['openstack']['telemetry-metric']['user']

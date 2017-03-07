@@ -86,6 +86,13 @@ directory node['openstack']['telemetry']['conf_dir'] do
   action :create
 end
 
+directory "#{node['apache']['run_dir']}/ceilometer" do
+  owner node['openstack']['telemetry']['user']
+  group node['openstack']['telemetry']['group']
+  mode 00750
+  action :create
+end
+
 # merge all config options and secrets to be used in the ceilometer.conf
 ceilometer_conf_options = merge_config_options 'telemetry'
 
