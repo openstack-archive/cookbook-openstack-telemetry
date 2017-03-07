@@ -80,10 +80,11 @@ end
 
 web_app 'ceilometer-api' do
   template 'wsgi-template.conf.erb'
-  deamon_process 'ceilometer-api'
+  daemon_process 'ceilometer-api'
   server_host bind_service.host
   server_port bind_service.port
   server_entry ceilometer_server_entry
+  run_dir node['apache']['run_dir']
   log_dir node['apache']['log_dir']
   log_debug node['openstack']['telemetry']['debug']
   user node['openstack']['telemetry']['user']
