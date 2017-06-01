@@ -15,7 +15,7 @@ the backend for Metrics as part of the OpenStack reference deployment Chef for
 OpenStack. Both are currently installed from packages.
 
 http://docs.openstack.org/developer/ceilometer/
-http://docs.openstack.org/developer/gnocchi/
+http://gnocchi.xyz/
 
 Requirements
 ============
