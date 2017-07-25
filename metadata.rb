@@ -6,7 +6,7 @@ source_url 'https://github.com/openstack/cookbook-openstack-telemetry' if respon
 license 'Apache 2.0'
 description 'The OpenStack Metering service Ceilometer.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version '14.0.0'
+version '14.0.1'
 
 recipe 'openstack-telemetry::agent-central', 'Installs agent central service.'
 recipe 'openstack-telemetry::agent-compute', 'Installs agent compute service.'
