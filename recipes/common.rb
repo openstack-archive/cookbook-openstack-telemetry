@@ -90,6 +90,7 @@ directory "#{node['apache']['run_dir']}/ceilometer" do
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
   mode 00750
+  recursive true
   action :create
 end
 
