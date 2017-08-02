@@ -35,7 +35,7 @@ describe 'openstack-telemetry::api' do
       expect(chef_run).to create_directory('/var/www/html/ceilometer').with(
         user: 'root',
         group: 'root',
-        mode: 00755
+        mode: 0o0755
       )
     end
 
@@ -43,7 +43,7 @@ describe 'openstack-telemetry::api' do
       expect(chef_run).to create_file('/var/www/html/ceilometer/app').with(
         user: 'root',
         group: 'root',
-        mode: 00755
+        mode: 0o0755
       )
     end
 

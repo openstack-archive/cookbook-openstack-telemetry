@@ -54,7 +54,7 @@ template node['openstack']['telemetry-metric']['conf_file'] do
   cookbook 'openstack-common'
   owner node['openstack']['telemetry-metric']['user']
   group node['openstack']['telemetry-metric']['group']
-  mode 00640
+  mode 0o0640
   variables(
     service_config: gnocchi_conf_options
   )
@@ -66,7 +66,7 @@ cookbook_file File.join(node['openstack']['telemetry']['conf_dir'], 'gnocchi_res
   source 'gnocchi_resources.yaml'
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 00640
+  mode 0o0640
 end
 
 # drop api-paste.ini to gnocchi folder (default ini will not use keystone auth)
@@ -74,7 +74,7 @@ cookbook_file File.join(node['openstack']['telemetry-metric']['conf_dir'], 'api-
   source 'api-paste.ini'
   owner node['openstack']['telemetry-metric']['user']
   group node['openstack']['telemetry-metric']['group']
-  mode 00640
+  mode 0o0640
 end
 
 if node['openstack']['telemetry-metric']['conf']['storage']['driver'] == 'file'
@@ -87,7 +87,7 @@ if node['openstack']['telemetry-metric']['conf']['storage']['driver'] == 'file'
       owner node['openstack']['telemetry-metric']['user']
       group node['openstack']['telemetry-metric']['group']
       recursive true
-      mode 00750
+      mode 0o0750
     end
   end
 end
@@ -119,7 +119,7 @@ gnocchi_apache_dir = "#{node['apache']['docroot_dir']}/gnocchi"
 directory gnocchi_apache_dir do
   owner 'root'
   group 'root'
-  mode 00755
+  mode 0o0755
 end
 
 gnocchi_server_entry = "#{gnocchi_apache_dir}/app"
@@ -129,7 +129,7 @@ file gnocchi_server_entry do
   content lazy { IO.read(platform['gnocchi-api_wsgi_file']) }
   owner 'root'
   group 'root'
-  mode 00755
+  mode 0o0755
 end
 
 web_app 'gnocchi-api' do

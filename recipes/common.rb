@@ -82,14 +82,14 @@ end
 directory node['openstack']['telemetry']['conf_dir'] do
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 00750
+  mode 0o0750
   action :create
 end
 
 directory "#{node['apache']['run_dir']}/ceilometer" do
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 00750
+  mode 0o0750
   recursive true
   action :create
 end
@@ -102,7 +102,7 @@ template node['openstack']['telemetry']['conf_file'] do
   cookbook 'openstack-common'
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 00640
+  mode 0o0640
   variables(
     service_config: ceilometer_conf_options
   )

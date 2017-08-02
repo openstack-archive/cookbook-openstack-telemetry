@@ -40,7 +40,7 @@ describe 'openstack-telemetry::common' do
         expect(chef_run).to create_directory(dir.name).with(
           user: 'ceilometer',
           group: 'ceilometer',
-          mode: 0750
+          mode: 0o750
         )
       end
     end
@@ -52,7 +52,7 @@ describe 'openstack-telemetry::common' do
         expect(chef_run).to create_template(file.name).with(
           user: 'ceilometer',
           group: 'ceilometer',
-          mode: 0640
+          mode: 0o640
         )
       end
 
@@ -127,7 +127,7 @@ describe 'openstack-telemetry::common' do
         expect(chef_run).to render_config_file(file.name)
           .with_section_content(
             'database',
-            %r{^connection = mysql://ceilometer:ceilometer-dbpass@127\.0\.0\.1:3306/ceilometer\?charset=utf8$}
+            %(connection = mysql+pymysql://ceilometer:ceilometer-dbpass@127.0.0.1:3306/ceilometer?charset=utf8)
           )
       end
     end

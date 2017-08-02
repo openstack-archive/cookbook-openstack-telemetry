@@ -65,7 +65,7 @@ ceilometer_apache_dir = "#{node['apache']['docroot_dir']}/ceilometer"
 directory ceilometer_apache_dir do
   owner 'root'
   group 'root'
-  mode 00755
+  mode 0o0755
 end
 
 ceilometer_server_entry = "#{ceilometer_apache_dir}/app"
@@ -75,7 +75,7 @@ file ceilometer_server_entry do
   content lazy { IO.read(platform['ceilometer-api_wsgi_file']) }
   owner 'root'
   group 'root'
-  mode 00755
+  mode 0o0755
 end
 
 web_app 'ceilometer-api' do

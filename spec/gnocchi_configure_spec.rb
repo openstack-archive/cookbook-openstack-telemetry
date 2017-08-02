@@ -15,7 +15,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
         expect(chef_run).to create_template(file.name).with(
           user: 'gnocchi',
           group: 'gnocchi',
-          mode: 0640
+          mode: 0o640
         )
       end
 
@@ -49,7 +49,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
         expect(chef_run).to render_config_file(file.name)
           .with_section_content(
             'database',
-            %r{^connection = mysql://gnocchi:gnocchi-dbpass@127\.0\.0\.1:3306/gnocchi\?charset=utf8$}
+            %(connection = mysql+pymysql://gnocchi:gnocchi-dbpass@127.0.0.1:3306/gnocchi?charset=utf8)
           )
       end
 
@@ -57,7 +57,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
         expect(chef_run).to render_config_file(file.name)
           .with_section_content(
             'indexer',
-            %r{^url = mysql://gnocchi:gnocchi-dbpass@127\.0\.0\.1:3306/gnocchi\?charset=utf8$}
+            %(url = mysql+pymysql://gnocchi:gnocchi-dbpass@127.0.0.1:3306/gnocchi?charset=utf8)
           )
       end
     end
@@ -68,7 +68,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
           source: 'gnocchi_resources.yaml',
           owner: 'ceilometer',
           group: 'ceilometer',
-          mode: 00640
+          mode: 0o0640
         )
     end
 
@@ -78,7 +78,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
           source: 'api-paste.ini',
           owner: 'gnocchi',
           group: 'gnocchi',
-          mode: 00640
+          mode: 0o0640
         )
     end
 
@@ -90,7 +90,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
               .with(
                 user: 'gnocchi',
                 group: 'gnocchi',
-                mode: 0750
+                mode: 0o750
               )
           end
         end
@@ -103,7 +103,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
               .with(
                 user: 'gnocchi',
                 group: 'gnocchi',
-                mode: 0750
+                mode: 0o750
               )
           end
         end
@@ -143,7 +143,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
       expect(chef_run).to create_directory('/var/www/html/gnocchi').with(
         user: 'root',
         group: 'root',
-        mode: 00755
+        mode: 0o0755
       )
     end
 
@@ -151,7 +151,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
       expect(chef_run).to create_file('/var/www/html/gnocchi/app').with(
         user: 'root',
         group: 'root',
-        mode: 00755
+        mode: 0o0755
       )
     end
 
