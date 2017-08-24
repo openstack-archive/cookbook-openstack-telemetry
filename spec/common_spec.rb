@@ -70,7 +70,7 @@ describe 'openstack-telemetry::common' do
           /^auth_type = v3password$/,
           /^region_name = RegionOne$/,
           %r{auth_url = http://127\.0\.0\.1:5000/v3},
-          /^password = ceilometer-pass$/
+          /^password = ceilometer-pass$/,
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)
             .with_section_content('keystone_authtoken', line)
@@ -87,7 +87,7 @@ describe 'openstack-telemetry::common' do
           /^interface = internal$/,
           /^region_name = RegionOne$/,
           %r{auth_url = http://127\.0\.0\.1:5000/v3},
-          /^password = ceilometer-pass$/
+          /^password = ceilometer-pass$/,
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)
             .with_section_content('service_credentials', line)
@@ -97,7 +97,7 @@ describe 'openstack-telemetry::common' do
       it do
         [
           /^host = 127\.0\.0\.1$/,
-          /^port = 8777$/
+          /^port = 8777$/,
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)
             .with_section_content('api', line)
@@ -107,7 +107,7 @@ describe 'openstack-telemetry::common' do
       it do
         [
           %r{url = http://127\.0\.0\.1:8041},
-          /^filter_project = service$/
+          /^filter_project = service$/,
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)
             .with_section_content('dispatcher_gnocchi', line)
@@ -116,7 +116,7 @@ describe 'openstack-telemetry::common' do
 
       it do
         [
-          %r{^transport_url = rabbit://guest:mypass@127.0.0.1:5672$}
+          %r{^transport_url = rabbit://guest:mypass@127.0.0.1:5672$},
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)
             .with_section_content('DEFAULT', line)

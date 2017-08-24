@@ -28,7 +28,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
           /^auth_type = v3password$/,
           /^region_name = RegionOne$/,
           %r{auth_url = http://127\.0\.0\.1:5000/v3},
-          /^password = gnocchi-pass$/
+          /^password = gnocchi-pass$/,
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)
             .with_section_content('keystone_authtoken', line)
@@ -38,7 +38,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
       it do
         [
           /^host = 127\.0\.0\.1$/,
-          /^port = 8041$/
+          /^port = 8041$/,
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)
             .with_section_content('api', line)

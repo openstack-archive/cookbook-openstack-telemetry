@@ -38,7 +38,7 @@ connection_params = {
   openstack_username:     admin_user,
   openstack_api_key:      admin_pass,
   openstack_project_name: admin_project,
-  openstack_domain_name:    admin_domain
+  openstack_domain_name:    admin_domain,
 }
 
 %w(telemetry telemetry-metric).each do |telemetry_service|
@@ -54,7 +54,7 @@ connection_params = {
   interfaces = {
     public: { url: public_endpoint(telemetry_service) },
     internal: { url: internal_endpoint(telemetry_service) },
-    admin: { url: admin_endpoint(telemetry_service) }
+    admin: { url: admin_endpoint(telemetry_service) },
   }
 
   service_pass = get_password 'service', "openstack-#{telemetry_service}"

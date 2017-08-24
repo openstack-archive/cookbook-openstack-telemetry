@@ -29,7 +29,7 @@ describe 'openstack-telemetry::identity_registration' do
         openstack_username: 'admin',
         openstack_api_key: 'admin-pass',
         openstack_project_name: 'admin',
-        openstack_domain_name: 'default'
+        openstack_domain_name: 'default',
       }
       service_user = service_name
       url = "http://127.0.0.1:#{port}"
