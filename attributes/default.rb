@@ -87,7 +87,7 @@ default['openstack']['telemetry-metric']['gnocchi-upgrade-options'] = ''
   # path of the CA cert files for SSL (Apache)
   default['openstack'][ts]['ssl']['ca_certs_path'] = "#{node['openstack'][ts]['ssl']['basedir']}/certs/"
 end
-case platform_family
+case node['platform_family']
 when 'rhel'
   default['openstack']['telemetry']['platform'] = {
     'common_packages' => ['openstack-ceilometer-common'],
