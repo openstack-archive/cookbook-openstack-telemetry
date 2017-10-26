@@ -32,7 +32,7 @@ end
 
 conf_switch = "--config-file #{node['openstack']['telemetry']['conf_file']}"
 execute 'database migration' do
-  command "ceilometer-dbsync #{conf_switch}"
+  command "ceilometer-upgrade --skip-gnocchi-resource-types #{conf_switch}"
 end
 
 service 'ceilometer-collector' do

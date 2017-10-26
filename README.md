@@ -74,7 +74,7 @@ Recipes
 - Install the client packages
 
 ## collector
-- Installs collector package and service. If the NoSQL database is used for metering service, ceilometer-dbsync will not be executed.
+- Installs collector package and service. If the NoSQL database is used for metering service, ceilometer-upgrade will not be executed.
 
 ## common
 - Common metering configuration.

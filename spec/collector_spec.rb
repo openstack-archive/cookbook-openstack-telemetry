@@ -17,7 +17,7 @@ describe 'openstack-telemetry::collector' do
 
     it do
       expect(chef_run).to run_execute(
-        'ceilometer-dbsync --config-file /etc/ceilometer/ceilometer.conf'
+        'ceilometer-upgrade --skip-gnocchi-resource-types --config-file /etc/ceilometer/ceilometer.conf'
       )
     end
 
