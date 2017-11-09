@@ -89,6 +89,7 @@ connection_params = {
 
   # Register Service User
   openstack_user service_user do
+    domain_name service_domain_name
     project_name service_tenant_name
     password service_pass
     connection_params connection_params
@@ -100,13 +101,5 @@ connection_params = {
     project_name service_tenant_name
     connection_params connection_params
     action :grant_role
-  end
-
-  openstack_user service_user do
-    domain_name service_domain_name
-    role_name service_role
-    user_name service_user
-    connection_params connection_params
-    action :grant_domain
   end
 end
