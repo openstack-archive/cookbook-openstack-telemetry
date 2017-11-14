@@ -41,7 +41,7 @@ connection_params = {
   openstack_domain_name:    admin_domain,
 }
 
-%w(telemetry telemetry-metric).each do |telemetry_service|
+%w(telemetry telemetry-metric aodh).each do |telemetry_service|
   case telemetry_service
   when 'telemetry'
     service_name = 'ceilometer'
@@ -49,6 +49,9 @@ connection_params = {
   when 'telemetry-metric'
     service_name = 'gnocchi'
     service_type = 'metric'
+  when 'aodh'
+    service_name = 'aodh'
+    service_type = 'alarming'
 
   end
   interfaces = {
