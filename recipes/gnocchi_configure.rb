@@ -43,7 +43,7 @@ auth_url =
 
 node.default['openstack']['telemetry-metric']['conf'].tap do |conf|
   conf['api']['host'] = bind_service_address
-  conf['api']['port'] = bind_service.port
+  conf['api']['port'] = bind_service['port']
   conf['keystone_authtoken']['auth_url'] = auth_url
 end
 
@@ -105,7 +105,7 @@ apache_listen = Array(node['apache']['listen']) # include already defined listen
 # Remove the default apache2 cookbook port, as that is also the default for horizon, but with
 # a different address syntax.  *:80   vs  0.0.0.0:80
 apache_listen -= ['*:80']
-apache_listen += ["#{bind_service_address}:#{bind_service.port}"]
+apache_listen += ["#{bind_service_address}:#{bind_service['port']}"]
 node.normal['apache']['listen'] = apache_listen.uniq
 
 # include the apache2 default recipe and the recipes for mod_wsgi
@@ -135,8 +135,8 @@ end
 web_app 'gnocchi-api' do
   template 'wsgi-template.conf.erb'
   daemon_process 'gnocchi-api'
-  server_host bind_service.host
-  server_port bind_service.port
+  server_host bind_service['host']
+  server_port bind_service['port']
   server_entry gnocchi_server_entry
   run_dir node['apache']['run_dir']
   log_dir node['apache']['log_dir']

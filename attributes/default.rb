@@ -127,6 +127,6 @@ when 'debian'
     'api_service' => 'ceilometer-api',
     'collector_packages' => ['ceilometer-collector', 'python-mysqldb'],
     'collector_service' => 'ceilometer-collector',
-    'package_overrides' => "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef'",
+    'package_overrides' => '',
   }
 end

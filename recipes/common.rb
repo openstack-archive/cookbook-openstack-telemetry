@@ -72,7 +72,7 @@ auth_url =
 
 node.default['openstack']['telemetry']['conf'].tap do |conf|
   conf['api']['host'] = bind_service_address
-  conf['api']['port'] = bind_service.port
+  conf['api']['port'] = bind_service['port']
   conf['keystone_authtoken']['auth_url'] = auth_url
   conf['service_credentials']['auth_url'] = auth_url
   conf['dispatcher_gnocchi']['url'] = public_endpoint 'telemetry-metric'

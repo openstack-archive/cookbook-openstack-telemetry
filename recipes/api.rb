@@ -20,7 +20,7 @@
 # limitations under the License.
 #
 
-require 'uri'
+require 'addressable'
 
 # load the methods defined in cookbook-openstack-common libraries
 class ::Chef::Recipe
@@ -51,7 +51,7 @@ apache_listen = Array(node['apache']['listen']) # include already defined listen
 # Remove the default apache2 cookbook port, as that is also the default for horizon, but with
 # a different address syntax.  *:80   vs  0.0.0.0:80
 apache_listen -= ['*:80']
-apache_listen += ["#{bind_service_address}:#{bind_service.port}"]
+apache_listen += ["#{bind_service_address}:#{bind_service['port']}"]
 node.normal['apache']['listen'] = apache_listen.uniq
 
 # include the apache2 default recipe and the recipes for mod_wsgi
@@ -81,8 +81,8 @@ end
 web_app 'ceilometer-api' do
   template 'wsgi-template.conf.erb'
   daemon_process 'ceilometer-api'
-  server_host bind_service.host
-  server_port bind_service.port
+  server_host bind_service['host']
+  server_port bind_service['port']
   server_entry ceilometer_server_entry
   run_dir node['apache']['run_dir']
   log_dir node['apache']['log_dir']

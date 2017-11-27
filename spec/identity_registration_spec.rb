@@ -77,16 +77,6 @@ describe 'openstack-telemetry::identity_registration' do
         ).with(
           domain_name: domain_name,
           project_name: project_name,
-          password: password,
-          connection_params: connection_params
-        )
-      end
-
-      it do
-        expect(chef_run).to grant_role_openstack_user(
-          service_user
-        ).with(
-          project_name: project_name,
           role_name: role_name,
           password: password,
           connection_params: connection_params

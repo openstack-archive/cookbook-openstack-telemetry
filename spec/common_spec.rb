@@ -24,11 +24,6 @@ describe 'openstack-telemetry::common' do
       expect(chef_run).to upgrade_package 'python-mysqldb'
     end
 
-    it 'installs postgresql python packages if explicitly told' do
-      node.set['openstack']['db']['telemetry']['service_type'] = 'postgresql'
-      expect(chef_run).to upgrade_package 'python-psycopg2'
-    end
-
     it 'installs the common package' do
       expect(chef_run).to upgrade_package 'ceilometer-common'
     end
