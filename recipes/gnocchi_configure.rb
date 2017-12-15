@@ -77,6 +77,16 @@ cookbook_file File.join(node['openstack']['telemetry-metric']['conf_dir'], 'api-
   mode 0o0640
 end
 
+# drop event_pipeline.yaml to ceilometer folder (gnocchi does not use events and
+# the default event_pipeline.yaml will lead to a queue "event.sample" in rabbit
+# without a consumer)
+cookbook_file File.join(node['openstack']['telemetry']['conf_dir'], 'event_pipeline.yaml') do
+  source 'event_pipeline.yaml'
+  owner node['openstack']['telemetry']['user']
+  group node['openstack']['telemetry']['group']
+  mode 0o0640
+end
+
 if node['openstack']['telemetry-metric']['conf']['storage']['driver'] == 'file'
   # default store is file, so create needed directories with correct permissions
   # (on ubuntu they are created by the package, but owned by root and not writable

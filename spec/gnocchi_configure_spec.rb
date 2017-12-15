@@ -82,6 +82,16 @@ describe 'openstack-telemetry::gnocchi_configure' do
         )
     end
 
+    it do
+      expect(chef_run).to create_cookbook_file('/etc/ceilometer/event_pipeline.yaml')
+        .with(
+          source: 'event_pipeline.yaml',
+          owner: 'ceilometer',
+          group: 'ceilometer',
+          mode: 0o0640
+        )
+    end
+
     %w(tmp measure cache).each do |dir|
       describe "gnocchi #{dir} dir" do
         context 'file as storage backend' do
