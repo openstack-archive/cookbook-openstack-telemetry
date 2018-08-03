@@ -12,7 +12,7 @@ describe 'openstack-telemetry::common' do
 
     context 'with logging enabled' do
       before do
-        node.set['openstack']['telemetry']['syslog']['use'] = true
+        node.override['openstack']['telemetry']['syslog']['use'] = true
       end
 
       it 'runs logging recipe' do
