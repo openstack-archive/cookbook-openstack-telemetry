@@ -14,8 +14,8 @@ Installs the OpenStack Metering service **Ceilometer** as well as **Gnocchi** as
 the backend for Metrics as part of the OpenStack reference deployment Chef for
 OpenStack. Both are currently installed from packages.
 
-http://docs.openstack.org/developer/ceilometer/
-http://gnocchi.xyz/
+https://docs.openstack.org/ceilometer/latest/
+https://gnocchi.xyz/
 
 Requirements
 ============
