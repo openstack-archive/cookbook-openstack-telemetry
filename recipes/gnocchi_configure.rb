@@ -19,37 +19,37 @@ class ::Chef::Recipe
   include ::Openstack
 end
 platform = node['openstack']['telemetry']['platform']
-db_user = node['openstack']['db']['telemetry-metric']['username']
+db_user = node['openstack']['db']['telemetry_metric']['username']
 db_pass = get_password 'db', 'gnocchi'
-bind_service = node['openstack']['bind_service']['all']['telemetry-metric']
+bind_service = node['openstack']['bind_service']['all']['telemetry_metric']
 bind_service_address = bind_address bind_service
 
 # define secrets that are needed in the gnocchi.conf
-node.default['openstack']['telemetry-metric']['conf_secrets'].tap do |conf_secrets|
+node.default['openstack']['telemetry_metric']['conf_secrets'].tap do |conf_secrets|
   conf_secrets['database']['connection'] =
-    db_uri('telemetry-metric', db_user, db_pass)
+    db_uri('telemetry_metric', db_user, db_pass)
   conf_secrets['indexer']['url'] =
-    db_uri('telemetry-metric', db_user, db_pass)
+    db_uri('telemetry_metric', db_user, db_pass)
   conf_secrets['keystone_authtoken']['password'] =
-    get_password 'service', 'openstack-telemetry-metric'
+    get_password 'service', 'openstack-telemetry_metric'
 end
 
 identity_endpoint = public_endpoint 'identity'
-auth_url = auth_uri_transform identity_endpoint.to_s, node['openstack']['api']['auth']['version']
+auth_url = ::URI.decode identity_endpoint.to_s
 
-node.default['openstack']['telemetry-metric']['conf'].tap do |conf|
+node.default['openstack']['telemetry_metric']['conf'].tap do |conf|
   conf['api']['host'] = bind_service_address
   conf['api']['port'] = bind_service['port']
   conf['keystone_authtoken']['auth_url'] = auth_url
 end
 
 # merge all config options and secrets to be used in the gnocchi.conf
-gnocchi_conf_options = merge_config_options 'telemetry-metric'
-template node['openstack']['telemetry-metric']['conf_file'] do
+gnocchi_conf_options = merge_config_options 'telemetry_metric'
+template node['openstack']['telemetry_metric']['conf_file'] do
   source 'openstack-service.conf.erb'
   cookbook 'openstack-common'
-  owner node['openstack']['telemetry-metric']['user']
-  group node['openstack']['telemetry-metric']['group']
+  owner node['openstack']['telemetry_metric']['user']
+  group node['openstack']['telemetry_metric']['group']
   mode 0o0640
   variables(
     service_config: gnocchi_conf_options
@@ -66,10 +66,10 @@ cookbook_file File.join(node['openstack']['telemetry']['conf_dir'], 'gnocchi_res
 end
 
 # drop api-paste.ini to gnocchi folder (default ini will not use keystone auth)
-cookbook_file File.join(node['openstack']['telemetry-metric']['conf_dir'], 'api-paste.ini') do
+cookbook_file File.join(node['openstack']['telemetry_metric']['conf_dir'], 'api-paste.ini') do
   source 'api-paste.ini'
-  owner node['openstack']['telemetry-metric']['user']
-  group node['openstack']['telemetry-metric']['group']
+  owner node['openstack']['telemetry_metric']['user']
+  group node['openstack']['telemetry_metric']['group']
   mode 0o0640
 end
 
@@ -83,15 +83,15 @@ cookbook_file File.join(node['openstack']['telemetry']['conf_dir'], 'event_pipel
   mode 0o0640
 end
 
-if node['openstack']['telemetry-metric']['conf']['storage']['driver'] == 'file'
+if node['openstack']['telemetry_metric']['conf']['storage']['driver'] == 'file'
   # default store is file, so create needed directories with correct permissions
   # (on ubuntu they are created by the package, but owned by root and not writable
   # for gnocchi)
-  store_path = node['openstack']['telemetry-metric']['conf']['storage']['file_basepath']
+  store_path = node['openstack']['telemetry_metric']['conf']['storage']['file_basepath']
   %w(tmp measure cache).each do |dir|
     directory File.join(store_path, dir) do
-      owner node['openstack']['telemetry-metric']['user']
-      group node['openstack']['telemetry-metric']['group']
+      owner node['openstack']['telemetry_metric']['user']
+      group node['openstack']['telemetry_metric']['group']
       recursive true
       mode 0o0750
     end
@@ -100,8 +100,8 @@ end
 
 # dbsync for gnocchi
 execute 'run gnocchi-upgrade' do
-  command "gnocchi-upgrade #{node['openstack']['telemetry-metric']['gnocchi-upgrade-options']}"
-  user node['openstack']['telemetry-metric']['user']
+  command "gnocchi-upgrade #{node['openstack']['telemetry_metric']['gnocchi-upgrade-options']}"
+  user node['openstack']['telemetry_metric']['user']
 end
 
 #### Start of Apache specific work
@@ -146,21 +146,21 @@ web_app 'gnocchi-api' do
   server_entry gnocchi_server_entry
   run_dir node['apache']['run_dir']
   log_dir node['apache']['log_dir']
-  log_debug node['openstack']['telemetry-metric']['debug']
-  user node['openstack']['telemetry-metric']['user']
-  group node['openstack']['telemetry-metric']['group']
-  use_ssl node['openstack']['telemetry-metric']['ssl']['enabled']
-  cert_file node['openstack']['telemetry-metric']['ssl']['certfile']
-  chain_file node['openstack']['telemetry-metric']['ssl']['chainfile']
-  key_file node['openstack']['telemetry-metric']['ssl']['keyfile']
-  ca_certs_path node['openstack']['telemetry-metric']['ssl']['ca_certs_path']
-  cert_required node['openstack']['telemetry-metric']['ssl']['cert_required']
-  protocol node['openstack']['telemetry-metric']['ssl']['protocol']
-  ciphers node['openstack']['telemetry-metric']['ssl']['ciphers']
+  log_debug node['openstack']['telemetry_metric']['debug']
+  user node['openstack']['telemetry_metric']['user']
+  group node['openstack']['telemetry_metric']['group']
+  use_ssl node['openstack']['telemetry_metric']['ssl']['enabled']
+  cert_file node['openstack']['telemetry_metric']['ssl']['certfile']
+  chain_file node['openstack']['telemetry_metric']['ssl']['chainfile']
+  key_file node['openstack']['telemetry_metric']['ssl']['keyfile']
+  ca_certs_path node['openstack']['telemetry_metric']['ssl']['ca_certs_path']
+  cert_required node['openstack']['telemetry_metric']['ssl']['cert_required']
+  protocol node['openstack']['telemetry_metric']['ssl']['protocol']
+  ciphers node['openstack']['telemetry_metric']['ssl']['ciphers']
 end
 
 service 'gnocchi-metricd' do
   service_name platform['gnocchi-metricd_service']
-  subscribes :restart, "template[#{node['openstack']['telemetry-metric']['conf_file']}]"
+  subscribes :restart, "template[#{node['openstack']['telemetry_metric']['conf_file']}]"
   action [:enable, :start]
 end

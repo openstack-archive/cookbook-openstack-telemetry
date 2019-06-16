@@ -36,7 +36,7 @@ shared_context 'telemetry-stubs' do
       .with('service', 'openstack-telemetry')
       .and_return('ceilometer-pass')
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)
-      .with('service', 'openstack-telemetry-metric')
+      .with('service', 'openstack-telemetry_metric')
       .and_return('gnocchi-pass')
     allow_any_instance_of(Chef::Recipe).to receive(:get_password)
       .with('service', 'openstack-aodh')

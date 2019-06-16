@@ -106,7 +106,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
         end
         context 'other storage backend' do
           before do
-            node.override['openstack']['telemetry-metric']['conf']['storage']['driver'] = 'ceph'
+            node.override['openstack']['telemetry_metric']['conf']['storage']['driver'] = 'ceph'
           end
           it do
             expect(chef_run).to_not create_directory("/var/lib/gnocchi/#{dir}")
@@ -176,7 +176,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
       end
 
       it "configures #{file} common lines" do
-        node.override['openstack']['telemetry-metric']['custom_template_banner'] = 'custom_template_banner_value'
+        node.override['openstack']['telemetry_metric']['custom_template_banner'] = 'custom_template_banner_value'
         [/user=gnocchi/,
          /group=gnocchi/,
          %r{^  ErrorLog /var/log/apache2/gnocchi-api_error.log$},
@@ -193,7 +193,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
       end
       context 'Enable SSL' do
         before do
-          node.override['openstack']['telemetry-metric']['ssl']['enabled'] = true
+          node.override['openstack']['telemetry_metric']['ssl']['enabled'] = true
         end
         it "configures #{file} common ssl lines" do
           [/^      SSLEngine On$/,
@@ -212,17 +212,17 @@ describe 'openstack-telemetry::gnocchi_configure' do
           end
         end
         it "configures #{file} chainfile when set" do
-          node.override['openstack']['telemetry-metric']['ssl']['chainfile'] = '/etc/ceilometer/ssl/certs/chainfile.pem'
+          node.override['openstack']['telemetry_metric']['ssl']['chainfile'] = '/etc/ceilometer/ssl/certs/chainfile.pem'
           expect(chef_run).to render_file(file)
             .with_content(%r{^          SSLCertificateChainFile /etc/ceilometer/ssl/certs/chainfile.pem$})
         end
         it "configures #{file} ciphers when set" do
-          node.override['openstack']['telemetry-metric']['ssl']['ciphers'] = 'ciphers_value'
+          node.override['openstack']['telemetry_metric']['ssl']['ciphers'] = 'ciphers_value'
           expect(chef_run).to render_file(file)
             .with_content(/^          SSLCipherSuite ciphers_value$/)
         end
         it "configures #{file} cert_required set" do
-          node.override['openstack']['telemetry-metric']['ssl']['cert_required'] = true
+          node.override['openstack']['telemetry_metric']['ssl']['cert_required'] = true
           expect(chef_run).to render_file(file)
             .with_content(/^          SSLVerifyClient require$/)
         end

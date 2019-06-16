@@ -27,13 +27,13 @@ default['openstack']['telemetry']['custom_template_banner'] = '
 
 # Set the endpoints for the telemetry services to allow all other cookbooks to
 # access and use them
-%w(telemetry telemetry-metric aodh).each do |ts|
+%w(telemetry telemetry_metric aodh).each do |ts|
   %w(public internal admin).each do |ep_type|
     default['openstack']['endpoints'][ep_type][ts]['host'] = '127.0.0.1'
     default['openstack']['endpoints'][ep_type][ts]['scheme'] = 'http'
     default['openstack']['endpoints'][ep_type][ts]['path'] = ''
     default['openstack']['endpoints'][ep_type]['telemetry']['port'] = 8777
-    default['openstack']['endpoints'][ep_type]['telemetry-metric']['port'] = 8041
+    default['openstack']['endpoints'][ep_type]['telemetry_metric']['port'] = 8041
     default['openstack']['endpoints'][ep_type]['aodh']['port'] = 8042
     # web-service (e.g. apache) listen address (can be different from openstack
     # telemetry endpoints)
@@ -41,15 +41,15 @@ default['openstack']['telemetry']['custom_template_banner'] = '
   default['openstack']['bind_service']['all'][ts]['host'] = '127.0.0.1'
 end
 default['openstack']['bind_service']['all']['telemetry']['port'] = 8777
-default['openstack']['bind_service']['all']['telemetry-metric']['port'] = 8041
+default['openstack']['bind_service']['all']['telemetry_metric']['port'] = 8041
 default['openstack']['bind_service']['all']['aodh']['port'] = 8042
 
 default['openstack']['telemetry']['conf_dir'] = '/etc/ceilometer'
 default['openstack']['telemetry']['conf_file'] =
   ::File.join(node['openstack']['telemetry']['conf_dir'], 'ceilometer.conf')
-default['openstack']['telemetry-metric']['conf_dir'] = '/etc/gnocchi'
-default['openstack']['telemetry-metric']['conf_file'] =
-  ::File.join(node['openstack']['telemetry-metric']['conf_dir'], 'gnocchi.conf')
+default['openstack']['telemetry_metric']['conf_dir'] = '/etc/gnocchi'
+default['openstack']['telemetry_metric']['conf_file'] =
+  ::File.join(node['openstack']['telemetry_metric']['conf_dir'], 'gnocchi.conf')
 default['openstack']['telemetry']['syslog']['use'] = false
 
 default['openstack']['aodh']['conf_dir'] = '/etc/aodh'
@@ -59,25 +59,19 @@ default['openstack']['aodh']['conf_file'] =
 default['openstack']['telemetry']['user'] = 'ceilometer'
 default['openstack']['telemetry']['group'] = 'ceilometer'
 
-default['openstack']['telemetry-metric']['user'] = 'gnocchi'
-default['openstack']['telemetry-metric']['group'] = 'gnocchi'
+default['openstack']['telemetry_metric']['user'] = 'gnocchi'
+default['openstack']['telemetry_metric']['group'] = 'gnocchi'
 
 default['openstack']['aodh']['user'] = 'aodh'
 default['openstack']['aodh']['group'] = 'aodh'
 
 default['openstack']['telemetry']['service_role'] = 'admin'
-default['openstack']['telemetry-metric']['service_role'] = 'admin'
+default['openstack']['telemetry_metric']['service_role'] = 'admin'
 default['openstack']['aodh']['service_role'] = 'admin'
 
-default['openstack']['telemetry']['identity-api']['auth']['version'] =
-  node['openstack']['api']['auth']['version']
-default['openstack']['telemetry-metric']['identity-api']['auth']['version'] =
-  node['openstack']['api']['auth']['version']
-default['openstack']['aodh']['identity-api']['auth']['version'] =
-  node['openstack']['api']['auth']['version']
-default['openstack']['telemetry-metric']['gnocchi-upgrade-options'] = ''
+default['openstack']['telemetry_metric']['gnocchi-upgrade-options'] = ''
 
-%w(telemetry telemetry-metric aodh).each do |ts|
+%w(telemetry telemetry_metric aodh).each do |ts|
   # specify whether to enable SSL for ceilometer API endpoint
   default['openstack'][ts]['ssl']['enabled'] = false
   # specify server whether to enforce client certificate requirement

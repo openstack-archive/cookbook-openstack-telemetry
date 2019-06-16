@@ -10,14 +10,14 @@ describe 'openstack-telemetry::identity_registration' do
 
     include_context 'telemetry-stubs'
 
-    %w(telemetry telemetry-metric).each do |telemetry_service|
+    %w(telemetry telemetry_metric).each do |telemetry_service|
       case telemetry_service
       when 'telemetry'
         service_name = 'ceilometer'
         service_type = 'metering'
         password = 'ceilometer-pass'
         port = 8777
-      when 'telemetry-metric'
+      when 'telemetry_metric'
         service_name = 'gnocchi'
         service_type = 'metric'
         password = 'gnocchi-pass'
@@ -56,7 +56,7 @@ describe 'openstack-telemetry::identity_registration' do
       end
 
       context "registers #{service_name} endpoint" do
-        %w(admin internal public).each do |interface|
+        %w(internal public).each do |interface|
           it "#{interface} endpoint with default values" do
             expect(chef_run).to create_openstack_endpoint(
               service_type

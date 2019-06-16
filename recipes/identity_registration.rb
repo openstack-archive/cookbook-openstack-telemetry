@@ -27,7 +27,7 @@ end
 
 identity_endpoint = public_endpoint 'identity'
 
-auth_url = auth_uri_transform identity_endpoint.to_s, node['openstack']['api']['auth']['version']
+auth_url = ::URI.decode identity_endpoint.to_s
 admin_user = node['openstack']['identity']['admin_user']
 admin_pass = get_password 'user', node['openstack']['identity']['admin_user']
 admin_project = node['openstack']['identity']['admin_project']
@@ -41,12 +41,12 @@ connection_params = {
   openstack_domain_name:    admin_domain,
 }
 
-%w(telemetry telemetry-metric aodh).each do |telemetry_service|
+%w(telemetry telemetry_metric aodh).each do |telemetry_service|
   case telemetry_service
   when 'telemetry'
     service_name = 'ceilometer'
     service_type = 'metering'
-  when 'telemetry-metric'
+  when 'telemetry_metric'
     service_name = 'gnocchi'
     service_type = 'metric'
   when 'aodh'
@@ -57,7 +57,6 @@ connection_params = {
   interfaces = {
     public: { url: public_endpoint(telemetry_service) },
     internal: { url: internal_endpoint(telemetry_service) },
-    admin: { url: admin_endpoint(telemetry_service) },
   }
 
   service_pass = get_password 'service', "openstack-#{telemetry_service}"
