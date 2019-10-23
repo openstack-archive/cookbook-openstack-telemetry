@@ -1,11 +1,9 @@
 # encoding: UTF-8
 #
 # Cookbook Name:: openstack-telemetry
-# Recipe:: collector
+# Recipe:: common
 #
-# Copyright 2013, AT&T Services, Inc.
-# Copyright 2013, Craig Tracey <craigtracey@gmail.com>
-# Copyright 2013, SUSE Linux GmbH
+# Copyright 2019, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,18 +18,11 @@
 # limitations under the License.
 #
 
-include_recipe 'openstack-telemetry::common'
-
-platform = node['openstack']['telemetry']['platform']
-platform['collector_packages'].each do |pkg|
-  package pkg do
-    options platform['package_overrides']
-    action :upgrade
-  end
+class ::Chef::Recipe
+  include ::Openstack
 end
 
-service 'ceilometer-collector' do
-  service_name platform['collector_service']
-  subscribes :restart, "template[#{node['openstack']['telemetry']['conf_file']}]"
-  action [:enable, :start]
+conf_switch = "--config-file #{node['openstack']['telemetry']['conf_file']}"
+execute 'ceilometer database migration' do
+  command "ceilometer-upgrade #{node['openstack']['telemetry']['upgrade_opts']} #{conf_switch}"
 end

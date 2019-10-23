@@ -51,6 +51,7 @@ default['openstack']['telemetry_metric']['conf_dir'] = '/etc/gnocchi'
 default['openstack']['telemetry_metric']['conf_file'] =
   ::File.join(node['openstack']['telemetry_metric']['conf_dir'], 'gnocchi.conf')
 default['openstack']['telemetry']['syslog']['use'] = false
+default['openstack']['telemetry']['upgrade_opts'] = '--skip-gnocchi-resource-types'
 
 default['openstack']['aodh']['conf_dir'] = '/etc/aodh'
 default['openstack']['aodh']['conf_file'] =
@@ -102,7 +103,7 @@ when 'rhel'
     'common_packages' => ['openstack-ceilometer-common'],
     'gnocchi_packages' => ['openstack-gnocchi-api', 'openstack-gnocchi-metricd'],
     'gnocchi-api_service' => 'openstack-gnocchi-api',
-    'gnocchi-metricd_service' => 'openstack-gnocchi-metricd',
+    'gnocchi-metricd_service' => 'gnocchi-metricd',
     'agent_central_packages' => ['openstack-ceilometer-central'],
     'agent_central_service' => 'openstack-ceilometer-central',
     'agent_compute_packages' => ['openstack-ceilometer-compute'],

@@ -238,6 +238,36 @@ describe 'openstack-telemetry::gnocchi_configure' do
           end
         end
       end
+
+      describe 'restart apache' do
+        it do
+          expect(chef_run).to nothing_execute('Clear gnocchi apache restart')
+            .with(
+              command: 'rm -f /var/chef/cache/gnocchi-apache-restarted'
+            )
+        end
+        %w(
+          /etc/gnocchi/gnocchi.conf
+          /etc/apache2/sites-available/gnocchi-api.conf
+        ).each do |f|
+          it "#{f} notifies execute[Clear gnocchi apache restart]" do
+            expect(chef_run.template(f)).to notify('execute[Clear gnocchi apache restart]').to(:run).immediately
+          end
+        end
+        it do
+          expect(chef_run).to run_execute('gnocchi apache restart')
+            .with(
+              command: 'touch /var/chef/cache/gnocchi-apache-restarted',
+              creates: '/var/chef/cache/gnocchi-apache-restarted'
+            )
+        end
+        it do
+          expect(chef_run.execute('gnocchi apache restart')).to notify('execute[restore-selinux-context-gnocchi]').to(:run).immediately
+        end
+        it do
+          expect(chef_run.execute('gnocchi apache restart')).to notify('service[apache2]').to(:restart).immediately
+        end
+      end
     end
   end
 end

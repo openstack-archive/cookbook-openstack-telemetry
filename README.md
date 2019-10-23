@@ -79,6 +79,9 @@ Recipes
 ## common
 - Common metering configuration.
 
+## setup
+- Run database migrations
+
 ## identity_registration
 - Registers the endpoints, tenant and user for metering and metric service with Keystone.
 

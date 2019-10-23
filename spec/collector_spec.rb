@@ -16,12 +16,6 @@ describe 'openstack-telemetry::collector' do
     end
 
     it do
-      expect(chef_run).to run_execute(
-        'ceilometer-upgrade --skip-gnocchi-resource-types --config-file /etc/ceilometer/ceilometer.conf'
-      )
-    end
-
-    it do
       expect(chef_run).to upgrade_package('python-mysqldb')
     end
 

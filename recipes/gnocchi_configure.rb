@@ -43,6 +43,12 @@ node.default['openstack']['telemetry_metric']['conf'].tap do |conf|
   conf['keystone_authtoken']['auth_url'] = auth_url
 end
 
+# Clear lock file when notified
+execute 'Clear gnocchi apache restart' do
+  command "rm -f #{Chef::Config[:file_cache_path]}/gnocchi-apache-restarted"
+  action :nothing
+end
+
 # merge all config options and secrets to be used in the gnocchi.conf
 gnocchi_conf_options = merge_config_options 'telemetry_metric'
 template node['openstack']['telemetry_metric']['conf_file'] do
@@ -54,6 +60,7 @@ template node['openstack']['telemetry_metric']['conf_file'] do
   variables(
     service_config: gnocchi_conf_options
   )
+  notifies :run, 'execute[Clear gnocchi apache restart]', :immediately
 end
 
 # drop gnocchi_resources.yaml to ceilometer folder (current workaround since not
@@ -158,6 +165,32 @@ web_app 'gnocchi-api' do
   cert_required node['openstack']['telemetry_metric']['ssl']['cert_required']
   protocol node['openstack']['telemetry_metric']['ssl']['protocol']
   ciphers node['openstack']['telemetry_metric']['ssl']['ciphers']
+end
+
+# Hack until Apache cookbook has lwrp's for proper use of notify restart
+# apache2 after gnocchi-api if completely configured. Whenever a gnocchi
+# config is updated, have it notify the resource which clears the lock
+# so the service can be restarted.
+# TODO(ramereth): This should be removed once this cookbook is updated
+# to use the newer apache2 cookbook which uses proper resources.
+edit_resource(:template, "#{node['apache']['dir']}/sites-available/gnocchi-api.conf") do
+  notifies :run, 'execute[Clear gnocchi apache restart]', :immediately
+end
+
+# Only restart gnocchi apache during the initial install. This causes
+# monitoring and service issues while the service is restarted so we
+# should minimize the amount of times we restart apache.
+execute 'gnocchi apache restart' do
+  command "touch #{Chef::Config[:file_cache_path]}/gnocchi-apache-restarted"
+  creates "#{Chef::Config[:file_cache_path]}/gnocchi-apache-restarted"
+  notifies :run, 'execute[restore-selinux-context-gnocchi]', :immediately
+  notifies :restart, 'service[apache2]', :immediately
+end
+
+execute 'restore-selinux-context-gnocchi' do
+  command 'restorecon -Rv /etc/httpd /etc/pki || :'
+  action :nothing
+  only_if { platform_family?('rhel') }
 end
 
 service 'gnocchi-metricd' do
