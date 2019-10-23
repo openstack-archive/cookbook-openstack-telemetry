@@ -63,6 +63,7 @@ cookbook_file File.join(node['openstack']['telemetry']['conf_dir'], 'gnocchi_res
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
   mode 0o0640
+  only_if { node['platform'] == 'ubuntu' }
 end
 
 # drop api-paste.ini to gnocchi folder (default ini will not use keystone auth)
