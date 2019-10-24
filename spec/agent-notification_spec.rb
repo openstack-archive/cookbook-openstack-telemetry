@@ -27,6 +27,9 @@ describe 'openstack-telemetry::agent-notification' do
       it 'subscribes to /etc/ceilometer/pipeline.yaml' do
         expect(chef_run.service('ceilometer-agent-notification')).to subscribe_to('template[/etc/ceilometer/pipeline.yaml]').delayed
       end
+      it 'subscribes to /etc/ceilometer/polling.yaml' do
+        expect(chef_run.service('ceilometer-agent-notification')).to subscribe_to('template[/etc/ceilometer/polling.yaml]').delayed
+      end
     end
   end
 end

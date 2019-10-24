@@ -72,6 +72,33 @@ default['openstack']['telemetry_metric']['gnocchi-upgrade-options'] = ''
 
 # Configuration for /etc/ceilometer/pipeline.yaml
 default['openstack']['telemetry']['pipeline']['publishers'] = ['gnocchi://']
+# Configuration for /etc/ceilometer/polling.yaml
+default['openstack']['telemetry']['polling']['interval'] = 300
+default['openstack']['telemetry']['polling']['meters'] =
+  %w(
+    cpu
+    cpu_l3_cache
+    memory.usage
+    network.incoming.bytes
+    network.incoming.packets
+    network.outgoing.bytes
+    network.outgoing.packets
+    disk.device.read.bytes
+    disk.device.read.requests
+    disk.device.write.bytes
+    disk.device.write.requests
+    hardware.cpu.util
+    hardware.memory.used
+    hardware.memory.total
+    hardware.memory.buffer
+    hardware.memory.cached
+    hardware.memory.swap.avail
+    hardware.memory.swap.total
+    hardware.system_stats.io.outgoing.blocks
+    hardware.system_stats.io.incoming.blocks
+    hardware.network.ip.incoming.datagrams
+    hardware.network.ip.outgoing.datagrams
+  )
 
 %w(telemetry_metric aodh).each do |ts|
   # specify whether to enable SSL for ceilometer API endpoint

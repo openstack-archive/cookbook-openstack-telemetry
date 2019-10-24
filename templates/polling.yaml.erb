@@ -1,0 +1,9 @@
+<%= node['openstack']['common']['custom_template_banner'] %>
+---
+sources:
+  - name: some_pollsters
+    interval: <%= @interval %>
+    meters:
+      <% @meters.each do |meter| -%>
+      - <%= meter %>
+      <% end -%>
