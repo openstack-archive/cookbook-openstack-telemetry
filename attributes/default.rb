@@ -71,6 +71,9 @@ default['openstack']['aodh']['service_role'] = 'admin'
 
 default['openstack']['telemetry_metric']['gnocchi-upgrade-options'] = ''
 
+# Configuration for /etc/ceilometer/pipeline.yaml
+default['openstack']['telemetry']['pipeline']['publishers'] = ['gnocchi://']
+
 %w(telemetry telemetry_metric aodh).each do |ts|
   # specify whether to enable SSL for ceilometer API endpoint
   default['openstack'][ts]['ssl']['enabled'] = false

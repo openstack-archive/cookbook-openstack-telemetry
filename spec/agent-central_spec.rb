@@ -24,6 +24,9 @@ describe 'openstack-telemetry::agent-central' do
       it 'subscribes to its config file' do
         expect(chef_run.service('ceilometer-agent-central')).to subscribe_to('template[/etc/ceilometer/ceilometer.conf]').delayed
       end
+      it 'subscribes to /etc/ceilometer/pipeline.yaml' do
+        expect(chef_run.service('ceilometer-agent-central')).to subscribe_to('template[/etc/ceilometer/pipeline.yaml]').delayed
+      end
     end
   end
 end
