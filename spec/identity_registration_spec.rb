@@ -16,7 +16,6 @@ describe 'openstack-telemetry::identity_registration' do
         service_name = 'ceilometer'
         service_type = 'metering'
         password = 'ceilometer-pass'
-        port = 8777
       when 'telemetry_metric'
         service_name = 'gnocchi'
         service_type = 'metric'
@@ -56,18 +55,20 @@ describe 'openstack-telemetry::identity_registration' do
         )
       end
 
-      context "registers #{service_name} endpoint" do
-        %w(internal public).each do |interface|
-          it "#{interface} endpoint with default values" do
-            expect(chef_run).to create_openstack_endpoint(
-              service_type
-            ).with(
-              service_name: service_name,
-              # interface: interface,
-              url: url,
-              region: region,
-              connection_params: connection_params
-            )
+      unless telemetry_service == 'telemetry'
+        context "registers #{service_name} endpoint" do
+          %w(internal public).each do |interface|
+            it "#{interface} endpoint with default values" do
+              expect(chef_run).to create_openstack_endpoint(
+                service_type
+              ).with(
+                service_name: service_name,
+                # interface: interface,
+                url: url,
+                region: region,
+                connection_params: connection_params
+              )
+            end
           end
         end
       end

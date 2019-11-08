@@ -1,8 +1,6 @@
 default['openstack']['telemetry']['conf_secrets'] = {}
 
 default['openstack']['telemetry']['conf'].tap do |conf|
-  # [DEFAULT] section
-  conf['DEFAULT']['meter_dispatchers'] = 'gnocchi'
   # [keystone_authtoken] section
   conf['keystone_authtoken']['username'] = 'ceilometer'
   conf['keystone_authtoken']['project_name'] = 'service'

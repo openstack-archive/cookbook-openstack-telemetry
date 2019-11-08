@@ -74,11 +74,6 @@ EOL
       end
 
       it do
-        expect(chef_run).to render_config_file(file.name)
-          .with_section_content('DEFAULT', /^meter_dispatchers = gnocchi$/)
-      end
-
-      it do
         [
           /^username = ceilometer$/,
           /^project_name = service$/,
@@ -108,16 +103,6 @@ EOL
         ].each do |line|
           expect(chef_run).to render_config_file(file.name)
             .with_section_content('service_credentials', line)
-        end
-      end
-
-      it do
-        [
-          /^host = 127\.0\.0\.1$/,
-          /^port = 8777$/,
-        ].each do |line|
-          expect(chef_run).to render_config_file(file.name)
-            .with_section_content('api', line)
         end
       end
 

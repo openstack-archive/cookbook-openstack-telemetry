@@ -67,9 +67,6 @@ Recipes
 ## agent-notification
 - Installs agent notification service.
 
-## api
-- Installs API service.
-
 ## client
 - Install the client packages
 

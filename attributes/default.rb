@@ -32,7 +32,6 @@ default['openstack']['telemetry']['custom_template_banner'] = '
     default['openstack']['endpoints'][ep_type][ts]['host'] = '127.0.0.1'
     default['openstack']['endpoints'][ep_type][ts]['scheme'] = 'http'
     default['openstack']['endpoints'][ep_type][ts]['path'] = ''
-    default['openstack']['endpoints'][ep_type]['telemetry']['port'] = 8777
     default['openstack']['endpoints'][ep_type]['telemetry_metric']['port'] = 8041
     default['openstack']['endpoints'][ep_type]['aodh']['port'] = 8042
     # web-service (e.g. apache) listen address (can be different from openstack
@@ -40,7 +39,6 @@ default['openstack']['telemetry']['custom_template_banner'] = '
   end
   default['openstack']['bind_service']['all'][ts]['host'] = '127.0.0.1'
 end
-default['openstack']['bind_service']['all']['telemetry']['port'] = 8777
 default['openstack']['bind_service']['all']['telemetry_metric']['port'] = 8041
 default['openstack']['bind_service']['all']['aodh']['port'] = 8042
 
@@ -75,7 +73,7 @@ default['openstack']['telemetry_metric']['gnocchi-upgrade-options'] = ''
 # Configuration for /etc/ceilometer/pipeline.yaml
 default['openstack']['telemetry']['pipeline']['publishers'] = ['gnocchi://']
 
-%w(telemetry telemetry_metric aodh).each do |ts|
+%w(telemetry_metric aodh).each do |ts|
   # specify whether to enable SSL for ceilometer API endpoint
   default['openstack'][ts]['ssl']['enabled'] = false
   # specify server whether to enforce client certificate requirement
@@ -112,8 +110,6 @@ when 'rhel'
     'agent_notification_service' => 'openstack-ceilometer-notification',
     'ceilometer-api_wsgi_file' => '/usr/lib/python2.7/site-packages/ceilometer/api/app.wsgi',
     'gnocchi-api_wsgi_file' => '/usr/share/gnocchi-common/app.wsgi',
-    'api_packages' => ['openstack-ceilometer-api'],
-    'api_service' => 'openstack-ceilometer-api',
     'collector_packages' => ['openstack-ceilometer-collector'],
     'collector_service' => 'openstack-ceilometer-collector',
     'package_overrides' => '',
@@ -140,9 +136,7 @@ when 'debian'
     'agent_notification_packages' => ['ceilometer-agent-notification'],
     'agent_notification_service' => 'ceilometer-agent-notification',
     'ceilometer-api_wsgi_file' => '/usr/lib/python2.7/dist-packages/ceilometer/api/app.wsgi',
-    'gnocchi-api_wsgi_file' => '/usr/share/gnocchi-common/app.wsgi',
-    'api_packages' => ['ceilometer-api'],
-    'api_service' => 'ceilometer-api',
+    'gnocchi-api_wsgi_file' => '/usr/lib/python2.7/dist-packages/gnocchi/rest/wsgi.py',
     'collector_packages' => ['ceilometer-collector', 'python-mysqldb'],
     'collector_service' => 'ceilometer-collector',
     'package_overrides' => '',

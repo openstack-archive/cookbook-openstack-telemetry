@@ -50,8 +50,6 @@ end
 
 db_user = node['openstack']['db']['telemetry']['username']
 db_pass = get_password 'db', 'ceilometer'
-bind_service = node['openstack']['bind_service']['all']['telemetry']
-bind_service_address = bind_address bind_service
 
 # define secrets that are needed in the ceilometer.conf
 node.default['openstack']['telemetry']['conf_secrets'].tap do |conf_secrets|
@@ -67,8 +65,6 @@ identity_endpoint = public_endpoint 'identity'
 auth_url = ::URI.decode identity_endpoint.to_s
 
 node.default['openstack']['telemetry']['conf'].tap do |conf|
-  conf['api']['host'] = bind_service_address
-  conf['api']['port'] = bind_service['port']
   conf['keystone_authtoken']['auth_url'] = auth_url
   conf['service_credentials']['auth_url'] = auth_url
   conf['dispatcher_gnocchi']['url'] = public_endpoint 'telemetry_metric'
