@@ -28,6 +28,28 @@ describe 'openstack-telemetry::common' do
       expect(chef_run).to upgrade_package 'ceilometer-common'
     end
 
+    describe '/etc/ceilometer/pipeline.yaml' do
+      pipeline_yaml = <<-EOL
+      publishers:
+          - gnocchi://
+
+EOL
+
+      it do
+        expect(chef_run).to create_template('/etc/ceilometer/pipeline.yaml')
+          .with(
+            source: 'pipeline.yaml.erb',
+            owner: 'ceilometer',
+            group: 'ceilometer',
+            mode: 0o0640
+          )
+      end
+
+      it do
+        expect(chef_run).to render_file('/etc/ceilometer/pipeline.yaml').with_content(pipeline_yaml)
+      end
+    end
+
     describe '/etc/ceilometer' do
       let(:dir) { chef_run.directory('/etc/ceilometer') }
 

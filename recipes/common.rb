@@ -103,3 +103,13 @@ template node['openstack']['telemetry']['conf_file'] do
     service_config: ceilometer_conf_options
   )
 end
+
+template ::File.join(node['openstack']['telemetry']['conf_dir'], 'pipeline.yaml') do
+  source 'pipeline.yaml.erb'
+  owner node['openstack']['telemetry']['user']
+  group node['openstack']['telemetry']['group']
+  mode 0o0640
+  variables(
+    publishers: node['openstack']['telemetry']['pipeline']['publishers']
+  )
+end
