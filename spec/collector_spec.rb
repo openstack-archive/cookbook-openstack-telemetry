@@ -16,7 +16,7 @@ describe 'openstack-telemetry::collector' do
     end
 
     it do
-      expect(chef_run).to upgrade_package('python-mysqldb')
+      expect(chef_run).to upgrade_package('python3-mysqldb')
     end
 
     it do

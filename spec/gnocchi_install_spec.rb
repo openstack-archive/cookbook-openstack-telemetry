@@ -10,8 +10,10 @@ describe 'openstack-telemetry::gnocchi_install' do
 
     include_context 'telemetry-stubs'
 
-    it do
-      expect(chef_run).to upgrade_package 'gnocchi-api'
+    %w(python3-gnocchi gnocchi-common gnocchi-api gnocchi-metricd python3-gnocchiclient).each do |p|
+      it do
+        expect(chef_run).to upgrade_package p
+      end
     end
 
     it do

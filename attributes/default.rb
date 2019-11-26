@@ -152,8 +152,8 @@ when 'rhel'
 
 when 'debian'
   default['openstack']['telemetry']['platform'] = {
-    'common_packages' => ['ceilometer-common'],
-    'gnocchi_packages' => ['python-gnocchi', 'gnocchi-common', 'gnocchi-api', 'gnocchi-metricd', 'python-gnocchiclient'],
+    'common_packages' => ['ceilometer-common', 'python3-ceilometer'],
+    'gnocchi_packages' => ['python3-gnocchi', 'gnocchi-common', 'gnocchi-api', 'gnocchi-metricd', 'python3-gnocchiclient'],
     'gnocchi-api_service' => 'gnocchi-api',
     'gnocchi-metricd_service' => 'gnocchi-metricd',
     'agent_central_packages' => ['ceilometer-agent-central'],
@@ -162,15 +162,15 @@ when 'debian'
     'agent_compute_service' => 'ceilometer-agent-compute',
     'agent_notification_packages' => ['ceilometer-agent-notification'],
     'agent_notification_service' => 'ceilometer-agent-notification',
-    'ceilometer-api_wsgi_file' => '/usr/lib/python2.7/dist-packages/ceilometer/api/app.wsgi',
-    'gnocchi-api_wsgi_file' => '/usr/lib/python2.7/dist-packages/gnocchi/rest/wsgi.py',
-    'collector_packages' => ['ceilometer-collector', 'python-mysqldb'],
+    'ceilometer-api_wsgi_file' => '/usr/lib/python3/dist-packages/ceilometer/api/app.wsgi',
+    'gnocchi-api_wsgi_file' => '/usr/lib/python3/dist-packages/gnocchi/rest/wsgi.py',
+    'collector_packages' => ['ceilometer-collector', 'python3-mysqldb'],
     'collector_service' => 'ceilometer-collector',
     'package_overrides' => '',
   }
 
   default['openstack']['aodh']['platform'] = {
-    'aodh_packages' => ['aodh-api', 'aodh-evaluator', 'aodh-expirer', 'aodh-listener', 'aodh-notifier', 'python-ceilometerclient'],
+    'aodh_packages' => ['aodh-api', 'aodh-evaluator', 'aodh-expirer', 'aodh-listener', 'aodh-notifier', 'python3-ceilometerclient'],
     'aodh_services' => ['aodh-evaluator', 'aodh-notifier', 'aodh-listener'],
     'aodh-api_wsgi_file' => '/usr/share/aodh/app.wsgi' # this file come with aodh-common which aodh-api depends on
   }

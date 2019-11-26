@@ -21,11 +21,12 @@ describe 'openstack-telemetry::common' do
     end
 
     it 'installs mysql python packages by default' do
-      expect(chef_run).to upgrade_package 'python-mysqldb'
+      expect(chef_run).to upgrade_package 'python3-mysqldb'
     end
 
     it 'installs the common package' do
       expect(chef_run).to upgrade_package 'ceilometer-common'
+      expect(chef_run).to upgrade_package 'python3-ceilometer'
     end
 
     describe '/etc/ceilometer/pipeline.yaml' do
