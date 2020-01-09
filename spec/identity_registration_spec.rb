@@ -6,7 +6,7 @@ describe 'openstack-telemetry::identity_registration' do
   describe 'ubuntu' do
     let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
     let(:node) { runner.node }
-    let(:chef_run) { runner.converge(described_recipe) }
+    cached(:chef_run) { runner.converge(described_recipe) }
 
     include_context 'telemetry-stubs'
 
@@ -56,7 +56,7 @@ describe 'openstack-telemetry::identity_registration' do
       end
 
       unless telemetry_service == 'telemetry'
-        context "registers #{service_name} endpoint" do
+        describe "registers #{service_name} endpoint" do
           %w(internal public).each do |interface|
             it "#{interface} endpoint with default values" do
               expect(chef_run).to create_openstack_endpoint(

@@ -1,25 +1,22 @@
 # encoding: UTF-8
 require 'chefspec'
 require 'chefspec/berkshelf'
-
-ChefSpec::Coverage.start! { add_filter 'openstack-telemetry' }
-
 require 'chef/application'
 
 RSpec.configure do |config|
   config.color = true
   config.formatter = :documentation
-  config.log_level = :fatal
+  config.log_level = :warn
   config.file_cache_path = '/var/chef/cache'
 end
 
 REDHAT_OPTS = {
   platform: 'redhat',
-  version: '7.4',
+  version: '7',
 }.freeze
 UBUNTU_OPTS = {
   platform: 'ubuntu',
-  version: '16.04',
+  version: '18.04',
 }.freeze
 
 shared_context 'telemetry-stubs' do

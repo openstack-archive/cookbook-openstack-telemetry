@@ -6,7 +6,7 @@ describe 'openstack-telemetry::setup' do
   describe 'ubuntu' do
     let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
     let(:node) { runner.node }
-    let(:chef_run) { runner.converge(described_recipe) }
+    cached(:chef_run) { runner.converge(described_recipe) }
 
     include_context 'telemetry-stubs'
 
@@ -18,8 +18,9 @@ describe 'openstack-telemetry::setup' do
     end
 
     context 'Non-default upgrade_opts' do
-      before do
+      cached(:chef_run) do
         node.override['openstack']['telemetry']['upgrade_opts'] = ''
+        runner.converge(described_recipe)
       end
       it do
         expect(chef_run).to run_execute('ceilometer database migration')

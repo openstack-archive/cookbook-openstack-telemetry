@@ -6,7 +6,7 @@ describe 'openstack-telemetry::agent-notification' do
   describe 'ubuntu' do
     let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
     let(:node) { runner.node }
-    let(:chef_run) { runner.converge(described_recipe) }
+    cached(:chef_run) { runner.converge(described_recipe) }
 
     include_context 'telemetry-stubs'
     include_examples 'expect-runs-common-recipe'
@@ -22,13 +22,16 @@ describe 'openstack-telemetry::agent-notification' do
 
     describe 'ceilometer-agent-notification' do
       it 'subscribes to its config file' do
-        expect(chef_run.service('ceilometer-agent-notification')).to subscribe_to('template[/etc/ceilometer/ceilometer.conf]').delayed
+        expect(chef_run.service('ceilometer-agent-notification')).to \
+          subscribe_to('template[/etc/ceilometer/ceilometer.conf]').delayed
       end
       it 'subscribes to /etc/ceilometer/pipeline.yaml' do
-        expect(chef_run.service('ceilometer-agent-notification')).to subscribe_to('template[/etc/ceilometer/pipeline.yaml]').delayed
+        expect(chef_run.service('ceilometer-agent-notification')).to \
+          subscribe_to('template[/etc/ceilometer/pipeline.yaml]').delayed
       end
       it 'subscribes to /etc/ceilometer/polling.yaml' do
-        expect(chef_run.service('ceilometer-agent-notification')).to subscribe_to('template[/etc/ceilometer/polling.yaml]').delayed
+        expect(chef_run.service('ceilometer-agent-notification')).to \
+          subscribe_to('template[/etc/ceilometer/polling.yaml]').delayed
       end
     end
   end

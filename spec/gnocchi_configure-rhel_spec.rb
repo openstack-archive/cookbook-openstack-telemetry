@@ -6,7 +6,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
   describe 'rhel' do
     let(:runner) { ChefSpec::SoloRunner.new(REDHAT_OPTS) }
     let(:node) { runner.node }
-    let(:chef_run) { runner.converge(described_recipe) }
+    cached(:chef_run) { runner.converge(described_recipe) }
 
     include_context 'telemetry-stubs'
 
@@ -21,7 +21,8 @@ describe 'openstack-telemetry::gnocchi_configure' do
     end
 
     it do
-      expect(chef_run).to nothing_execute('restore-selinux-context-gnocchi').with(command: 'restorecon -Rv /etc/httpd /etc/pki || :')
+      expect(chef_run).to nothing_execute('restore-selinux-context-gnocchi')
+        .with(command: 'restorecon -Rv /etc/httpd /etc/pki || :')
     end
   end
 end

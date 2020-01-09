@@ -6,13 +6,14 @@ describe 'openstack-telemetry::common' do
   describe 'ubuntu' do
     let(:runner) { ChefSpec::SoloRunner.new(UBUNTU_OPTS) }
     let(:node) { runner.node }
-    let(:chef_run) { runner.converge(described_recipe) }
+    cached(:chef_run) { runner.converge(described_recipe) }
 
     include_context 'telemetry-stubs'
 
     context 'with logging enabled' do
-      before do
+      cached(:chef_run) do
         node.override['openstack']['telemetry']['syslog']['use'] = true
+        runner.converge(described_recipe)
       end
 
       it 'runs logging recipe' do
