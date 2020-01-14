@@ -16,6 +16,7 @@ describe 'openstack-telemetry::common' do
 
     it 'installs the common package' do
       expect(chef_run).to upgrade_package 'openstack-ceilometer-common'
+      expect(chef_run).to upgrade_package 'mod_wsgi'
     end
   end
 end

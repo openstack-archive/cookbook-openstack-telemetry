@@ -17,7 +17,11 @@
 #
 class ::Chef::Recipe
   include ::Openstack
+  include Apache2::Cookbook::Helpers
 end
+
+include_recipe 'openstack-telemetry::common'
+
 platform = node['openstack']['telemetry']['platform']
 db_user = node['openstack']['db']['telemetry_metric']['username']
 db_pass = get_password 'db', 'gnocchi'
@@ -43,12 +47,6 @@ node.default['openstack']['telemetry_metric']['conf'].tap do |conf|
   conf['keystone_authtoken']['auth_url'] = auth_url
 end
 
-# Clear lock file when notified
-execute 'Clear gnocchi apache restart' do
-  command "rm -f #{Chef::Config[:file_cache_path]}/gnocchi-apache-restarted"
-  action :nothing
-end
-
 # merge all config options and secrets to be used in the gnocchi.conf
 gnocchi_conf_options = merge_config_options 'telemetry_metric'
 template node['openstack']['telemetry_metric']['conf_file'] do
@@ -60,7 +58,7 @@ template node['openstack']['telemetry_metric']['conf_file'] do
   variables(
     service_config: gnocchi_conf_options
   )
-  notifies :run, 'execute[Clear gnocchi apache restart]', :immediately
+  notifies :restart, 'service[apache2]'
 end
 
 # drop gnocchi_resources.yaml to ceilometer folder (current workaround since not
@@ -110,26 +108,28 @@ end
 execute 'run gnocchi-upgrade' do
   command "gnocchi-upgrade #{node['openstack']['telemetry_metric']['gnocchi-upgrade-options']}"
   user node['openstack']['telemetry_metric']['user']
+  group node['openstack']['telemetry_metric']['group']
 end
 
 #### Start of Apache specific work
 
-# configure attributes for apache2 cookbook to align with openstack settings
-apache_listen = Array(node['apache']['listen']) # include already defined listen attributes
-# Remove the default apache2 cookbook port, as that is also the default for horizon, but with
-# a different address syntax.  *:80   vs  0.0.0.0:80
-apache_listen -= ['*:80']
-apache_listen += ["#{bind_service_address}:#{bind_service['port']}"]
-node.normal['apache']['listen'] = apache_listen.uniq
+# Finds and appends the listen port to the apache2_install[openstack]
+# resource which is defined in openstack-identity::server-apache.
+apache_resource = find_resource(:apache2_install, 'openstack')
 
-# include the apache2 default recipe and the recipes for mod_wsgi
-include_recipe 'apache2'
-include_recipe 'apache2::mod_wsgi'
-# include the apache2 mod_ssl recipe if ssl is enabled for identity
-include_recipe 'apache2::mod_ssl' if node['openstack']['identity']['ssl']['enabled']
+if apache_resource
+  apache_resource.listen = [apache_resource.listen, "#{bind_service['host']}:#{bind_service['port']}"].flatten
+else
+  apache2_install 'openstack' do
+    listen "#{bind_service['host']}:#{bind_service['port']}"
+  end
+end
+
+apache2_module 'wsgi'
+apache2_module 'ssl' if node['openstack']['telemetry_metric']['ssl']['enabled']
 
 # create the gnocchi-api apache directory
-gnocchi_apache_dir = "#{node['apache']['docroot_dir']}/gnocchi"
+gnocchi_apache_dir = "#{default_docroot_dir}/gnocchi"
 directory gnocchi_apache_dir do
   owner 'root'
   group 'root'
@@ -146,51 +146,33 @@ file gnocchi_server_entry do
   mode 0o0755
 end
 
-web_app 'gnocchi-api' do
-  template 'wsgi-template.conf.erb'
-  daemon_process 'gnocchi-api'
-  server_host bind_service['host']
-  server_port bind_service['port']
-  server_entry gnocchi_server_entry
-  run_dir node['apache']['run_dir']
-  log_dir node['apache']['log_dir']
-  log_debug node['openstack']['telemetry_metric']['debug']
-  user node['openstack']['telemetry_metric']['user']
-  group node['openstack']['telemetry_metric']['group']
-  use_ssl node['openstack']['telemetry_metric']['ssl']['enabled']
-  cert_file node['openstack']['telemetry_metric']['ssl']['certfile']
-  chain_file node['openstack']['telemetry_metric']['ssl']['chainfile']
-  key_file node['openstack']['telemetry_metric']['ssl']['keyfile']
-  ca_certs_path node['openstack']['telemetry_metric']['ssl']['ca_certs_path']
-  cert_required node['openstack']['telemetry_metric']['ssl']['cert_required']
-  protocol node['openstack']['telemetry_metric']['ssl']['protocol']
-  ciphers node['openstack']['telemetry_metric']['ssl']['ciphers']
+template "#{apache_dir}/sites-available/gnocchi-api.conf" do
+  extend Apache2::Cookbook::Helpers
+  source 'wsgi-template.conf.erb'
+  variables(
+    daemon_process: 'gnocchi-api',
+    server_host: bind_service['host'],
+    server_port: bind_service['port'],
+    server_entry: gnocchi_server_entry,
+    run_dir: lock_dir,
+    log_dir: default_log_dir,
+    log_debug: node['openstack']['telemetry_metric']['debug'],
+    user: node['openstack']['telemetry_metric']['user'],
+    group: node['openstack']['telemetry_metric']['group'],
+    use_ssl: node['openstack']['telemetry_metric']['ssl']['enabled'],
+    cert_file: node['openstack']['telemetry_metric']['ssl']['certfile'],
+    chain_file: node['openstack']['telemetry_metric']['ssl']['chainfile'],
+    key_file: node['openstack']['telemetry_metric']['ssl']['keyfile'],
+    ca_certs_path: node['openstack']['telemetry_metric']['ssl']['ca_certs_path'],
+    cert_required: node['openstack']['telemetry_metric']['ssl']['cert_required'],
+    protocol: node['openstack']['telemetry_metric']['ssl']['protocol'],
+    ciphers: node['openstack']['telemetry_metric']['ssl']['ciphers']
+  )
+  notifies :restart, 'service[apache2]'
 end
 
-# Hack until Apache cookbook has lwrp's for proper use of notify restart
-# apache2 after gnocchi-api if completely configured. Whenever a gnocchi
-# config is updated, have it notify the resource which clears the lock
-# so the service can be restarted.
-# TODO(ramereth): This should be removed once this cookbook is updated
-# to use the newer apache2 cookbook which uses proper resources.
-edit_resource(:template, "#{node['apache']['dir']}/sites-available/gnocchi-api.conf") do
-  notifies :run, 'execute[Clear gnocchi apache restart]', :immediately
-end
-
-# Only restart gnocchi apache during the initial install. This causes
-# monitoring and service issues while the service is restarted so we
-# should minimize the amount of times we restart apache.
-execute 'gnocchi apache restart' do
-  command "touch #{Chef::Config[:file_cache_path]}/gnocchi-apache-restarted"
-  creates "#{Chef::Config[:file_cache_path]}/gnocchi-apache-restarted"
-  notifies :run, 'execute[restore-selinux-context-gnocchi]', :immediately
+apache2_site 'gnocchi-api' do
   notifies :restart, 'service[apache2]', :immediately
-end
-
-execute 'restore-selinux-context-gnocchi' do
-  command 'restorecon -Rv /etc/httpd /etc/pki || :'
-  action :nothing
-  only_if { platform_family?('rhel') }
 end
 
 service 'gnocchi-metricd' do

@@ -19,7 +19,10 @@
 # load the methods defined in cookbook-openstack-common libraries
 class ::Chef::Recipe
   include ::Openstack
+  include Apache2::Cookbook::Helpers
 end
+
+include_recipe 'openstack-telemetry::common'
 
 platform = node['openstack']['aodh']['platform']
 platform['aodh_packages'].each do |pkg|
@@ -52,7 +55,7 @@ auth_url = ::URI.decode identity_public_endpoint.to_s
 
 node.default['openstack']['aodh']['conf'].tap do |conf|
   conf['api']['host'] = bind_service_address
-  conf['api']['port'] = bind_service.port
+  conf['api']['port'] = bind_service['port']
   conf['keystone_authtoken']['auth_url'] = auth_url
   conf['service_credentials']['auth_url'] = auth_url
   conf['keystone_authtoken']['memcache_servers'] = memcached_servers.join ','
@@ -77,31 +80,34 @@ template node['openstack']['aodh']['conf_file'] do
   variables(
     service_config: aodh_conf_options
   )
+  notifies :restart, 'service[apache2]'
 end
 
 execute 'run aodh-dbsync' do
   command 'aodh-dbsync '
   user node['openstack']['aodh']['user']
+  group node['openstack']['aodh']['group']
 end
 
 #### Start of Apache specific work
 
-# configure attributes for apache2 cookbook to align with openstack settings
-apache_listen = Array(node['apache']['listen']) # include already defined listen attributes
-# Remove the default apache2 cookbook port, as that is also the default for horizon, but with
-# a different address syntax.  *:80   vs  0.0.0.0:80
-apache_listen -= ['*:80']
-apache_listen += ["#{bind_service_address}:#{bind_service.port}"]
-node.normal['apache']['listen'] = apache_listen.uniq
+# Finds and appends the listen port to the apache2_install[openstack]
+# resource which is defined in openstack-identity::server-apache.
+apache_resource = find_resource(:apache2_install, 'openstack')
 
-# include the apache2 default recipe and the recipes for mod_wsgi
-include_recipe 'apache2'
-include_recipe 'apache2::mod_wsgi'
-# include the apache2 mod_ssl recipe if ssl is enabled for identity
-include_recipe 'apache2::mod_ssl' if node['openstack']['aodh']['ssl']['enabled']
+if apache_resource
+  apache_resource.listen = [apache_resource.listen, "#{bind_service['host']}:#{bind_service['port']}"].flatten
+else
+  apache2_install 'openstack' do
+    listen "#{bind_service['host']}:#{bind_service['port']}"
+  end
+end
+
+apache2_module 'wsgi'
+apache2_module 'ssl' if node['openstack']['aodh']['ssl']['enabled']
 
 # create the aodh-api apache directory
-aodh_apache_dir = "#{node['apache']['docroot_dir']}/aodh"
+aodh_apache_dir = "#{default_docroot_dir}/aodh"
 directory aodh_apache_dir do
   owner 'root'
   group 'root'
@@ -118,25 +124,32 @@ file aodh_server_entry do
   mode 0o0755
 end
 
-web_app 'aodh-api' do
-  template 'wsgi-template.conf.erb'
-  daemon_process 'aodh-api'
-  server_host bind_service.host
-  server_port bind_service.port
-  server_entry aodh_server_entry
-  run_dir node['apache']['run_dir']
-  log_dir node['apache']['log_dir']
-  log_debug node['openstack']['aodh']['debug']
-  user node['openstack']['aodh']['user']
-  group node['openstack']['aodh']['group']
-  use_ssl node['openstack']['aodh']['ssl']['enabled']
-  cert_file node['openstack']['aodh']['ssl']['certfile']
-  chain_file node['openstack']['aodh']['ssl']['chainfile']
-  key_file node['openstack']['aodh']['ssl']['keyfile']
-  ca_certs_path node['openstack']['aodh']['ssl']['ca_certs_path']
-  cert_required node['openstack']['aodh']['ssl']['cert_required']
-  protocol node['openstack']['aodh']['ssl']['protocol']
-  ciphers node['openstack']['aodh']['ssl']['ciphers']
+template "#{apache_dir}/sites-available/aodh-api.conf" do
+  extend Apache2::Cookbook::Helpers
+  source 'wsgi-template.conf.erb'
+  variables(
+    daemon_process: 'aodh-api',
+    server_host: bind_service['host'],
+    server_port: bind_service['port'],
+    server_entry: aodh_server_entry,
+    run_dir: lock_dir,
+    log_dir: default_log_dir,
+    user: node['openstack']['aodh']['user'],
+    group: node['openstack']['aodh']['group'],
+    use_ssl: node['openstack']['aodh']['ssl']['enabled'],
+    cert_file: node['openstack']['aodh']['ssl']['certfile'],
+    chain_file: node['openstack']['aodh']['ssl']['chainfile'],
+    key_file: node['openstack']['aodh']['ssl']['keyfile'],
+    ca_certs_path: node['openstack']['aodh']['ssl']['ca_certs_path'],
+    cert_required: node['openstack']['aodh']['ssl']['cert_required'],
+    protocol: node['openstack']['aodh']['ssl']['protocol'],
+    ciphers: node['openstack']['aodh']['ssl']['ciphers']
+  )
+  notifies :restart, 'service[apache2]'
+end
+
+apache2_site 'aodh-api' do
+  notifies :restart, 'service[apache2]', :immediately
 end
 
 platform['aodh_services'].each do |aodh_service|

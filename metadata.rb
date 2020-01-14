@@ -10,7 +10,6 @@ recipe 'openstack-telemetry::agent-compute', 'Installs agent compute service.'
 recipe 'openstack-telemetry::agent-notification', 'Installs the agent notification service.'
 recipe 'openstack-telemetry::aodh', 'Installs aodh service'
 recipe 'openstack-telemetry::api', 'Installs API service.'
-recipe 'openstack-telemetry::collector', 'Installs collector service. If the NoSQL database is used for metering service, ceilometer-upgrade will not be executed.'
 recipe 'openstack-telemetry::common', 'Common metering configuration.'
 recipe 'openstack-telemetry::gnocchi_configure', 'Configure Gnocchi'
 recipe 'openstack-telemetry::gnocchi_install', 'Installs and starts the Gnocchi service'
@@ -20,7 +19,7 @@ recipe 'openstack-telemetry::identity_registration', 'Registers the endpoints, t
   supports os
 end
 
-depends 'apache2'
+depends 'apache2', '~> 8.0'
 depends 'openstackclient'
 depends 'openstack-common', '>= 18.0.0'
 depends 'openstack-identity', '>= 18.0.0'

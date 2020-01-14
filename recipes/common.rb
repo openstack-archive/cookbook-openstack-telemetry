@@ -22,6 +22,7 @@
 
 class ::Chef::Recipe
   include ::Openstack
+  include Apache2::Cookbook::Helpers
 end
 
 if node['openstack']['telemetry']['syslog']['use']
@@ -78,7 +79,7 @@ directory node['openstack']['telemetry']['conf_dir'] do
   action :create
 end
 
-directory "#{node['apache']['run_dir']}/ceilometer" do
+directory "#{lock_dir}/ceilometer" do
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
   mode 0o0750
@@ -88,6 +89,16 @@ end
 
 # merge all config options and secrets to be used in the ceilometer.conf
 ceilometer_conf_options = merge_config_options 'telemetry'
+
+# service['apache2'] is defined in the apache2_default_install resource
+# but other resources are currently unable to reference it.  To work
+# around this issue, define the following helper in your cookbook:
+service 'apache2' do
+  extend Apache2::Cookbook::Helpers
+  service_name lazy { apache_platform_service_name }
+  supports restart: true, status: true, reload: true
+  action :nothing
+end
 
 template node['openstack']['telemetry']['conf_file'] do
   source 'openstack-service.conf.erb'

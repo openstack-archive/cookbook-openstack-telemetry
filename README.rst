@@ -76,12 +76,6 @@ aodh
 
 - Installs aodh service
 
-collector
----------
-
-- Installs collector package and service. If the NoSQL database is used
-  for metering service, ``ceilometer-upgrade`` will not be executed.
-
 common
 ------
 
