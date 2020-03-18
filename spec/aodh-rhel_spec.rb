@@ -11,12 +11,7 @@ describe 'openstack-telemetry::aodh' do
     include_context 'telemetry-stubs'
 
     it 'installs the aodh packages' do
-      expect(chef_run).to upgrade_package('openstack-aodh-api')
-      expect(chef_run).to upgrade_package('openstack-aodh-evaluator')
-      expect(chef_run).to upgrade_package('openstack-aodh-expirer')
-      expect(chef_run).to upgrade_package('openstack-aodh-listener')
-      expect(chef_run).to upgrade_package('openstack-aodh-notifier')
-      expect(chef_run).to upgrade_package('python-aodhclient')
+      expect(chef_run).to upgrade_package %w(openstack-aodh-api openstack-aodh-evaluator openstack-aodh-expirer openstack-aodh-listener openstack-aodh-notifier python-aodhclient)
     end
 
     it 'starts aodh services' do

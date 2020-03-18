@@ -9,12 +9,7 @@ describe 'openstack-telemetry::aodh' do
     include_context 'telemetry-stubs'
 
     it 'installs aodh packages' do
-      expect(chef_run).to upgrade_package('aodh-api')
-      expect(chef_run).to upgrade_package('aodh-evaluator')
-      expect(chef_run).to upgrade_package('aodh-expirer')
-      expect(chef_run).to upgrade_package('aodh-listener')
-      expect(chef_run).to upgrade_package('aodh-notifier')
-      expect(chef_run).to upgrade_package('python3-ceilometerclient')
+      expect(chef_run).to upgrade_package %w(aodh-api aodh-evaluator aodh-expirer aodh-listener aodh-notifier python3-ceilometerclient)
     end
 
     it do
@@ -42,7 +37,8 @@ describe 'openstack-telemetry::aodh' do
           cookbook: 'openstack-common',
           user: 'aodh',
           group: 'aodh',
-          mode: 0o640,
+          mode: '640',
+          sensitive: true,
           variables: {
             service_config: {
               'DEFAULT' => {
@@ -127,7 +123,7 @@ describe 'openstack-telemetry::aodh' do
       expect(chef_run).to create_directory('/var/www/html/aodh').with(
         user: 'root',
         group: 'root',
-        mode: 0o0755
+        mode: '755'
       )
     end
 
@@ -135,7 +131,7 @@ describe 'openstack-telemetry::aodh' do
       expect(chef_run).to create_file('/var/www/html/aodh/app').with(
         user: 'root',
         group: 'root',
-        mode: 0o0755
+        mode: '755'
       )
     end
 

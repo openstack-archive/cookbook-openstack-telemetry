@@ -1,11 +1,12 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-telemetry
+# Cookbook:: openstack-telemetry
 # Recipe:: common
 #
-# Copyright 2013, AT&T Services, Inc.
-# Copyright 2013, Craig Tracey <craigtracey@gmail.com>
-# Copyright 2013-2014, SUSE Linux GmbH
+# Copyright:: 2013, AT&T Services, Inc.
+# Copyright:: 2013, Craig Tracey <craigtracey@gmail.com>
+# Copyright:: 2013-2014, SUSE Linux GmbH
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,21 +33,18 @@ end
 platform = node['openstack']['telemetry']['platform']
 
 db_type = node['openstack']['db']['telemetry']['service_type']
-node['openstack']['db']['python_packages'][db_type].each do |pkg|
-  package pkg do
-    action :upgrade
-  end
+package node['openstack']['db']['python_packages'][db_type] do
+  action :upgrade
 end
 
-platform['common_packages'].each do |pkg|
-  package pkg do
-    options platform['package_overrides']
-    action :upgrade
-  end
+package platform['common_packages'] do
+  options platform['package_overrides']
+  action :upgrade
 end
 
 if node['openstack']['mq']['service_type'] == 'rabbit'
-  node.default['openstack']['telemetry']['conf_secrets']['DEFAULT']['transport_url'] = rabbit_transport_url 'telemetry'
+  node.default['openstack']['telemetry']['conf_secrets']['DEFAULT']['transport_url'] =
+    rabbit_transport_url 'telemetry'
 end
 
 db_user = node['openstack']['db']['telemetry']['username']
@@ -75,16 +73,14 @@ end
 directory node['openstack']['telemetry']['conf_dir'] do
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 0o0750
-  action :create
+  mode '750'
 end
 
 directory "#{lock_dir}/ceilometer" do
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 0o0750
+  mode '750'
   recursive true
-  action :create
 end
 
 # merge all config options and secrets to be used in the ceilometer.conf
@@ -105,7 +101,8 @@ template node['openstack']['telemetry']['conf_file'] do
   cookbook 'openstack-common'
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 0o0640
+  mode '640'
+  sensitive true
   variables(
     service_config: ceilometer_conf_options
   )
@@ -115,7 +112,7 @@ template ::File.join(node['openstack']['telemetry']['conf_dir'], 'pipeline.yaml'
   source 'pipeline.yaml.erb'
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 0o0640
+  mode '640'
   variables(
     publishers: node['openstack']['telemetry']['pipeline']['publishers']
   )
@@ -125,7 +122,7 @@ template ::File.join(node['openstack']['telemetry']['conf_dir'], 'polling.yaml')
   source 'polling.yaml.erb'
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 0o0640
+  mode '640'
   variables(
     interval: node['openstack']['telemetry']['polling']['interval'],
     meters: node['openstack']['telemetry']['polling']['meters']

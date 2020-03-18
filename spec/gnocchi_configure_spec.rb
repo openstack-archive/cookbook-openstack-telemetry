@@ -25,9 +25,12 @@ describe 'openstack-telemetry::gnocchi_configure' do
 
       it do
         expect(chef_run).to create_template(file.name).with(
+          source: 'openstack-service.conf.erb',
+          cookbook: 'openstack-common',
           user: 'gnocchi',
           group: 'gnocchi',
-          mode: 0o640
+          mode: '640',
+          sensitive: true
         )
       end
 
@@ -80,7 +83,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
           source: 'gnocchi_resources.yaml',
           owner: 'ceilometer',
           group: 'ceilometer',
-          mode: 0o0640
+          mode: '640'
         )
     end
 
@@ -90,7 +93,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
           source: 'api-paste.ini',
           owner: 'gnocchi',
           group: 'gnocchi',
-          mode: 0o0640
+          mode: '640'
         )
     end
 
@@ -100,7 +103,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
           source: 'event_pipeline.yaml',
           owner: 'ceilometer',
           group: 'ceilometer',
-          mode: 0o0640
+          mode: '640'
         )
     end
 
@@ -111,7 +114,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
             .with(
               user: 'gnocchi',
               group: 'gnocchi',
-              mode: 0o750
+              mode: '750'
             )
         end
         context 'other storage backend' do
@@ -124,7 +127,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
               .with(
                 user: 'gnocchi',
                 group: 'gnocchi',
-                mode: 0o750
+                mode: '750'
               )
           end
         end
@@ -151,7 +154,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
       expect(chef_run).to create_directory('/var/www/html/gnocchi').with(
         user: 'root',
         group: 'root',
-        mode: 0o0755
+        mode: '755'
       )
     end
 
@@ -159,7 +162,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
       expect(chef_run).to create_file('/var/www/html/gnocchi/app').with(
         user: 'root',
         group: 'root',
-        mode: 0o0755
+        mode: '755'
       )
     end
 

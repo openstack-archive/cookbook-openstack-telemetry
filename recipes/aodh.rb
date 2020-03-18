@@ -1,7 +1,9 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-telemetry
+# Cookbook:: openstack-telemetry
 # Recipe:: aodh
+#
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,11 +27,9 @@ end
 include_recipe 'openstack-telemetry::common'
 
 platform = node['openstack']['aodh']['platform']
-platform['aodh_packages'].each do |pkg|
-  package pkg do
-    options platform['package_overrides']
-    action :upgrade
-  end
+package platform['aodh_packages'] do
+  options platform['package_overrides']
+  action :upgrade
 end
 
 if node['openstack']['mq']['service_type'] == 'rabbit'
@@ -64,8 +64,7 @@ end
 directory node['openstack']['aodh']['conf_dir'] do
   owner node['openstack']['aodh']['user']
   group node['openstack']['aodh']['group']
-  mode 0o0750
-  action :create
+  mode '750'
 end
 
 # merge all config options and secrets to be used in the aodh.conf
@@ -76,7 +75,8 @@ template node['openstack']['aodh']['conf_file'] do
   cookbook 'openstack-common'
   owner node['openstack']['aodh']['user']
   group node['openstack']['aodh']['group']
-  mode 0o0640
+  mode '640'
+  sensitive true
   variables(
     service_config: aodh_conf_options
   )
@@ -111,7 +111,7 @@ aodh_apache_dir = "#{default_docroot_dir}/aodh"
 directory aodh_apache_dir do
   owner 'root'
   group 'root'
-  mode 0o0755
+  mode '755'
 end
 
 aodh_server_entry = "#{aodh_apache_dir}/app"
@@ -121,7 +121,7 @@ file aodh_server_entry do
   content lazy { IO.read(platform['aodh-api_wsgi_file']) }
   owner 'root'
   group 'root'
-  mode 0o0755
+  mode '755'
 end
 
 template "#{apache_dir}/sites-available/aodh-api.conf" do

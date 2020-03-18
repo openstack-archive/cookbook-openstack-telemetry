@@ -1,10 +1,11 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-telemetry
+# Cookbook:: openstack-telemetry
 # Recipe:: agent-central
 #
-# Copyright 2013, AT&T Services, Inc.
-# Copyright 2013, SUSE Linux GmbH
+# Copyright:: 2013, AT&T Services, Inc.
+# Copyright:: 2013, SUSE Linux GmbH
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,11 +23,9 @@
 include_recipe 'openstack-telemetry::common'
 
 platform = node['openstack']['telemetry']['platform']
-platform['agent_central_packages'].each do |pkg|
-  package pkg do
-    options platform['package_overrides']
-    action :upgrade
-  end
+package platform['agent_central_packages'] do
+  options platform['package_overrides']
+  action :upgrade
 end
 
 service 'ceilometer-agent-central' do

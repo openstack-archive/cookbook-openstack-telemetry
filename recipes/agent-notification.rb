@@ -1,9 +1,10 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-telemetry
+# Cookbook:: openstack-telemetry
 # Recipe:: agent-notification
 #
-# Copyright 2014, IBM Corp.
+# Copyright:: 2014, IBM Corp.
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,11 +22,9 @@
 include_recipe 'openstack-telemetry::common'
 
 platform = node['openstack']['telemetry']['platform']
-platform['agent_notification_packages'].each do |pkg|
-  package pkg do
-    options platform['package_overrides']
-    action :upgrade
-  end
+package platform['agent_notification_packages'] do
+  options platform['package_overrides']
+  action :upgrade
 end
 
 service 'ceilometer-agent-notification' do

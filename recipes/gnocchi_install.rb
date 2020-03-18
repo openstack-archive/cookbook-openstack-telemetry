@@ -1,7 +1,9 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-telemetry
+# Cookbook:: openstack-telemetry
 # Recipe:: gnocchi_install
+#
+# Copyright:: 2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,12 +21,11 @@
 include_recipe 'openstack-telemetry::common'
 
 platform = node['openstack']['telemetry']['platform']
-platform['gnocchi_packages'].each do |pkg|
-  package pkg do
-    options platform['package_overrides']
-    action :upgrade
-  end
+package platform['gnocchi_packages'] do
+  options platform['package_overrides']
+  action :upgrade
 end
+
 # stop and disable the service gnocchi-api_service itself, since it should be run inside
 # of apache
 service platform['gnocchi-api_service'] do

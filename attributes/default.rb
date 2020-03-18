@@ -1,10 +1,11 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-telemetry
+# Cookbook:: openstack-telemetry
 # Recipe:: default
 #
-# Copyright 2013, AT&T Services, Inc.
-# Copyright 2013-2014, SUSE Linux GmbH
+# Copyright:: 2013, AT&T Services, Inc.
+# Copyright:: 2013-2014, SUSE Linux GmbH
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -199,6 +200,6 @@ when 'debian'
         aodh-notifier
         aodh-listener
       ),
-    'aodh-api_wsgi_file' => '/usr/share/aodh/app.wsgi' # this file come with aodh-common which aodh-api depends on
+    'aodh-api_wsgi_file' => '/usr/share/aodh/app.wsgi', # this file come with aodh-common which aodh-api depends on
   }
 end

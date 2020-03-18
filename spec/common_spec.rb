@@ -25,9 +25,8 @@ describe 'openstack-telemetry::common' do
       expect(chef_run).to upgrade_package 'python3-mysqldb'
     end
 
-    it 'installs the common package' do
-      expect(chef_run).to upgrade_package 'ceilometer-common'
-      expect(chef_run).to upgrade_package 'python3-ceilometer'
+    it 'installs the common packages' do
+      expect(chef_run).to upgrade_package %w(ceilometer-common python3-ceilometer)
     end
 
     describe '/etc/ceilometer/pipeline.yaml' do
@@ -43,7 +42,7 @@ EOL
             source: 'pipeline.yaml.erb',
             owner: 'ceilometer',
             group: 'ceilometer',
-            mode: 0o0640
+            mode: '640'
           )
       end
 
@@ -92,7 +91,7 @@ EOL
             source: 'polling.yaml.erb',
             owner: 'ceilometer',
             group: 'ceilometer',
-            mode: 0o0640
+            mode: '640'
           )
       end
 
@@ -108,7 +107,7 @@ EOL
         expect(chef_run).to create_directory(dir.name).with(
           user: 'ceilometer',
           group: 'ceilometer',
-          mode: 0o750
+          mode: '750'
         )
       end
     end
@@ -118,9 +117,12 @@ EOL
 
       it 'creates the file' do
         expect(chef_run).to create_template(file.name).with(
+          source: 'openstack-service.conf.erb',
+          cookbook: 'openstack-common',
           user: 'ceilometer',
           group: 'ceilometer',
-          mode: 0o640
+          mode: '640',
+          sensitive: true
         )
       end
 

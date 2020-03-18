@@ -14,9 +14,8 @@ describe 'openstack-telemetry::common' do
       expect(chef_run).to upgrade_package 'MySQL-python'
     end
 
-    it 'installs the common package' do
-      expect(chef_run).to upgrade_package 'openstack-ceilometer-common'
-      expect(chef_run).to upgrade_package 'mod_wsgi'
+    it 'installs the common packages' do
+      expect(chef_run).to upgrade_package %w(openstack-ceilometer-common mod_wsgi)
     end
   end
 end

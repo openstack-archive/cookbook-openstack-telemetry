@@ -16,7 +16,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
           source: 'gnocchi_resources.yaml',
           owner: 'ceilometer',
           group: 'ceilometer',
-          mode: 0o0640
+          mode: '640'
         )
     end
   end

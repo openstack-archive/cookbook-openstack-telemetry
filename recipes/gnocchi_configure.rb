@@ -1,7 +1,9 @@
 # encoding: UTF-8
 #
-# Cookbook Name:: openstack-telemetry
+# Cookbook:: openstack-telemetry
 # Recipe:: gnocchi_configure
+#
+# Copyright:: 2019-2020, Oregon State University
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -54,7 +56,8 @@ template node['openstack']['telemetry_metric']['conf_file'] do
   cookbook 'openstack-common'
   owner node['openstack']['telemetry_metric']['user']
   group node['openstack']['telemetry_metric']['group']
-  mode 0o0640
+  mode '640'
+  sensitive true
   variables(
     service_config: gnocchi_conf_options
   )
@@ -67,8 +70,8 @@ cookbook_file File.join(node['openstack']['telemetry']['conf_dir'], 'gnocchi_res
   source 'gnocchi_resources.yaml'
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 0o0640
-  only_if { node['platform'] == 'ubuntu' }
+  mode '640'
+  only_if { platform?('ubuntu') }
 end
 
 # drop api-paste.ini to gnocchi folder (default ini will not use keystone auth)
@@ -76,7 +79,7 @@ cookbook_file File.join(node['openstack']['telemetry_metric']['conf_dir'], 'api-
   source 'api-paste.ini'
   owner node['openstack']['telemetry_metric']['user']
   group node['openstack']['telemetry_metric']['group']
-  mode 0o0640
+  mode '640'
 end
 
 # drop event_pipeline.yaml to ceilometer folder (gnocchi does not use events and
@@ -86,7 +89,7 @@ cookbook_file File.join(node['openstack']['telemetry']['conf_dir'], 'event_pipel
   source 'event_pipeline.yaml'
   owner node['openstack']['telemetry']['user']
   group node['openstack']['telemetry']['group']
-  mode 0o0640
+  mode '640'
 end
 
 if node['openstack']['telemetry_metric']['conf']['storage']['driver'] == 'file'
@@ -99,7 +102,7 @@ if node['openstack']['telemetry_metric']['conf']['storage']['driver'] == 'file'
       owner node['openstack']['telemetry_metric']['user']
       group node['openstack']['telemetry_metric']['group']
       recursive true
-      mode 0o0750
+      mode '750'
     end
   end
 end
@@ -133,7 +136,7 @@ gnocchi_apache_dir = "#{default_docroot_dir}/gnocchi"
 directory gnocchi_apache_dir do
   owner 'root'
   group 'root'
-  mode 0o0755
+  mode '755'
 end
 
 gnocchi_server_entry = "#{gnocchi_apache_dir}/app"
@@ -143,7 +146,7 @@ file gnocchi_server_entry do
   content lazy { IO.read(platform['gnocchi-api_wsgi_file']) }
   owner 'root'
   group 'root'
-  mode 0o0755
+  mode '755'
 end
 
 template "#{apache_dir}/sites-available/gnocchi-api.conf" do

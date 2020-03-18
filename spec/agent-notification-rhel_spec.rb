@@ -11,8 +11,8 @@ describe 'openstack-telemetry::agent-notification' do
     include_context 'telemetry-stubs'
     include_examples 'expect-runs-common-recipe'
 
-    it 'installs the agent-notification package' do
-      expect(chef_run).to upgrade_package 'openstack-ceilometer-collector'
+    it do
+      expect(chef_run).to upgrade_package %w(openstack-ceilometer-collector openstack-ceilometer-notification)
     end
 
     it 'starts the agent-notification service' do
