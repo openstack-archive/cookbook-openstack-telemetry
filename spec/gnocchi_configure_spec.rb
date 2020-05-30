@@ -9,7 +9,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
     include_context 'telemetry-stubs'
 
     it do
-      expect(chef_run).to install_apache2_install('openstack').with(listen: '127.0.0.1:8041')
+      expect(chef_run).to install_apache2_install('openstack').with(listen: %w(127.0.0.1:8041))
     end
 
     it do
