@@ -61,7 +61,7 @@ node.default['openstack']['telemetry']['conf_secrets'].tap do |conf_secrets|
 end
 
 identity_endpoint = public_endpoint 'identity'
-auth_url = ::URI.decode identity_endpoint.to_s
+auth_url = identity_endpoint.to_s
 
 node.default['openstack']['telemetry']['conf'].tap do |conf|
   conf['keystone_authtoken']['auth_url'] = auth_url

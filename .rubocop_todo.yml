@@ -13,9 +13,3 @@ Style/IfUnlessModifier:
     - 'attributes/gnocchi_conf.rb'
     - 'recipes/aodh.rb'
     - 'recipes/common.rb'
-
-# Offense count: 80
-# Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
-# URISchemes: http, https
-Metrics/LineLength:
-  Max: 163

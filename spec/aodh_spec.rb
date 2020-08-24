@@ -13,7 +13,7 @@ describe 'openstack-telemetry::aodh' do
     end
 
     it do
-      expect(chef_run).to install_apache2_install('openstack').with(listen: '127.0.0.1:8042')
+      expect(chef_run).to install_apache2_install('openstack').with(listen: %w(127.0.0.1:8042))
     end
 
     it do
