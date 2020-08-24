@@ -41,7 +41,7 @@ node.default['openstack']['telemetry_metric']['conf_secrets'].tap do |conf_secre
 end
 
 identity_endpoint = public_endpoint 'identity'
-auth_url = ::URI.decode identity_endpoint.to_s
+auth_url = identity_endpoint.to_s
 
 node.default['openstack']['telemetry_metric']['conf'].tap do |conf|
   conf['api']['host'] = bind_service_address

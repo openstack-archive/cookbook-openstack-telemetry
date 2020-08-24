@@ -19,8 +19,6 @@
 # limitations under the License.
 #
 
-require 'uri'
-
 # Include OS
 class ::Chef::Recipe
   include ::Openstack
@@ -28,7 +26,7 @@ end
 
 identity_endpoint = public_endpoint 'identity'
 
-auth_url = ::URI.decode identity_endpoint.to_s
+auth_url = identity_endpoint.to_s
 admin_user = node['openstack']['identity']['admin_user']
 admin_pass = get_password 'user', node['openstack']['identity']['admin_user']
 admin_project = node['openstack']['identity']['admin_project']
