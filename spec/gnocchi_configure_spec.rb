@@ -183,7 +183,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
             log_debug: nil,
             log_dir: '/var/log/apache2',
             protocol: 'All -SSLv2 -SSLv3',
-            run_dir: '/var/lock/apache2',
+            run_dir: '/var/lock',
             server_entry: '/var/www/html/gnocchi/app',
             server_host: '127.0.0.1',
             server_port: 8041,
@@ -203,7 +203,7 @@ describe 'openstack-telemetry::gnocchi_configure' do
           /WSGIDaemonProcess gnocchi-api processes=2 threads=10 user=gnocchi group=gnocchi display-name=%{GROUP}$/,
           /WSGIProcessGroup gnocchi-api$/,
           %r{WSGIScriptAlias / /var/www/html/gnocchi/app$},
-          %r{^WSGISocketPrefix /var/lock/apache2$},
+          %r{^WSGISocketPrefix /var/lock$},
           %r{ErrorLog /var/log/apache2/gnocchi-api_error.log$},
           %r{CustomLog /var/log/apache2/gnocchi-api_access.log combined$},
         ].each do |line|

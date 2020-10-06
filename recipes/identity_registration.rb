@@ -1,4 +1,3 @@
-# encoding: UTF-8
 #
 # Cookbook:: openstack-telemetry
 # Recipe:: identity_registration
