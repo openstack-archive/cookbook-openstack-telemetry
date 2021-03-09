@@ -114,7 +114,7 @@ directory aodh_apache_dir do
 end
 
 aodh_server_entry = "#{aodh_apache_dir}/app"
-# Note: Using lazy here as the wsgi file is not available until after
+# NOTE: Using lazy here as the wsgi file is not available until after
 # the aodh-common package is installed during execution phase.
 file aodh_server_entry do
   content lazy { IO.read(platform['aodh-api_wsgi_file']) }

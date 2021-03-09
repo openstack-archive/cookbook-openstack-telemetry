@@ -139,7 +139,7 @@ directory gnocchi_apache_dir do
 end
 
 gnocchi_server_entry = "#{gnocchi_apache_dir}/app"
-# Note: Using lazy here as the wsgi file is not available until after
+# NOTE: Using lazy here as the wsgi file is not available until after
 # the gnocchik-api package is installed during execution phase.
 file gnocchi_server_entry do
   content lazy { IO.read(platform['gnocchi-api_wsgi_file']) }
