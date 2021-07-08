@@ -151,7 +151,7 @@ describe 'openstack-telemetry::aodh' do
             key_file: '/etc/ceilometer/ssl/private/sslkey.pem',
             log_dir: '/var/log/apache2',
             protocol: 'All -SSLv2 -SSLv3',
-            run_dir: '/var/lock/apache2',
+            run_dir: '/var/lock',
             server_entry: '/var/www/html/aodh/app',
             server_host: '127.0.0.1',
             server_port: 8042,
@@ -171,7 +171,7 @@ describe 'openstack-telemetry::aodh' do
           /WSGIDaemonProcess aodh-api processes=2 threads=10 user=aodh group=aodh display-name=%{GROUP}$/,
           /WSGIProcessGroup aodh-api$/,
           %r{WSGIScriptAlias / /var/www/html/aodh/app$},
-          %r{^WSGISocketPrefix /var/lock/apache2$},
+          %r{^WSGISocketPrefix /var/lock$},
           %r{ErrorLog /var/log/apache2/aodh-api_error.log$},
           %r{CustomLog /var/log/apache2/aodh-api_access.log combined$},
         ].each do |line|
