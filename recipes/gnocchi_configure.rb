@@ -127,7 +127,7 @@ else
   end
 end
 
-apache2_module 'wsgi'
+apache2_mod_wsgi 'gnocchi'
 apache2_module 'ssl' if node['openstack']['telemetry_metric']['ssl']['enabled']
 
 # create the gnocchi-api apache directory

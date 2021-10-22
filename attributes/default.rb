@@ -124,40 +124,83 @@ default['openstack']['telemetry']['polling']['meters'] =
 end
 case node['platform_family']
 when 'rhel'
-  default['openstack']['telemetry']['platform'] = {
-    'common_packages' => %w(openstack-ceilometer-common mod_wsgi),
-    'gnocchi_packages' => %w(openstack-gnocchi-api openstack-gnocchi-metricd),
-    'gnocchi-api_service' => 'openstack-gnocchi-api',
-    'gnocchi-metricd_service' => 'gnocchi-metricd',
-    'agent_central_packages' => %w(openstack-ceilometer-central),
-    'agent_central_service' => 'openstack-ceilometer-central',
-    'agent_compute_packages' => %w(openstack-ceilometer-compute),
-    'agent_compute_service' => 'openstack-ceilometer-compute',
-    'agent_notification_packages' => %w(openstack-ceilometer-collector openstack-ceilometer-notification),
-    'agent_notification_service' => 'openstack-ceilometer-notification',
-    'ceilometer-api_wsgi_file' => '/usr/lib/python2.7/site-packages/ceilometer/api/app.wsgi',
-    'gnocchi-api_wsgi_file' => '/usr/lib/python2.7/site-packages/gnocchi/rest/wsgi.py',
-    'package_overrides' => '',
-  }
+  default['openstack']['telemetry']['platform'] =
+    case node['platform_version'].to_i
+    when 8
+      {
+        'common_packages' => %w(openstack-ceilometer-common),
+        'gnocchi_packages' => %w(openstack-gnocchi-api openstack-gnocchi-metricd),
+        'gnocchi-api_service' => 'openstack-gnocchi-api',
+        'gnocchi-metricd_service' => 'gnocchi-metricd',
+        'agent_central_packages' => %w(openstack-ceilometer-central),
+        'agent_central_service' => 'openstack-ceilometer-central',
+        'agent_compute_packages' => %w(openstack-ceilometer-compute),
+        'agent_compute_service' => 'openstack-ceilometer-compute',
+        'agent_notification_packages' => %w(openstack-ceilometer-collector openstack-ceilometer-notification),
+        'agent_notification_service' => 'openstack-ceilometer-notification',
+        'ceilometer-api_wsgi_file' => '/usr/lib/python3.6/site-packages/ceilometer/api/app.wsgi',
+        'gnocchi-api_wsgi_file' => '/usr/lib/python3.6/site-packages/gnocchi/rest/wsgi.py',
+        'package_overrides' => '',
+      }
+    when 7
+      {
+        'common_packages' => %w(openstack-ceilometer-common),
+        'gnocchi_packages' => %w(openstack-gnocchi-api openstack-gnocchi-metricd),
+        'gnocchi-api_service' => 'openstack-gnocchi-api',
+        'gnocchi-metricd_service' => 'gnocchi-metricd',
+        'agent_central_packages' => %w(openstack-ceilometer-central),
+        'agent_central_service' => 'openstack-ceilometer-central',
+        'agent_compute_packages' => %w(openstack-ceilometer-compute),
+        'agent_compute_service' => 'openstack-ceilometer-compute',
+        'agent_notification_packages' => %w(openstack-ceilometer-collector openstack-ceilometer-notification),
+        'agent_notification_service' => 'openstack-ceilometer-notification',
+        'ceilometer-api_wsgi_file' => '/usr/lib/python2.7/site-packages/ceilometer/api/app.wsgi',
+        'gnocchi-api_wsgi_file' => '/usr/lib/python2.7/site-packages/gnocchi/rest/wsgi.py',
+        'package_overrides' => '',
+      }
+    end
 
-  default['openstack']['aodh']['platform'] = {
-    'aodh_packages' =>
-      %w(
-        openstack-aodh-api
-        openstack-aodh-evaluator
-        openstack-aodh-expirer
-        openstack-aodh-listener
-        openstack-aodh-notifier
-        python-aodhclient
-      ),
-    'aodh_services' =>
-      %w(
-        openstack-aodh-evaluator
-        openstack-aodh-notifier
-        openstack-aodh-listener
-      ),
-    'aodh-api_wsgi_file' => '/usr/lib/python2.7/site-packages/aodh/api/app.wsgi',
-  }
+  default['openstack']['aodh']['platform'] =
+    case node['platform_version'].to_i
+    when 8
+      {
+        'aodh_packages' =>
+          %w(
+            openstack-aodh-api
+            openstack-aodh-evaluator
+            openstack-aodh-expirer
+            openstack-aodh-listener
+            openstack-aodh-notifier
+            python3-aodhclient
+          ),
+        'aodh_services' =>
+          %w(
+            openstack-aodh-evaluator
+            openstack-aodh-notifier
+            openstack-aodh-listener
+          ),
+        'aodh-api_wsgi_file' => '/usr/lib/python3.6/site-packages/aodh/api/app.wsgi',
+      }
+    when 7
+      {
+        'aodh_packages' =>
+          %w(
+            openstack-aodh-api
+            openstack-aodh-evaluator
+            openstack-aodh-expirer
+            openstack-aodh-listener
+            openstack-aodh-notifier
+            python-aodhclient
+          ),
+        'aodh_services' =>
+          %w(
+            openstack-aodh-evaluator
+            openstack-aodh-notifier
+            openstack-aodh-listener
+          ),
+        'aodh-api_wsgi_file' => '/usr/lib/python2.7/site-packages/aodh/api/app.wsgi',
+      }
+    end
 
 when 'debian'
   default['openstack']['telemetry']['platform'] = {

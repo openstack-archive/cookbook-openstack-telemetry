@@ -102,7 +102,7 @@ else
   end
 end
 
-apache2_module 'wsgi'
+apache2_mod_wsgi 'aodh'
 apache2_module 'ssl' if node['openstack']['aodh']['ssl']['enabled']
 
 # create the aodh-api apache directory
